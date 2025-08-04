@@ -1,0 +1,14 @@
+.bodyContainer{
+    width: 780px;
+    min-height: 100vh;
+}
+.container{
+    display: flex;
+}
+.bodyContainer strong{
+    font-size: calc(1.4 * 1em);
+}
+
+.gray{
+    font-size: calc(1.4 * 1em);
+}

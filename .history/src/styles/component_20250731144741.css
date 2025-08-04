@@ -1,0 +1,37 @@
+
+.bodyContainer{
+    display: flex;
+    min-height: 100vh;    
+    width: 100vw;
+    position: relative;
+}
+.absol{
+    position: absolute;
+    top:20px;
+}
+
+.sidebarContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 0;
+    background-color: #f9f9f9;
+    height: 100vh;
+    width: 60px;
+}
+.tabMenu{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: auto;
+    margin: auto 0;
+}
+.sidebarContainer .tabItem{
+    width: 51px;
+    height: 41px;
+    z-index: 99;
+    margin-bottom: 30px;
+    object-fit: contain;
+    cursor: pointer;
+    
+}

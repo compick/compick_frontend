@@ -1,0 +1,52 @@
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  width: 60px;
+  background-color: #fff;
+  border-right: 1px solid #ddd;
+  height: 100vh;
+}
+
+.sidebar .homeLogo{
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    cursor: pointer;
+    margin-bottom: 40px;
+    
+}
+.top-section,
+.bottom-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tabIcon {
+  padding: 10px;
+  border-radius: 12px;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.tabIcon:hover {
+  background-color: #e6e6e6;
+}
+
+.tabItem {
+  width: 24px;
+  height: 24px;
+  stroke: gray;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.3s;
+}
+
+.tabIcon.active .tabItem {
+  stroke: black;
+}

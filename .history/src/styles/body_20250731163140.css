@@ -1,0 +1,21 @@
+.bodyContainer{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+.bodyContainer .content{
+    width: 760px;
+    min-height: 100vh;
+    border: 1px solid gray;
+}
+.container{
+    display: flex;
+}
+.bodyContainer strong{
+    font-size: calc(1.4 * 1em);
+}
+
+.gray{
+    font-size: calc(1.4 * 1em);
+}

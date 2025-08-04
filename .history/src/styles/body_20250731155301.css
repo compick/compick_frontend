@@ -1,0 +1,10 @@
+.bodyContainer{
+    width: 780px;
+    min-height: 100vh;
+}
+.container{
+    display: flex;
+}
+.gray{
+    font-size: calc(1.4 * 1em);
+}

@@ -1,0 +1,24 @@
+.bodyContainer{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+.bodyContainer .content{
+    width: 740px;
+    min-height: 100vh;
+    border: 1px solid gray;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 20px;
+}
+.container{
+    display: flex;
+}
+.bodyContainer .username{
+    font-size: calc(1.4 * 1em);
+}
+
+.timestamp{
+    font-size: calc(1.2 * 1em);
+}

@@ -1,0 +1,59 @@
+import requests
+from bs4 import BeautifulSoup
+import os
+import re
+
+headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)'
+}
+
+save_dir = 'src/img/soccerTeam/laligaSpain'
+os.makedirs(save_dir, exist_ok=True)
+
+# 정확한 URL 생성
+urls = [
+    f"https://namu.wiki/w/{year}-{str(year+1)[-2:]}%20%EB%9D%BC%EB%A6%AC%EA%B0%80%20EA%20SPORTS"
+    for year in range(2019, 2026)
+]
+
+club_data = set()
+
+for url in urls:
+    try:
+        print(f"🔎 요청 중: {url}")
+        res = requests.get(url, headers=headers)
+        res.raise_for_status()
+        res.encoding = 'utf-8'
+        soup = BeautifulSoup(res.text, 'html.parser')
+
+        span_tags = soup.find_all('span', class_='no5JPXQH')
+
+        for span in span_tags:
+            img = span.find('img', class_='IIlhLQ+O')
+            if img:
+                alt = img.get('alt')
+                src = img.get('src')
+                if alt and src:
+                    club_data.add((alt.strip(), src.strip()))
+                print(f"[✓] 크롤링 완료: {url}")
+
+    except Exception as e:
+        print(f"[X] 크롤링 실패: {url} → {e}")
+
+for alt, src in sorted(club_data):
+    try:
+        safe_name = re.sub(r'[\\/*?:"<>|]', "", alt)
+        file_path = os.path.join(save_dir, f"{safe_name}.png")
+
+        img_res = requests.get(src, headers=headers)
+        img_res.raise_for_status()
+
+        with open(file_path, 'wb') as f:
+            f.write(img_res.content)
+
+        print(f"[↓] 저장 완료: {alt} → {file_path}")
+
+    except Exception as e:
+        print(f"[X] 저장 실패: {alt} → {e}")
+
+print(f"\n✅ 총 {len(club_data)}개 구단 이미지 저장 완료.")
