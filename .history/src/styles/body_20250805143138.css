@@ -1,0 +1,112 @@
+.bodyContainer{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+}
+.container.col{
+    flex-direction: column;
+}
+.bodyContainer .content{
+    width: 700px;
+    min-height: 100vh;
+    border: 1px solid gray;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 20px;
+}
+.container{
+    display: flex;
+}
+.contentBox {
+  display: flex;
+  flex-direction: column;
+}
+.content  .matchCard {
+  position: relative;
+  background: #f9fbff;
+  border-radius: 16px;
+  padding: 10px;
+  margin: 12px 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+/* ✅ hover 효과 */
+.content  .matchCard:hover {
+  transform: scale(1.005);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+}
+
+/* 배경 이미지 */
+.content  .teamBg {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 200px;
+  height: 200px;
+  background-size: 35%;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.38;
+  z-index: 0;
+
+  /* ✅ 이벤트 통과시키기 */
+  pointer-events: none;
+}
+
+.teamBg.left {
+  left: -31px;
+}
+
+.teamBg.right {
+  right: 0px;
+}
+
+
+.content .matchTime {
+  font-size: 0.9rem;
+  color: #444444;
+  position: absolute;
+  bottom: 0;
+
+}
+.content  .matchInfo {
+  display: flex;
+  width: 500px;
+  justify-content: space-between;
+  align-items: center;
+  gap:15px;
+}
+
+.content .teamLogo{
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+}
+.content .teamName{
+    font-weight: 500;
+    font-size: 1.2rem;
+}
+.scoreBox{
+    height: 100%;
+    display: flex;
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: center;
+}
+.content  .scoreText{
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+.menuTab{
+  
+}
