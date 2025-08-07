@@ -1,0 +1,109 @@
+.sidebarContainer {
+  height: 60px;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  position: relative; /* 🎯 기준 */
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  background-color: #fff;
+  border-bottom: 1px solid #ddd;
+  width: 100%;
+  max-width: 700px;
+  position: relative; /* 🎯 popup 위치 기준 */
+}
+
+.sidebar .homeLogo{
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    cursor: pointer;
+    
+}
+.top-section,
+.bottom-section {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.tabIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;        /* 아이콘 클릭 영역 확보 */
+  height: 40px;
+  border-radius: 12px;
+  transition: background-color 0.3s;
+  cursor: pointer;
+}
+
+.tabIcon:hover {
+  background-color: #e6e6e6;
+}
+
+.tabItem {
+  width: 24px;
+  height: 24px;
+  stroke: gray;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.3s;
+}
+
+.tabIcon.active .tabItem {
+  stroke: black;
+}
+
+.popupOverlay {
+  position: absolute;
+  top: 60px;
+  right: 16px; /* 기존보다 여유 있는 위치 */
+  z-index: 999;
+}
+@media (max-width: 500px) {
+  .popupOverlay {
+    right: 8px;
+  }
+    .popupBox {
+    min-width: 100px;
+  }
+}
+
+.popupBox {
+  background: white;
+  padding: 12px;
+  border-radius: 16px;
+  min-width: 120px;
+  max-width: 200px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.popupContent {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.popupIcon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.popupIcon:hover {
+  background: #f5f5f5;
+}
