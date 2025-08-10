@@ -173,17 +173,31 @@
   width: 100%;
   background: #ededed;
 }
+.container.addpage{
+  display: flex;
+  width: 100%;
+  position: relative;
+  height: 50px;
+  align-items: center;
+}
 .closeBtn {
-  position: absolute;
-  right: 12px;
-  top: 8px;
+  
   font-size: 18px;
   background: transparent;
   border: none;
   cursor: pointer;
 }
-.calendarBox{
-
+.pageTitle{ 
+  font-size: 24px;
+  text-align: center;
+  
+}
+.nextBtn{
+  position: absolute;
+  right: 9px;
+  top: 19px;
+  background-color: #fff;
+  border-radius: 5px;
 }
 .feedContainer {
   margin-top: 20px;

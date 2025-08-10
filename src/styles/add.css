@@ -6,20 +6,21 @@
     margin: 0 auto;
 }
 .previewBox {
-  width: 100%;
-  height: 45vh;
-  border: 2px solid #ccc;
-  background: #f4f4f4;
-  overflow: hidden;
+  width: 742px; /* 또는 원하는 고정/반응형 사이즈 */
+  aspect-ratio: 1 / 1; /* 1:1 비율 유지 */
+  overflow: hidden;     /* 넘치는 이미지 잘라내기 */
   position: relative;
-  touch-action: none; /* 터치 드래그 방지 */
+  background-color: #111;
+  touch-action: none; /* 모바일에서 pinch-zoom 방지 */
 }
 
 .draggableImage {
   position: absolute;
+  top: 0;
+  left: 0;
   cursor: grab;
   user-select: none;
-  transition: transform 0.05s linear;
+  touch-action: none; /* 모바일에서 스크롤 막고 제스처 인식 */
 }
 
 .noImageText {
@@ -32,13 +33,10 @@
 .previewImage {
   max-width: 100%;
   max-height: 100%;
-  object-fit: contain;
+  display: block;
 }
 
-.noImageText {
-  color: #aaa;
-  font-size: 14px;
-}
+
 
 .resizeHandle {
   position: absolute;
@@ -121,16 +119,14 @@
 }
 
 
-.editor-container {
-  min-height: 100vh;
-  background-color: #111;
-  color: #fff;
-  padding: 20px;
-  font-family: system-ui;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.editor-container .previewBox {
+  width: 742px;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;  /* 이 부분이 중요합니다 */
   position: relative;
+  background-color: #111;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .editor-container .title {
@@ -140,16 +136,15 @@
 
 .editor-container .image-area {
   position: relative;
-  width: 320px;
+  width: 742px;  
+  aspect-ratio: 1 / 1; 
   border-radius: 16px;
   overflow: hidden;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  background-color: #111;
 }
 
-.preview-image {
-  width: 100%;
-  display: block;
-}
+
 
 .text-label {
   position: absolute;

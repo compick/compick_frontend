@@ -23,9 +23,9 @@ export default function AddBody() {
   return (
     <div className="uploadContainer">
       {/* 상단 툴바 */}
-      <div className="container">
+      <div className="container addpage">
         <button className="closeBtn" onClick={handleClose}>❌</button>
-        <h2 className="pageTitle">게시글 작성</h2>
+        <div className="pageTitle">게시글 작성</div>
         <button className="nextBtn" onClick={handleNext}>다음 ▶</button>
       </div>
 
