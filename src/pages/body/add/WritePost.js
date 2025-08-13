@@ -6,7 +6,7 @@ export default function WritePost() {
   const image = location.state?.image;
 
   return (
-    <div style={{ background: "#111", color: "#fff", minHeight: "100vh", padding: "16px" }}>
+    <div className="uploadContainer">
       <h2>새 게시물</h2>
       {image && (
         <img
@@ -21,23 +21,14 @@ export default function WritePost() {
         />
       )}
 
-      <textarea
-        placeholder="캡션 추가..."
-        style={{
-          width: "100%",
-          height: "80px",
-          padding: "8px",
-          borderRadius: "8px",
-          resize: "none",
-        }}
-      />
+      <textarea placeholder="게시글 설명 작성" className="postText"/>
 
       <div style={{ marginTop: "16px" }}>
-        <button style={{ background: "#333", color: "#fff", padding: "10px", margin: "5px" }}>
-          📍 위치 추가
+        <button className="tagBtn">
+          사람 태그
         </button>
-        <button style={{ background: "#333", color: "#fff", padding: "10px", margin: "5px" }}>
-          🎵 음악 추가
+        <button className="tagBtn">
+          캡션 추가
         </button>
       </div>
 
@@ -45,18 +36,7 @@ export default function WritePost() {
         AI 레이블, 공개 범위 등은 커스텀 구현 가능
       </div>
 
-      <button
-        style={{
-          marginTop: "20px",
-          width: "100%",
-          background: "#4e54c8",
-          padding: "12px",
-          color: "#fff",
-          fontWeight: "bold",
-          border: "none",
-          borderRadius: "8px",
-        }}
-      >
+      <button className="postBtn">
         공유
       </button>
     </div>

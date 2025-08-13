@@ -20,12 +20,12 @@ export default function ImagePicker({ onSelectImage }) {
     const files = Array.from(e.target.files);
 
     // 📦 FileReader로 비동기 Base64 인코딩
-    Promise.all(
+    Promise.all( //을 통해서 불러오
       files.map((file) => {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
-          reader.onload = () => resolve({ url: reader.result }); // Base64
-          reader.onerror = reject;
+          reader.onload = () => resolve({ url: reader.result }); // 파일 읽기
+          reader.onerror = reject; //실패 시 
           reader.readAsDataURL(file);
         });
       })
