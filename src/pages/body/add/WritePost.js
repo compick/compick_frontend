@@ -1,16 +1,15 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
 
-export default function WritePost() {
-  const location = useLocation();
-  const image = location.state?.image;
+export default function WritePost({ capturedImage }) {
+  // const location = useLocation();
+  // const image = location.state?.image;
 
   return (
     <div className="uploadContainer">
       <h2>새 게시물</h2>
-      {image && (
+      {capturedImage && (
         <img
-          src={image}
+          src={capturedImage}
           alt="post"
           style={{
             width: "100%",

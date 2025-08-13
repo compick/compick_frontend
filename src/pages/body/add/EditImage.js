@@ -1,7 +1,8 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useImperativeHandle, forwardRef } from "react";
 import { useLocation } from "react-router-dom";
+import html2canvas from 'html2canvas';
 
-export default function EditImage() {
+const EditImage = forwardRef(({ setCapturedImage }, ref) => {
   const location = useLocation();
   const imageFromState = location.state?.image || null;
   const boxFromState = location.state?.box || null;
@@ -150,10 +151,28 @@ export default function EditImage() {
     }
   }, [texts]);
 
+  const captureRef = useRef(); // 캡처할 영역을 위한 ref
+
+  useImperativeHandle(ref, () => ({
+    async captureImage() {
+      if (!captureRef.current) return null;
+      try {
+        const canvas = await html2canvas(captureRef.current, {
+          useCORS: true, // 외부 이미지가 있다면 필요
+          backgroundColor: null, // 배경을 투명하게
+        });
+        return canvas.toDataURL("image/png");
+      } catch (error) {
+        console.error("이미지 캡처 실패:", error);
+        return null;
+      }
+    }
+  }));
+
   return (
     <div className="editor-container">
-      <h2 className="title">✨ 이미지 꾸미기</h2>
       <div
+        ref={captureRef} // 캡처할 영역 지정
         className="image-area"
         style={{
           width:  box?.width,     // ← Upload에서 온 픽셀값 그대로
@@ -331,4 +350,6 @@ export default function EditImage() {
       </button>
     </div>
   );
-}
+});
+
+export default EditImage;

@@ -35,7 +35,12 @@ const topIcons = [
 
 const bottomIcons = [
   {
-    name: "user",
+    name: "login",
+    svg: <circle cx="12" cy="8" r="4" />,
+    extra: <path d="M6 20c0-2 4-4 6-4s6 2 6 4" />,
+  },
+  {
+    name: "myProfile",
     svg: <circle cx="12" cy="8" r="4" />,
     extra: <path d="M6 20c0-2 4-4 6-4s6 2 6 4" />,
   },
