@@ -31,9 +31,14 @@
 
 
 .previewImage {
-  max-width: 100%;
-  max-height: 100%;
-  display: block;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* 아래 transform은 JS에서 덮어씌움 (translate + scale) */
+  transform: translate(-50%, -50%);
+  transform-origin: center center;
+  pointer-events: none; /* 드래그 핸들러가 부모에서 받게 하려면 */
+  will-change: transform;
 }
 
 
@@ -117,10 +122,13 @@
   margin-top: 5px;
   font-size: 12px;
 }
-
+.editor-container {
+  width: 742px;
+  margin: 0 auto;
+}
 
 .editor-container .previewBox {
-  width: 742px;
+  width: 100%;
   aspect-ratio: 1 / 1;
   overflow: hidden;  /* 이 부분이 중요합니다 */
   position: relative;
@@ -136,11 +144,11 @@
 
 .editor-container .image-area {
   position: relative;
-  width: 742px;  
-  aspect-ratio: 1 / 1; 
+  width: 742px;
+  aspect-ratio: 1 / 1;
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
   background-color: #111;
 }
 
@@ -187,13 +195,14 @@
   display: flex;
   flex-direction: column;
   font-size: 14px;
+  color: #111;
   gap: 4px;
 }
 .text-toolbar {
   background: rgba(20, 20, 20, 0.95);
   padding: 12px;
   border-radius: 10px;
-  color: white;
+  color: #111;
   font-size: 13px;
   display: flex;
   flex-direction: column;
@@ -209,4 +218,34 @@
 }
 .text-toolbar input[type="range"] {
   width: 100px;
+}
+.tagBtn{
+  background: #333;
+  color: #fff;
+  padding: 7px;
+  margin: 0 7px ;
+}
+.postText{
+  width: 96%;
+  padding: 1%;
+  margin: 1%;
+  border-radius: 8px;
+  height: 80px;
+  resize: none;
+}
+.postImg{
+  width: 100%;
+  max-width: 400px;
+  border-radius: 1%;
+  margin-bottom: 2%;
+}
+.postBtn{
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background-color: #70cde9;
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
 }
