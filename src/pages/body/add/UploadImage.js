@@ -6,6 +6,7 @@ import React, {
   useImperativeHandle,
 } from "react";
 import ImagePicker from "./ImagePicker";
+import html2canvas from 'html2canvas';
 
 // ❗ html2canvas/ useNavigate 불필요하므로 제거
 // import html2canvas from "html2canvas";
@@ -196,7 +197,28 @@ const UploadImage = forwardRef(function UploadImage(
 
   // 7) 부모에서 호출할 수 있게 메서드 노출
   useImperativeHandle(ref, () => ({
-    exportEdited: exportPreviewToImage,
+    async exportEdited() {
+      if (!previewRef.current || !selectedImage) {
+        console.error("Preview element or image not found for capture.");
+        return null;
+      }
+      try {
+        const canvas = await html2canvas(previewRef.current, {
+          useCORS: true,
+          backgroundColor: null, // 배경 투명하게
+        });
+        const dataUrl = canvas.toDataURL("image/png");
+        return {
+          dataUrl: dataUrl,
+          width: canvas.width,
+          height: canvas.height,
+          // transform 정보는 이제 전달하지 않음
+        };
+      } catch (error) {
+        console.error("Image capture failed:", error);
+        return null;
+      }
+    },
   }));
 
   return (
