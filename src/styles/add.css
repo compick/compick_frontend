@@ -1,17 +1,23 @@
 .uploadContainer {
-  display: flex;
-  flex-direction: column;
-  min-height: 95vh;
-  width: 742px;
-  margin: 0 auto;
+    width: 100%; /* 너비를 100%로 설정하여 유동적으로 만듦 */
+    max-width: 100vw; /* 최대 너비는 742px로 제한 */
+    margin: 40px auto; /* 데스크탑에서는 상하 여백 다시 추가 */
+    
+    background-color: #f9f9f9;
+    border-radius: 8px;
 }
 .previewBox {
-width: 742px; /* 또는 원하는 고정/반응형 사이즈 */
-aspect-ratio: 1 / 1; /* 1:1 비율 유지 */
-overflow: hidden;     /* 넘치는 이미지 잘라내기 */
-position: relative;
-background-color: #111;
-touch-action: none; /* 모바일에서 pinch-zoom 방지 */
+    width: 100%;
+    aspect-ratio: 1 / 1; /* 가로:세로 비율을 1:1 (정사각형)으로 설정 */
+    border: 2px dashed #ccc;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    touch-action: none;
+    /* height: 500px; 제거 */
 }
 
 .draggableImage {
@@ -123,8 +129,11 @@ margin-top: 5px;
 font-size: 12px;
 }
 .editor-container {
-width: 742px;
-margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%; /* 너비를 100%로 설정 */
+    max-width: 742px; /* 최대 너비 제한 */
+    margin: 0 auto; /* 중앙 정렬 */
 }
 
 .editor-container .previewBox {
@@ -144,7 +153,7 @@ font-weight: 500;
 
 .editor-container .image-area {
 position: relative;
-width: 742px;
+width: 100%;
 aspect-ratio: 1 / 1;
 overflow: hidden;
 box-shadow: 0 8px 24px rgba(0,0,0,0.4);
@@ -153,21 +162,19 @@ background-color: #111;
 
 
 
-.text-label {
-position: absolute;
-padding: 6px 10px;
-border-radius: 12px;
-cursor: grab;
-user-select: none;
-transition: background 0.2s;
+.text-label,
+.text-input {
+    position: absolute; /* transform의 기준점을 image-area로 설정 */
+    padding: 6px 10px;
+    border-radius: 12px;
+    cursor: grab;
+    user-select: none;
+    transition: background 0.2s;
 }
 
 .text-input {
-position: absolute;
-padding: 6px 10px;
-border-radius: 12px;
-border: none;
-outline: none;
+    border: none;
+    outline: none;
 }
 
 .add-button {
@@ -247,4 +254,40 @@ color: #fff;
 font-weight: bold;
 border: none;
 border-radius: 8px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .uploadContainer {
+        margin: 0; /* 모바일에서는 여백 제거 */
+        padding: 0px;
+        border-radius: 0; /* 모바일에서는 radius 제거 */
+    }
+
+    .uploadBox, .postBox {
+        padding: 20px; /* 모바일에서는 패딩 축소 */
+    }
+
+    .uploadBox h1, .postBox h1 {
+        font-size: 1.5em; /* 제목 폰트 크기 조정 */
+    }
+
+    .image-picker-container, .post-options {
+        flex-direction: column; /* 세로로 쌓기 */
+        gap: 15px;
+    }
+
+    .post-actions {
+        flex-direction: column;
+        align-items: stretch; /* 버튼을 꽉 채움 */
+    }
+
+    .post-actions .next-step-btn {
+        width: 100%;
+        margin-left: 0;
+    }
+    .add-button {
+        width: 100%;
+        margin-top: 15px;
+    }
 }

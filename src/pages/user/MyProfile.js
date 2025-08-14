@@ -1,63 +1,67 @@
 import { useState } from "react";
-import { Link } from "react-router-dom"; // Link import
-import profileImg from "../../img/icon/defaultProfile.jpeg";
-import TierInfo from "./TierInfo";
-import EditProfileModal from "./EditProfileModal";
-// TierDetailModal import 제거
+import { useNavigate } from "react-router-dom";
+import TierList from "./TierList";
+import MyVotesPage from "./MyVotesPage";
+import FavoritesPage from "./FavoritesPage";
+import MyCommentsPage from "./MyCommentsPage";
+// PasswordConfirmModal 및 checkPassword import 제거
 
-export default function MyProfile({ userScores }){ // prop으로 userScores 받기
-    // MyProfile 내의 userScores 상태는 제거
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    // selectedTier 및 관련 함수 제거
+export default function MyProfile({ userScores, userInfo }) {
+    const navigate = useNavigate();
+    const [activeView, setActiveView] = useState('tiers');
+    
+    // 모달 관련 상태 및 핸들러 모두 제거
 
-    const openEditModal = () => setIsEditModalOpen(true);
-    const closeEditModal = () => setIsEditModalOpen(false);
-
-    // handleProfileUpdate, userInfo 상태는 그대로
-    const handleProfileUpdate = (newUserInfo) => {
-        setUserInfo(newUserInfo);
-        console.log("Updated user info:", newUserInfo);
+    const handleNavigate = (path) => {
+        navigate(path);
     };
 
-    const [userInfo, setUserInfo] = useState({
-        nickname: "홍길동1234",
-        profileImg: profileImg,
-        introduction: "안녕하세요! 축구를 사랑하는 유저입니다.",
-    });
+    const handleViewChange = (view) => {
+        setActiveView(view);
+    };
 
-    return(
+    const renderContent = () => {
+        switch (activeView) {
+            case 'tiers':
+                return <TierList userScores={userScores} />;
+            case 'votes':
+                return <MyVotesPage />;
+            case 'favorites':
+                return <FavoritesPage />;
+            case 'comments':
+                return <MyCommentsPage />;
+            default:
+                return <TierList userScores={userScores} />;
+        }
+    };
+
+    return (
         <div className="uploadContainer">
             <div className="profileBox">
                 <div className="container col">
                     <span className="profileNickName">{userInfo.nickname}</span>
                     <span className="profileIntroduction">{userInfo.introduction}</span>
-                    {/* Link 컴포넌트로 변경 */}
-                    <Link to="/all-tiers" className="link">내 티어 보러가기</Link>
                 </div>
-                <div className="profileImg" onClick={openEditModal}>
-                    <img src={userInfo.profileImg}/>
+                <div className="container col profileImginBox" onClick={() => handleNavigate('/edit-profile')}>
+                    <div className="profileImg">
+                        <img src={userInfo.profileImg} alt="프로필" />
+                    </div>
                 </div>
             </div>
 
-            <div className="tierContainer">
-                {Object.entries(userScores)
-                    .filter(([, data]) => data.score > 0)
-                    .sort(([, dataA], [, dataB]) => dataB.score - dataA.score)
-                    .map(([category, data]) => (
-                        <Link to={`/tier/${category}`} key={category} className="tierInfoWrapper">
-                            <TierInfo category={category} score={data.score} />
-                        </Link>
-                ))}
+            <div className="profileMenuContainer">
+                <button className={`profileMenuButton ${activeView === 'tiers' ? 'active' : ''}`} onClick={() => handleViewChange('tiers')}>내 티어</button>
+                <button className={`profileMenuButton ${activeView === 'votes' ? 'active' : ''}`} onClick={() => handleViewChange('votes')}>내 투표함</button>
+                <button className={`profileMenuButton ${activeView === 'favorites' ? 'active' : ''}`} onClick={() => handleViewChange('favorites')}>즐겨찾기</button>
+                <button className={`profileMenuButton ${activeView === 'comments' ? 'active' : ''}`} onClick={() => handleViewChange('comments')}>작성한 댓글</button>
+                <button className="profileMenuButton" onClick={() => handleNavigate('/edit-profile')}>회원정보 수정</button>
             </div>
 
-            {isEditModalOpen && (
-                <EditProfileModal
-                    onClose={closeEditModal}
-                    currentUser={userInfo}
-                    onSave={handleProfileUpdate}
-                />
-            )}
-            {/* TierDetailModal 렌더링 JSX 제거 */}
+            <div className="profileContentContainer">
+                {renderContent()}
+            </div>
+            
+            {/* 모달 렌더링 JSX 제거 */}
         </div>
-    )
+    );
 }

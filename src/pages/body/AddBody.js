@@ -42,8 +42,8 @@ export default function AddBody({ capturedImage, setCapturedImage }) {
           navigate("/editImage", {
             state: {
               image: out.dataUrl,
-              meta: { width: out.width, height: out.height, background: out.bg },
-              info: out.original,
+              meta: { width: out.width, height: out.height },
+              // info, transform 정보 제거
             },
           });
           return;
