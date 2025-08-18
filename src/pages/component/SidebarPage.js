@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
 const icons = [
-    { name: "home", svg: <path d="M4 10v10h5v-6h6v6h5V10L12 3z" /> },
+    { name: "", svg: <path d="M4 10v10h5v-6h6v6h5V10L12 3z" /> },
     { name: "search", svg: <circle cx="11" cy="11" r="6" />, extra: <line x1="15.5" y1="15.5" x2="20" y2="20" /> },
     { name: "add", svg: <><line x1="12" y1="6" x2="12" y2="18" /><line x1="6" y1="12" x2="18" y2="12" /></> },
     { name: "heart", svg: <path d="M12 21s-6-4.35-6-8a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 3.65-6 8-6 8z" /> },
@@ -11,7 +11,7 @@ const icons = [
 ];
 
 export default function SidebarPage() {
-    const [activeIcon, setActiveIcon] = useState("home");
+    const [activeIcon, setActiveIcon] = useState("");
 
     return (
         <div className="sidebarContainer">
