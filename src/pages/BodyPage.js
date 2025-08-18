@@ -4,6 +4,8 @@ import HomeBodyPage from './body/HomeBodyPage';
 import LoginPage from "./login/LoginUser";
 import RegisterUserPage from "./login/RegisterUser";
 import AddBody from './body/AddBody';
+import EditImage from './body/add/EditImage';
+import WritePost from './body/add/WritePost';
 import MyProfile from './user/MyProfile';
 import TierDetailPage from './user/TierDetailPage';
 import EditProfilePage from './user/EditProfilePage';

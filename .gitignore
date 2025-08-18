@@ -34,3 +34,8 @@ utils/*_[0-9]*.js
 # 히스토리 파일 & 폴더
 *.history
 .history/
+
+.env*
+
+.package-lock.json
+.package.json
