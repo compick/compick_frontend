@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const icons = [
     { name: "", svg: <path d="M4 10v10h5v-6h6v6h5V10L12 3z" /> },
@@ -10,8 +10,17 @@ const icons = [
     { name: "myProfile", svg: <circle cx="12" cy="8" r="4" />, extra: <path d="M6 20c0-2 4-4 6-4s6 2 6 4" /> },
 ];
 
-export default function SidebarPage() {
+const loginIcon = { name: "login", svg: <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" /> };
+const logoutIcon = { name: "logout", svg: <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" /> };
+
+export default function SidebarPage({ isLoggedIn, onLogout }) {
     const [activeIcon, setActiveIcon] = useState("");
+    const navigate = useNavigate();
+
+    const handleLogoutClick = () => {
+        onLogout();
+        navigate('/'); // 로그아웃 후 홈으로 이동
+    };
 
     return (
         <div className="sidebarContainer">
@@ -22,13 +31,28 @@ export default function SidebarPage() {
                             className={`tabIcon ${activeIcon === icon.name ? "active" : ""}`}
                             onClick={() => setActiveIcon(icon.name)}
                         >
-                            <svg viewBox="0 0 24 24" className="tabItem" xmlns="http://www.w3.org/2000/svg">
+                            <svg viewBox="0 0 24 24" className="tabItem" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                 {icon.svg}
                                 {icon.extra}
                             </svg>
                         </div>
                     </Link>
                 ))}
+                {isLoggedIn ? (
+                    <div className={`tabIcon ${activeIcon === logoutIcon.name ? "active" : ""}`} onClick={handleLogoutClick} style={{cursor: 'pointer'}}>
+                        <svg viewBox="0 0 24 24" className="tabItem" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            {logoutIcon.svg}
+                        </svg>
+                    </div>
+                ) : (
+                    <Link to={`/${loginIcon.name}`} style={{ textDecoration: "none" }}>
+                        <div className={`tabIcon ${activeIcon === loginIcon.name ? "active" : ""}`} onClick={() => setActiveIcon(loginIcon.name)}>
+                            <svg viewBox="0 0 24 24" className="tabItem" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                {loginIcon.svg}
+                            </svg>
+                        </div>
+                    </Link>
+                )}
             </div>
         </div>
     );

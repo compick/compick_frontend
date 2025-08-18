@@ -155,6 +155,8 @@
 .sport-menu-item {
     position: relative;
     align-items: center;
+    text-decoration: none;
+    color: #111;
     width: 80px;
 }
 
@@ -223,4 +225,39 @@
 .no-holiday-style {
     background-color: transparent !important; /* 공휴일 배경색 제거 */
     color: inherit !important; /* 공휴일 텍스트 색상 원래대로 */
+}
+
+.sport-menu-item {
+    position: relative; /* 하위 메뉴의 기준점 역할을 하도록 설정 */
+}
+
+.sport-menu-item .league-menu {
+    position: absolute;
+    top: 100%; /* 부모 요소 바로 아래에 위치 */
+    left: 50%;
+    transform: translateX(-50%); /* 가운데 정렬 */
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 1000;
+    padding: 5px;
+    white-space: nowrap; /* 메뉴 아이템들이 한 줄로 표시되도록 */
+}
+
+/* SportHeader의 Link 스타일 초기화 */
+.sport-button, .league-button {
+    text-decoration: none;
+    color: inherit;
+    background: none;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+    display: inline-block; /* Link가 올바른 영역을 차지하도록 */
+}
+
+.sport-button.active, .league-button.active {
+    font-weight: bold;
+    color: #007bff; /* 활성화 시 색상 */
 }

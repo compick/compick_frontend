@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 
 export default function LoginUser() {
     const [form, setForm] = useState({ userId: "", password: "" });
-
+    const navigate = useNavigate();
     const handleChange = (e) => {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }))
@@ -55,7 +55,7 @@ export default function LoginUser() {
                     <span> 또는 </span>
                     <div className="shortLine" />
                 </div>
-
+                <button className="registerButton" onClick={() => navigate('/regist')}>회원가입</button>
                 <span> 로그인 api 추가</span>
             </div>
         </div>

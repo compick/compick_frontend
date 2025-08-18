@@ -6,20 +6,20 @@ import RecommendedPosts from "./home/RecommendedPosts";
 import TeamRankings from "./home/TeamRankings";
 // 이미지 import 및 useEffect 로직 제거
 
-export default function HomeBodyPage({ posts, matches, likedMatches, onLikeMatch, onOpenChat, league }) {
+export default function HomeBodyPage({ posts, matches, likedMatches, onLikeMatch, onOpenChat, onDateChange, league }) {
     const [activeView, setActiveView] = useState('calendar');
     // matches 상태 및 useEffect 제거
 
     const renderContent = () => {
         switch (activeView) {
             case 'calendar':
-                return <CalendarView matches={matches} likedMatches={likedMatches} onLikeMatch={onLikeMatch} />;
+                return <CalendarView matches={matches} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onDateChange={onDateChange} />;
             case 'date':
                 return <DateMatchList matches={matches} likedMatches={likedMatches} onLikeMatch={onLikeMatch} />;
             case 'favorite':
                 return <FavoriteTeamMatchList matches={matches} likedMatches={likedMatches} onLikeMatch={onLikeMatch} />;
             default:
-                return <CalendarView matches={matches} likedMatches={likedMatches} onLikeMatch={onLikeMatch} />;
+                return <CalendarView matches={matches} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onDateChange={onDateChange} />;
         }
     };
 

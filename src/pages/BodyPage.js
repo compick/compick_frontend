@@ -1,4 +1,5 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useParams, useLocation } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import SidebarPage from "./component/SidebarPage"
 import HomeBodyPage from './body/HomeBodyPage';
 import LoginPage from "./login/LoginUser";
@@ -16,20 +17,44 @@ import RankingPage from './user/RankingPage';
 import PostDetailPage from './body/PostDetailPage';
 import SportHeader from './component/SportHeader';
 
-export default function BodyPage({ posts, matches, userScores, capturedImage, setCapturedImage, userInfo, onProfileUpdate, likedMatches, onLikeMatch, onOpenChat, onCloseChat, chatState, onMinimizeChat, onSetActiveChat, onAddComment, onLikeComment, onAddReply, currentUser, onLikePost, onReport, handleLeagueChange, selectedLeague }){
+// URL 파라미터를 읽어 HomeBodyPage에 league prop을 전달하는 래퍼 컴포넌트
+const HomePageWrapper = ({ posts, matches, likedMatches, onLikeMatch, onOpenChat, handleLeagueChange, onDateChange, selectedLeague }) => {
+    const { sport, league } = useParams();
+    const location = useLocation();
+
+    useEffect(() => {
+        let leagueToSet = 'all'; // 기본값
+        if (league) {
+            leagueToSet = league;
+        } else if (sport) {
+            leagueToSet = sport;
+        } else if (location.pathname === '/') {
+            leagueToSet = 'all';
+        }
+        handleLeagueChange(leagueToSet);
+    }, [sport, league, location, handleLeagueChange]);
+
+    return <HomeBodyPage posts={posts} matches={matches} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} onDateChange={onDateChange} league={selectedLeague} />;
+};
+
+
+export default function BodyPage({ posts, matches, userScores, capturedImage, setCapturedImage, userInfo, onProfileUpdate, likedMatches, onLikeMatch, onOpenChat, onCloseChat, chatState, onMinimizeChat, onSetActiveChat, onAddComment, onLikeComment, onAddReply, currentUser, onLikePost, onReport, handleLeagueChange, selectedLeague, isLoggedIn, onLogin, onLogout, onDateChange }){
 
     return(
         <>
-            <SportHeader selectedLeague={selectedLeague} handleLeagueChange={handleLeagueChange} />
+            <SportHeader selectedLeague={selectedLeague} />
             <div className="bodyContainer">
-                <SidebarPage/>
+                <SidebarPage isLoggedIn={isLoggedIn} onLogout={onLogout} />
                 <div style={{flex: 1 }}>
                     <Routes>
-                        <Route path='/*' element={<HomeBodyPage posts={posts} matches={matches} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} />}/>
+                        <Route path="/" element={<HomePageWrapper handleLeagueChange={handleLeagueChange} onDateChange={onDateChange} posts={posts} matches={matches} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} selectedLeague={selectedLeague} />} />
+                        <Route path="/:sport" element={<HomePageWrapper handleLeagueChange={handleLeagueChange} onDateChange={onDateChange} posts={posts} matches={matches} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} selectedLeague={selectedLeague} />} />
+                        <Route path="/:sport/:league" element={<HomePageWrapper handleLeagueChange={handleLeagueChange} onDateChange={onDateChange} posts={posts} matches={matches} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} selectedLeague={selectedLeague} />} />
+
                         <Route path='/add' element={<AddBody setCapturedImage={setCapturedImage} />}/>
                         <Route path='/editImage' element={<AddBody setCapturedImage={setCapturedImage} />}/>
                         <Route path='/writePost' element={<AddBody capturedImage={capturedImage} />}/>
-                        <Route path="/login" element={ <LoginPage/> }/>
+                        <Route path="/login" element={ <LoginPage onLogin={onLogin} /> }/>
                         <Route path="/regist" element={ <RegisterUserPage/> }/>
                         <Route path="/myProfile" element={<MyProfile userScores={userScores} userInfo={userInfo} />}/>
                         <Route path="/edit-profile" element={<EditProfilePage currentUser={userInfo} onSave={onProfileUpdate} />} />
