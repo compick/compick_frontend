@@ -1,20 +1,18 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useImperativeHandle, forwardRef } from "react";
 import { useLocation } from "react-router-dom";
+import html2canvas from 'html2canvas';
 
-export default function EditImage() {
+const EditImage = forwardRef(({ setCapturedImage }, ref) => {
   const location = useLocation();
   const imageFromState = location.state?.image || null;
-  const boxFromState = location.state?.box || null;
-  const image = imageFromState ?? sessionStorage.getItem("edit.image");
-  const box = boxFromState ?? JSON.parse(sessionStorage.getItem("edit.box") || "null");
+  // transformFromState 및 boxFromState 관련 로직 제거
 
-  const [scale, setScale] = useState(1);
-  const [pos, setPos]   = useState({ x: 0, y: 0 }); // 미리보기 프레임 중앙 기준 오프셋(px)
+  // scale, pos 상태 제거
 
   useEffect(() => {
     if (imageFromState) sessionStorage.setItem("edit.image", imageFromState);
-    if (boxFromState) sessionStorage.setItem("edit.box", JSON.stringify(boxFromState));
-  }, [imageFromState, boxFromState]);
+    // transform, box 저장 로직 제거
+  }, [imageFromState]);
 
 
   const [texts, setTexts] = useState([]);
@@ -47,6 +45,7 @@ export default function EditImage() {
     const startX = e.clientX;
     const startY = e.clientY;
     const target = texts.find((t) => t.id === id);
+    if (!target) return;
     const origin = { x: target.x, y: target.y };
 
     const move = (e) => {
@@ -62,6 +61,28 @@ export default function EditImage() {
 
     window.addEventListener("mousemove", move);
     window.addEventListener("mouseup", up);
+  };
+
+  const handleTouchDragStart = (e, id) => {
+      const startX = e.touches[0].clientX;
+      const startY = e.touches[0].clientY;
+      const target = texts.find((t) => t.id === id);
+      if (!target) return;
+      const origin = { x: target.x, y: target.y };
+
+      const move = (e) => {
+          const dx = e.touches[0].clientX - startX;
+          const dy = e.touches[0].clientY - startY;
+          updateText(id, { x: origin.x + dx, y: origin.y + dy });
+      };
+
+      const up = () => {
+          window.removeEventListener("touchmove", move);
+          window.removeEventListener("touchend", up);
+      };
+
+      window.addEventListener("touchmove", move);
+      window.addEventListener("touchend", up);
   };
   //텍스트 배경이미지 투명도 조절
   const hexToRgb = (hex) => {
@@ -145,30 +166,41 @@ export default function EditImage() {
     if (!Array.isArray(texts)) {
       console.warn("texts is not array", { texts });
     }
-    if (!image) {
+    if (!imageFromState) {
       return <div>이미지 정보가 없습니다. 이전 단계에서 다시 시도해주세요.</div>;
     }
-  }, [texts]);
+  }, [texts, imageFromState]);
+
+  const captureRef = useRef(); // 캡처할 영역을 위한 ref
+
+  useImperativeHandle(ref, () => ({
+    async captureImage() {
+      if (!captureRef.current) return null;
+      try {
+        const canvas = await html2canvas(captureRef.current, {
+          useCORS: true, // 외부 이미지가 있다면 필요
+          backgroundColor: null, // 배경을 투명하게
+        });
+        return canvas.toDataURL("image/png");
+      } catch (error) {
+        console.error("이미지 캡처 실패:", error);
+        return null;
+      }
+    }
+  }));
 
   return (
     <div className="editor-container">
-      <h2 className="title">✨ 이미지 꾸미기</h2>
       <div
+        ref={captureRef}
         className="image-area"
-        style={{
-          width:  box?.width,     // ← Upload에서 온 픽셀값 그대로
-          height: box?.height,     // ← 그대로
-          background: box?.background ?? "#111",
-          position: "relative",
-          overflow: "hidden",
-        }}
+        // width, height, background 스타일 제거 (이미지에 포함됨)
       >
-    <img
-      src={image}
-      className="previewImage"
-        style={{
-       transform: `translate(calc(-50% + ${pos.x}px), calc(-50% + ${pos.y}px)) scale(${scale})`}}
-    />
+        <img
+          src={imageFromState}
+          className="previewImage"
+          // transform 스타일 제거
+        />
 
         {/* ✅ 진짜 렌더를 넣어야 함 + 배열 가드 */}
         {Array.isArray(texts) &&
@@ -182,8 +214,7 @@ export default function EditImage() {
                 onBlur={() => handleTextBlur(t.id)}
                 className="text-input"
                 style={{
-                  left: t.x,
-                  top: t.y,
+                  transform: `translate(${t.x}px, ${t.y}px)`,
                   fontSize: t.fontSize,
                   fontFamily: t.fontFamily,
                   backgroundColor: rgbaString(t.bgHex, t.bgOpacity), 
@@ -199,7 +230,13 @@ export default function EditImage() {
                 key={t.id}
                 ref={(el) => (textRefs.current[t.id] = el)}
                 onWheel={(e) => handleWheel(e, t.id)}
-                onTouchStart={(e) => handleTouchStart(e, t.id)}
+                onTouchStart={(e) => {
+                    if (e.touches.length === 1) { // 한 손가락: 드래그
+                        handleTouchDragStart(e, t.id);
+                    } else if (e.touches.length === 2) { // 두 손가락: 핀치 줌
+                        handleTouchStart(e, t.id);
+                    }
+                }}
                 onTouchMove={(e) => handleTouchMove(e, t.id)}
                 onMouseDown={(e) => handleMouseDown(e, t.id)}
                 onDoubleClick={() => handleDoubleClick(t.id)}
@@ -215,8 +252,7 @@ export default function EditImage() {
                 }}
                 className="text-label"
                 style={{
-                  left: t.x,
-                  top: t.y,
+                  transform: `translate(${t.x}px, ${t.y}px)`,
                   fontSize: t.fontSize,
                   fontFamily: t.fontFamily,
                   backgroundColor: rgbaString(t.bgHex, t.bgOpacity),  
@@ -280,12 +316,8 @@ export default function EditImage() {
             배경색
             <input
               type="color"
-              // NOTE: rgba를 바로 color input에 넣으면 안 됨
-              // 간단히: rgba면 기본값 대체
-              value={
-                /^#/.test(selectedText.bgColor) ? selectedText.bgColor : "#000000"
-              }
-              onChange={(e) => updateText(selectedText.id, { bgColor: e.target.value })}
+              value={selectedText.bgHex}
+              onChange={(e) => updateText(selectedText.id, { bgHex: e.target.value })}
             />
              <label style={{ display: "flex",  gap: 6 }}>
           배경 투명도
@@ -331,4 +363,6 @@ export default function EditImage() {
       </button>
     </div>
   );
-}
+});
+
+export default EditImage;
