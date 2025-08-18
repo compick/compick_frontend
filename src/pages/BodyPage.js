@@ -12,18 +12,18 @@ import MatchDetailPage from './body/MatchDetailPage';
 import ChatManager from './body/ChatManager'; // ChatContainer 대신 ChatManager import
 import RankingPage from './user/RankingPage';
 import PostDetailPage from './body/PostDetailPage';
+import SportHeader from './component/SportHeader';
 
-export default function BodyPage({ posts, matches, userScores, capturedImage, setCapturedImage, userInfo, onProfileUpdate, likedMatches, onLikeMatch, activeChatMatch, onOpenChat, onCloseChat, chatState, onMinimizeChat, onSetActiveChat, onAddComment, onLikeComment, onAddReply, currentUser, onLikePost, onReport }){
+export default function BodyPage({ posts, matches, userScores, capturedImage, setCapturedImage, userInfo, onProfileUpdate, likedMatches, onLikeMatch, onOpenChat, onCloseChat, chatState, onMinimizeChat, onSetActiveChat, onAddComment, onLikeComment, onAddReply, currentUser, onLikePost, onReport, handleLeagueChange, selectedLeague }){
 
     return(
         <>
+            <SportHeader selectedLeague={selectedLeague} handleLeagueChange={handleLeagueChange} />
             <div className="bodyContainer">
-                <div style={{display:"flex"}}>
-                    <SidebarPage/>
-                </div>
+                <SidebarPage/>
                 <div style={{flex: 1 }}>
                     <Routes>
-                        <Route path='/home' element={<HomeBodyPage posts={posts} matches={matches} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} />}/>
+                        <Route path='/*' element={<HomeBodyPage posts={posts} matches={matches} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} />}/>
                         <Route path='/add' element={<AddBody setCapturedImage={setCapturedImage} />}/>
                         <Route path='/editImage' element={<AddBody setCapturedImage={setCapturedImage} />}/>
                         <Route path='/writePost' element={<AddBody capturedImage={capturedImage} />}/>

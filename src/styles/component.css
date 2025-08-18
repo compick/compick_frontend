@@ -2,7 +2,7 @@
     position: sticky; /* 스크롤 되어도 상단에 고정 */
     top: 0;
     align-self: flex-start; /* 부모 flex 컨테이너의 시작점에 붙도록 */
-  width: 100vw;
+  width: 100%;
   display: flex;
   justify-content: center;
   position: relative; /* 🎯 기준 */
@@ -131,4 +131,96 @@
         align-items: center;
         justify-content: center;
     }
+}
+
+/* SportHeader styles */
+.sportHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 20px;
+    background-color: #fff;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.sportHeaderLeft img {
+    height: 40px;
+}
+
+.sportHeaderCenter {
+    display: flex;
+    gap: 25px;
+}
+
+.sport-menu-item {
+    position: relative;
+    align-items: center;
+    width: 80px;
+}
+
+.sport-menu-item button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 10px;
+    transition: color 0.3s;    
+    text-align: center;
+    
+}
+
+.sport-menu-item button:hover {
+    color: #007bff;
+}
+
+.league-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    margin-top: 5px;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    font-size: 13px;
+}
+
+.league-menu button {
+    width: 100%;
+    text-align: left;
+    font-size: 13px;
+}
+
+.sport-menu-item button.active,
+.league-menu button.active {
+    color: #007bff;
+    font-weight: bold;
+}
+
+.team-rankings-container {
+    padding: 20px;
+}
+
+.team-ranking-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.team-ranking-logo {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.selected-day {
+    background-color: #e0e0e0 !important; /* 선택된 날짜의 배경색 */
+}
+
+.no-holiday-style {
+    background-color: transparent !important; /* 공휴일 배경색 제거 */
+    color: inherit !important; /* 공휴일 텍스트 색상 원래대로 */
 }

@@ -6,7 +6,7 @@ import RecommendedPosts from "./home/RecommendedPosts";
 import TeamRankings from "./home/TeamRankings";
 // 이미지 import 및 useEffect 로직 제거
 
-export default function HomeBodyPage({ posts, matches, likedMatches, onLikeMatch, onOpenChat }) {
+export default function HomeBodyPage({ posts, matches, likedMatches, onLikeMatch, onOpenChat, league }) {
     const [activeView, setActiveView] = useState('calendar');
     // matches 상태 및 useEffect 제거
 
@@ -23,8 +23,20 @@ export default function HomeBodyPage({ posts, matches, likedMatches, onLikeMatch
         }
     };
 
+    const leagueTitle = {
+        all: '전체 경기',
+        soccer: '축구',
+        baseball: '야구',
+        mma: 'MMA',
+        epl: 'EPL',
+        laliga: '라리가',
+        kbo: 'KBO',
+        ufc: 'UFC'
+    }
+
     return (
         <div className="homeContainer_new">
+            <h2>{leagueTitle[league] || '전체 경기'}</h2>
             <div className="homeToggleBar">
                 <button 
                     className={`toggleButton ${activeView === 'calendar' ? 'active' : ''}`}

@@ -1,30 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import MatchCard from './MatchCard';
 import GetLeagueLogo from '../../../utils/GetLeagueLogo';
+import GetTeamLogo from '../../../utils/GetTeamLogo';
+
+// Date 객체를 'YYYY-MM-DD' 문자열로 변환하는 헬퍼 함수
+const formatDate = (date) => {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, '0');
+    const d = String(date.getDate()).padStart(2, '0');
+    return `${y}-${m}-${d}`;
+};
 
 export default function CalendarView({ matches, likedMatches, onLikeMatch }) {
-    // 오늘 날짜를 yyyy-mm-dd 형식의 문자열로 변환하는 함수
-    const getTodayString = () => {
-        const today = new Date();
-        return today.toISOString().slice(0, 10);
+    const getInitialDate = () => {
+        if (matches && matches.length > 0) {
+            // YYYY.MM.DD 형식의 문자열은 직접 정렬해도 안전합니다.
+            const sortedMatches = [...matches].sort((a, b) => a.date.localeCompare(b.date));
+            return sortedMatches[0].date.replace(/\./g, "-");
+        }
+        // 경기가 없으면 오늘 날짜 반환
+        return formatDate(new Date());
     };
 
-    const [selectedDate, setSelectedDate] = useState(getTodayString());
+    const [selectedDate, setSelectedDate] = useState(getInitialDate());
+
+    useEffect(() => {
+        setSelectedDate(getInitialDate());
+    }, [matches]);
 
     // 날짜 클릭 핸들러
     const handleDateClick = (arg) => {
-        setSelectedDate(arg.dateStr);
+        setSelectedDate(formatDate(arg.date));
     };
 
-    // 선택된 날짜의 경기 필터링
-    const filteredMatches = matches.filter((match) => {
-        if (!match.date) return false;
-        const matchDate = match.date.replace(/\./g, "-");
-        return matchDate === selectedDate;
-    });
+    // 선택된 날짜의 경기 필터링 및 로고 추가
+    const filteredMatches = matches
+        .filter((match) => {
+            if (!match.date) return false;
+            const matchDate = match.date.replace(/\./g, "-");
+            return matchDate === selectedDate;
+        })
+        .map(match => {
+            if (match.league.toLowerCase() === 'kbo') {
+                return {
+                    ...match,
+                    homeLogo: GetTeamLogo(match.league, match.home),
+                    awayLogo: GetTeamLogo(match.league, match.away)
+                };
+            }
+            return match;
+        });
 
     // 캘린더에 표시할 이벤트 데이터 생성 (리그 로고)
     const events = matches.reduce((acc, match) => {
@@ -65,6 +93,17 @@ export default function CalendarView({ matches, likedMatches, onLikeMatch }) {
                                 ))}
                             </div>
                         );
+                    }}
+                    dayCellClassNames={(arg) => {
+                        const classes = [];
+                        if (formatDate(arg.date) === selectedDate) {
+                            classes.push('selected-day');
+                        }
+                        // FullCalendar가 locale='ko' 설정으로 인해 공휴일에 적용하는 기본 스타일을 무시하기 위함
+                        if (arg.isHoliday) {
+                            classes.push('no-holiday-style');
+                        }
+                        return classes;
                     }}
                     locale="ko"
                     height="auto"
