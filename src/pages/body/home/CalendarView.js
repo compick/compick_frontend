@@ -14,7 +14,7 @@ const formatDate = (date) => {
     return `${y}-${m}-${d}`;
 };
 
-export default function CalendarView({ matches, likedMatches, onLikeMatch }) {
+export default function CalendarView({ matches, likedMatches, onLikeMatch, onDateChange }) {
     const getInitialDate = () => {
         if (matches && matches.length > 0) {
             // YYYY.MM.DD 형식의 문자열은 직접 정렬해도 안전합니다.
@@ -36,22 +36,12 @@ export default function CalendarView({ matches, likedMatches, onLikeMatch }) {
         setSelectedDate(formatDate(arg.date));
     };
 
-    // 선택된 날짜의 경기 필터링 및 로고 추가
+    // 선택된 날짜의 경기 필터링
     const filteredMatches = matches
         .filter((match) => {
             if (!match.date) return false;
             const matchDate = match.date.replace(/\./g, "-");
             return matchDate === selectedDate;
-        })
-        .map(match => {
-            if (match.league.toLowerCase() === 'kbo') {
-                return {
-                    ...match,
-                    homeLogo: GetTeamLogo(match.league, match.home),
-                    awayLogo: GetTeamLogo(match.league, match.away)
-                };
-            }
-            return match;
         });
 
     // 캘린더에 표시할 이벤트 데이터 생성 (리그 로고)
@@ -83,6 +73,10 @@ export default function CalendarView({ matches, likedMatches, onLikeMatch }) {
                     plugins={[dayGridPlugin, interactionPlugin]}
                     initialView="dayGridMonth"
                     dateClick={handleDateClick}
+                    datesSet={(arg) => {
+                        // 캘린더 뷰의 현재 날짜를 부모에게 알림 (예: 월 이동 시)
+                        onDateChange(arg.view.currentStart);
+                    }}
                     events={calendarEvents}
                     eventContent={(arg) => {
                         const icons = arg.event.extendedProps.icons;

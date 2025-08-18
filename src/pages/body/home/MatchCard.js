@@ -14,14 +14,19 @@ export default function MatchCard({ match, likedMatches = [], onLike }) {
 
     const isLiked = likedMatches.some(likedMatch => likedMatch.id === match.id);
     const cardClassName = `matchCard ${isLiked ? 'liked' : ''}`;
+    const isMma = match.league && match.league.toLowerCase() === 'ufc';
 
     return (
         <div className={cardClassName} onClick={handleClick} onDoubleClick={handleDoubleClick}>
             <div className="like-icon">
                 {isLiked ? '❤️' : '♡'}
             </div>
-            <img className="teamBg left" src={match.homeLogo} alt={match.home} />
-            <img className="teamBg right" src={match.awayLogo} alt={match.away} />
+            {!isMma && (
+                <>
+                    <img className="teamBg left" src={match.homeLogo} alt={match.home} />
+                    <img className="teamBg right" src={match.awayLogo} alt={match.away} />
+                </>
+            )}
             <div className="matchInfo">
                 <div className="teamName">{match.home}</div>
                 <div className="scoreBox">

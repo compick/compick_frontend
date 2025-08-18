@@ -62,3 +62,20 @@
     align-items: center;
     gap: 15px;
 }
+
+.loginContainer .loginBox .registerButton {
+    box-sizing: border-box;
+    width: 370px;
+    font-size: 15px;    
+    padding: 20px;
+    border: none;    
+    border-radius: 10px;
+    background-color: #ccc; /* 배경색을 회색으로 설정 */
+    color: #000; /* 글자색을 검은색으로 설정 */
+    cursor: pointer;
+    text-align: center;
+}
+
+.loginContainer .loginBox .registerButton:hover {
+    background-color: #bbb; /* 호버 시 약간 더 어두운 회색으로 */
+}

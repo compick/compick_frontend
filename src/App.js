@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { BrowserRouter } from "react-router-dom"
 
 
@@ -19,10 +19,23 @@ import barcelona from "./img/soccerTeam/laligaSpain/FC 바르셀로나 로고.sv
 import kbo from "./img/icon/baseball/kboicon.png";
 import arsenalLogo from "./img/soccerTeam/epl/아스날 FC 로고.svg";
 import manUtdLogo from "./img/soccerTeam/epl/맨체스터 유나이티드 FC 로고.svg";
+import GetTeamLogo from "./utils/GetTeamLogo";
+import { getMatches } from "./api/MatchApi";
 
 
 function App() {
   const currentUser = { name: '나' }; // 현재 사용자 정보 (임시)
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+    // 필요하다면 여기에 로그아웃 후 리디렉션 로직 추가
+  };
+
   const [userScores, setUserScores] = useState({
       soccer: {
           score: 820,
@@ -72,31 +85,48 @@ function App() {
   });
 
   const [selectedLeague, setSelectedLeague] = useState('all'); // 'all', 'epl', 'laliga', 'kbo', 'ufc'
+  const [currentDate, setCurrentDate] = useState(new Date());
 
-  const handleLeagueChange = (league) => {
+  const handleLeagueChange = useCallback((league) => {
     setSelectedLeague(league);
-  };
+  }, []);
+
+  const handleDateChange = useCallback((date) => {
+    setCurrentDate(date);
+  }, []);
 
   const [likedMatches, setLikedMatches] = useState([]);
-  const [matches, setMatches] = useState([
-      // EPL
-      { id: 1, league: "epl", home: "토트넘 홋스퍼 FC", away: "아스날 FC", date: "2025.08.10", time: "20:30", homeLogo: tottenham, awayLogo: arsenalLogo, homeScore: 2, awayScore: 2 },
-      { id: 2, league: "epl", home: "맨체스터 시티 FC", away: "맨체스터 유나이티드 FC", date: "2025.08.11", time: "23:00", homeLogo: manchesterCity, awayLogo: manUtdLogo, homeScore: 3, awayScore: 1 },
-      { id: 3, league: "epl", home: "리버풀 FC", away: "첼시 FC", date: "2025.08.12", time: "01:30", homeLogo: liverpool, awayLogo: chelsea, homeScore: 4, awayScore: 1 },
-      // KBO
-      { id: 4, league: "kbo", home: "KIA 타이거즈", away: "롯데 자이언츠", date: "2025.08.16", time: "18:30", homeLogo: null, awayLogo: null, homeScore: 3, awayScore: 0 },
-      { id: 5, league: "kbo", home: "SSG 랜더스", away: "NC 다이노스", date: "2025.08.17", time: "17:00", homeLogo: null, awayLogo: null, homeScore: 6, awayScore: 7 },
-      { id: 6, league: "kbo", home: "두산 베어스", away: "LG 트윈스", date: "2025.08.18", time: "18:30", homeLogo: null, awayLogo: null, homeScore: 5, awayScore: 4 },
-      { id: 7, league: "kbo", home: "키움 히어로즈", away: "삼성 라이온즈", date: "2025.08.19", time: "18:30", homeLogo: null, awayLogo: null, homeScore: 1, awayScore: 2 },
-      // UFC
-      { id: 8, league: "UFC", home: "정찬성", away: "맥스 할로웨이", date: "2025.09.01", time: "12:00", homeLogo: null, awayLogo: null, homeScore: null, awayScore: null },
-  ]);
+  const [matches, setMatches] = useState([]);
 
-  const filteredMatches = matches.filter(match => {
-    if (selectedLeague === 'all') return true;
-    if (selectedLeague === 'soccer') return match.league === 'epl' || match.league === 'laliga';
-    return match.league.toLowerCase() === selectedLeague.toLowerCase();
-  });
+  useEffect(() => {
+    const fetchMatches = async () => {
+        const year = currentDate.getFullYear();
+        const month = currentDate.getMonth();
+        const data = await getMatches(year, month, selectedLeague);
+        setMatches(data);
+    };
+    fetchMatches();
+  }, [currentDate, selectedLeague]);
+
+  const filteredMatches = matches
+    .filter(match => {
+        const league = selectedLeague.toLowerCase();
+        if (league === 'all') return true;
+        if (league === 'soccer') return ['epl', 'laliga'].includes(match.league.toLowerCase());
+        if (league === 'baseball') return match.league.toLowerCase() === 'kbo';
+        if (league === 'mma') return match.league.toLowerCase() === 'ufc';
+        return match.league.toLowerCase() === league;
+    })
+    .map(match => {
+        if (match.league.toLowerCase() === 'kbo' && !match.homeLogo) {
+            return {
+                ...match,
+                homeLogo: GetTeamLogo(match.league, match.home),
+                awayLogo: GetTeamLogo(match.league, match.away)
+            };
+        }
+        return match;
+    });
 
   const [chatState, setChatState] = useState({
       openChats: [],
@@ -278,6 +308,10 @@ function App() {
             currentUser={currentUser}
             handleLeagueChange={handleLeagueChange}
             selectedLeague={selectedLeague}
+            onDateChange={handleDateChange} // CalendarView에 전달할 prop
+            isLoggedIn={isLoggedIn}
+            onLogin={handleLogin}
+            onLogout={handleLogout}
          />
     </BrowserRouter>
   );
