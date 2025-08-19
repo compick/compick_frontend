@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getCookie } from '../../utils/Cookie';
 
 export default function LoginUser() {
     const [form, setForm] = useState({ userId: "", password: "" });
@@ -21,11 +22,12 @@ export default function LoginUser() {
             console.log(data);
             if (data.code === 200) {
                 alert("로그인 성공");
+                document.cookie = `jwt=${data.data}; path=/;`
                 window.location.href = "/";
             } else {
                 alert("로그인 실패: " + data.message);
             }
-        } catch (e) {
+        } catch(e) {
             alert("오류 발생");
         }
     };
