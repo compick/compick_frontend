@@ -4,6 +4,7 @@ import DateMatchList from "./home/DateMatchList";
 import FavoriteTeamMatchList from "./home/FavoriteTeamMatchList";
 import RecommendedPosts from "./home/RecommendedPosts";
 import TeamRankings from "./home/TeamRankings";
+import { getCookie } from "../../utils/Cookie";
 // 이미지 import 및 useEffect 로직 제거
 
 export default function HomeBodyPage({ posts, matches, likedMatches, onLikeMatch, onOpenChat, onDateChange, league }) {

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { getCookie, deleteCookie } from '../../utils/Cookie';
+
 
 const icons = [
     { name: "", svg: <path d="M4 10v10h5v-6h6v6h5V10L12 3z" /> },
@@ -13,12 +15,15 @@ const icons = [
 const loginIcon = { name: "login", svg: <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" /> };
 const logoutIcon = { name: "logout", svg: <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" /> };
 
-export default function SidebarPage({ isLoggedIn, onLogout }) {
+export default function SidebarPage() {
     const [activeIcon, setActiveIcon] = useState("");
     const navigate = useNavigate();
 
+    const token = getCookie('jwt');
+    const isLoggedIn = !!token;
     const handleLogoutClick = () => {
-        onLogout();
+        console.log("JWT Token:", token);
+        deleteCookie('jwt'); // JWT 쿠키 삭제
         navigate('/'); // 로그아웃 후 홈으로 이동
     };
 
