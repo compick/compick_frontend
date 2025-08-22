@@ -2,8 +2,10 @@ import { Routes, Route, useParams, useLocation } from 'react-router-dom';
 import React, { useEffect } from 'react';
 import SidebarPage from "./component/SidebarPage"
 import HomeBodyPage from './body/HomeBodyPage';
-import LoginPage from "./login/LoginUser";
-import RegisterUserPage from "./login/RegisterUser";
+import SelectLogin from "./auth/SelectLogin";
+import LocalLogin from './auth/LocalLogin';
+import KakaoLogin from './auth/KakaoLogin';
+import SelectSignup from "./auth/SelectSignup";
 import AddBody from './body/AddBody';
 import EditImage from './body/add/EditImage';
 import WritePost from './body/add/WritePost';
@@ -54,8 +56,12 @@ export default function BodyPage({ posts, matches, userScores, capturedImage, se
                         <Route path='/add' element={<AddBody setCapturedImage={setCapturedImage} />}/>
                         <Route path='/editImage' element={<AddBody setCapturedImage={setCapturedImage} />}/>
                         <Route path='/writePost' element={<AddBody capturedImage={capturedImage} />}/>
-                        <Route path="/login" element={ <LoginPage onLogin={onLogin} /> }/>
-                        <Route path="/regist" element={ <RegisterUserPage/> }/>
+
+                        <Route path="/login" element={ <SelectLogin onLogin={onLogin} /> }/>
+                        <Route path="/regist" element={ <SelectSignup/> }/>
+                        <Route path="/login/local" element={ <LocalLogin/> }/>
+                        <Route path="/login/kakao" element={ <KakaoLogin/> }/>
+
                         <Route path="/myProfile" element={<MyProfile userScores={userScores} userInfo={userInfo} />}/>
                         <Route path="/edit-profile" element={<EditProfilePage currentUser={userInfo} onSave={onProfileUpdate} />} />
                         <Route path="/tier/:category" element={<TierDetailPage userScores={userScores} />}/>

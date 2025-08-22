@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function RegisterUser() {
+export default function LocalSignup() {
   const [form, setForm] = useState({
     userId: "",
     password: "",

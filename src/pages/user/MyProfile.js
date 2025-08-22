@@ -1,16 +1,44 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import TierList from "./TierList";
 import MyVotesPage from "./MyVotesPage";
 import FavoritesPage from "./FavoritesPage";
 import MyCommentsPage from "./MyCommentsPage";
+import { getCookie, deleteCookie } from '../../utils/Cookie';
 // PasswordConfirmModal 및 checkPassword import 제거
 
 export default function MyProfile({ userScores, userInfo }) {
     const navigate = useNavigate();
     const [activeView, setActiveView] = useState('tiers');
-    
+    const [nickName, setNickName] = useState("");
     // 모달 관련 상태 및 핸들러 모두 제거
+
+    useEffect(() => {
+        const token = getCookie('jwt');
+        if (!token) return;
+
+        fetch("/api/user/info", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+            },
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data.data.userName);
+                if (data.code === 200) {
+                    setNickName(data.data.userName);
+                } else {
+                    setNickName("알수없음");
+                }
+            })
+            .catch(() => {
+                setNickName("에러");
+                deleteCookie('jwt');
+                window.location.href = '/login';
+            })
+    }, [])
+
 
     const handleNavigate = (path) => {
         navigate(path);
@@ -39,7 +67,7 @@ export default function MyProfile({ userScores, userInfo }) {
         <div className="uploadContainer">
             <div className="profileBox">
                 <div className="container col">
-                    <span className="profileNickName">{userInfo.nickname}</span>
+                    <span className="profileNickName">{nickName}</span>
                     <span className="profileIntroduction">{userInfo.introduction}</span>
                 </div>
                 <div className="container col profileImginBox" onClick={() => handleNavigate('/edit-profile')}>
@@ -60,7 +88,7 @@ export default function MyProfile({ userScores, userInfo }) {
             <div className="profileContentContainer">
                 {renderContent()}
             </div>
-            
+
             {/* 모달 렌더링 JSX 제거 */}
         </div>
     );

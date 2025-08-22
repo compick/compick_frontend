@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCookie } from '../../utils/Cookie';
 
-export default function LoginUser() {
+export default function LocalLogin() {
     const [form, setForm] = useState({ userId: "", password: "" });
     const navigate = useNavigate();
     const handleChange = (e) => {
