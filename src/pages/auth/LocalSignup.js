@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { API_BASE } from "../../config"
 
 export default function LocalSignup() {
   const [form, setForm] = useState({
@@ -28,7 +29,7 @@ export default function LocalSignup() {
   const checkUserId = async () => {
     if (!form.userId.trim()) return alert("아이디를 입력하세요.");
     try {
-      const res = await fetch(`/api/user/check/userid?userId=${encodeURIComponent(form.userId)}`,{
+      const res = await fetch(`${API_BASE}/api/user/check/userid?userId=${encodeURIComponent(form.userId)}`,{
           method: "GET", credentials: "include"
       });
       const data = await res.json();
@@ -46,7 +47,7 @@ export default function LocalSignup() {
     if (!form.email.trim()) return alert("이메일을 입력하세요.");
     setEmailState(s => ({ ...s, sending: true, msg: "" }));
     try {
-      const res = await fetch("/api/auth/email/send", {
+      const res = await fetch(`${API_BASE}/api/auth/email/send`, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: `email=${encodeURIComponent(form.email)}`
@@ -66,7 +67,7 @@ export default function LocalSignup() {
     if (!emailState.code.trim()) return alert("인증코드를 입력하세요.");
     setEmailState(s => ({ ...s, verifying: true, msg: "" }));
     try {
-      const res = await fetch("/api/auth/email/verify?email="+encodeURIComponent(form.email)+"&code="+emailState.code,{
+      const res = await fetch(`${API_BASE}/api/auth/email/verify?email=`+encodeURIComponent(form.email)+"&code="+emailState.code,{
           method: "GET"
       });
       const data = await res.json();
@@ -85,7 +86,7 @@ export default function LocalSignup() {
     if (!idCheck.done || !idCheck.available) return alert("아이디 중복확인을 완료하세요.");
     if (!emailState.verified) return alert("이메일 인증을 완료하세요.");
 
-    const res = await fetch("/api/user/regist", {
+    const res = await fetch(`${API_BASE}/api/user/regist`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(form)
