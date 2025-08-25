@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCookie } from '../../utils/Cookie';
+import {API_BASE} from "../../config"
 
 export default function LocalLogin() {
     const [form, setForm] = useState({ userId: "", password: "" });
@@ -13,7 +14,7 @@ export default function LocalLogin() {
     const handleSubmit = async () => {
         try {
 
-            const res = await fetch("/api/user/login/normal", {
+            const res = await fetch(`${API_BASE}/api/user/login/normal`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form)
