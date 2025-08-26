@@ -3,7 +3,7 @@ import MatchCard from './body/home/MatchCard'; // MatchCard 재사용
 
 export default function HeartPage({ likedMatches, onLikeMatch }) {
     return (
-        <div className="heartPageContainer">
+        <div className="homeContainer_new">
             <h2>❤️ 관심 경기로 등록한 경기</h2>
             {likedMatches.length > 0 ? (
                 <div className="matchList">

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // Link 추가
 import TierList from "./TierList";
 import MyVotesPage from "./MyVotesPage";
 import FavoritesPage from "./FavoritesPage";
@@ -39,7 +39,10 @@ export default function MyProfile({ userScores, userInfo }) {
         <div className="uploadContainer">
             <div className="profileBox">
                 <div className="container col">
-                    <span className="profileNickName">{userInfo.nickname}</span>
+                    <div className="profile-header">
+                        <span className="profileNickName">{userInfo.nickname}</span>
+                        <Link to="/edit-profile" className="edit-profile-button action-button grayBtn">프로필 편집</Link>
+                    </div>
                     <span className="profileIntroduction">{userInfo.introduction}</span>
                 </div>
                 <div className="container col profileImginBox" onClick={() => handleNavigate('/edit-profile')}>
@@ -54,7 +57,6 @@ export default function MyProfile({ userScores, userInfo }) {
                 <button className={`profileMenuButton ${activeView === 'votes' ? 'active' : ''}`} onClick={() => handleViewChange('votes')}>내 투표함</button>
                 <button className={`profileMenuButton ${activeView === 'favorites' ? 'active' : ''}`} onClick={() => handleViewChange('favorites')}>즐겨찾기</button>
                 <button className={`profileMenuButton ${activeView === 'comments' ? 'active' : ''}`} onClick={() => handleViewChange('comments')}>작성한 댓글</button>
-                <button className="profileMenuButton" onClick={() => handleNavigate('/edit-profile')}>회원정보 수정</button>
             </div>
 
             <div className="profileContentContainer">

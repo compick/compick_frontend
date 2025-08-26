@@ -1,16 +1,21 @@
 .bodyContainer{
     display: flex;
     flex-direction: column;
-    max-width: 742px;
+    max-width: 630px;
     margin: 0 auto;
+    padding-top: 60px; /* 고정된 SportHeader의 높이만큼 여백 */
 }
 .HomeContainer{
-  width: 742px;
+  width: 630px;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
   align-items: center;
+}
+.container.width{
+    width: 630px;
+    justify-content: space-between;
 }
 .HomeContainer .scheduleTab{
   width: 95%;
@@ -195,10 +200,12 @@
   display: flex;
   width: 100%;
   position: relative;
-  height: 50px;
+  height: 30px;
   align-items: center;  
   padding:  5px 0;
-  background-color: #111;
+  border-bottom: 3px solid #aaa;
+  background-color: #fff;
+  color: #000;
 }
 .closeBtn {
   font-size: 18px;
@@ -211,15 +218,16 @@
   font-size: 24px;
   text-align: center;
   position: absolute;
-  top: 15px;
-  left: 310px;
-  color: #fff;
+  top: 3%;
+  left: 50% ;
+  transform: translateX(-55%);
+  color: #111;
   
 }
 .nextBtn{
   position: absolute;
   right: 9px;
-  top: 20px;
+  top: 8px;
   background-color: #111;
   color: #fff;
   border-radius: 5px;
@@ -323,7 +331,8 @@
 
 /* New Home Page Styles */
 .homeContainer_new {
-    padding: 20px;
+    padding-top: 40px;
+    padding-bottom: 20px;
 }
 
 .homeToggleBar {
@@ -350,7 +359,7 @@
 }
 
 .toggleButton.active {
-    background-color: #333;
+    background-color: #38c0e9; /* 포인트 블루 */
     color: white;
     font-weight: bold;
 }
@@ -378,8 +387,9 @@
 .recommendedPosts h3, .teamRankings h3 {
     margin-top: 0;
     margin-bottom: 15px;
-    border-bottom: 2px solid #333;
+    border-bottom: 2px solid #38c0e9; /* 포인트 블루 */
     padding-bottom: 10px;
+    color: #1a202c; /* 짙은 네이비 텍스트 */
 }
 
 /* CalendarView Styles */
@@ -778,3 +788,18 @@
         left: 10px;
     }
 }
+
+/* 순위표 강조 */
+.ranking-table .points-cell {
+    font-weight: bold;
+    color: #1a202c;
+}
+
+.ranking-table .team-cell {
+    font-weight: 500;
+}
+
+/* 폼 아이콘 색상 */
+.form-win { background-color: #48bb78; } /* 녹색 */
+.form-draw { background-color: #a0aec0; } /* 회색 */
+.form-loss { background-color: #f56565; } /* 붉은색 */

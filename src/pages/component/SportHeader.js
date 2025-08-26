@@ -2,8 +2,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../../img/icon/homeLogo.gif';
 import '../../styles/component.css';
+import SidebarPage from './SidebarPage'; // SidebarPage import 추가
 
-export default function SportHeader({ selectedLeague }){
+export default function SportHeader({ selectedLeague, isLoggedIn, onLogout }){
     const [openSport, setOpenSport] = useState(null);
     const menuRef = useRef(null);
 
@@ -63,33 +64,36 @@ export default function SportHeader({ selectedLeague }){
     };
 
     return(
-        <div className="sportHeader">
-            <div className="sportHeaderLeft">
-                <Link to="/">
-                    <img src={logo} alt="logo" style={{cursor: 'pointer'}}/>
-                </Link>
-            </div>
-            <div className="sportHeaderCenter" ref={menuRef}>
-                {Object.entries(sports).map(([sportName, sportData]) => (
-                    <div key={sportName} className="sport-menu-item">
-                        <Link to={sportData.basePath} className={`sport-button ${activeSport === sportName ? 'active' : ''}`} onClick={() => handleSportClick(sportName)}>
-                            {sportName}
-                        </Link>
-                        {openSport === sportName && (
-                            <div className="league-menu">
-                                {sportData.leagues.map((league) => (
-                                    <Link to={league.path} key={league.name} className={`league-button ${window.location.pathname === league.path ? 'active' : ''}`} onClick={handleLeagueSelect}>
-                                        {league.name}
-                                    </Link>
-                                ))}
-                            </div>
-                        )}
-                    </div>
-                ))}
+        <div className="container col sportHeader ">
+            <div className="container width">
+                <div className="sportHeaderLeft">
+                    <Link to="/">
+                        <img src={logo} alt="logo" style={{cursor: 'pointer'}}/>
+                    </Link>
+                </div>
+                <div className="sportHeaderCenter" ref={menuRef}>
+                    {Object.entries(sports).map(([sportName, sportData]) => (
+                        <div key={sportName} className="sport-menu-item">
+                            <Link to={sportData.basePath} className={`sport-button ${activeSport === sportName ? 'active' : ''}`} onClick={() => handleSportClick(sportName)}>
+                                {sportName}
+                            </Link>
+                            {openSport === sportName && (
+                                <div className="league-menu">
+                                    {sportData.leagues.map((league) => (
+                                        <Link to={league.path} key={league.name} className={`league-button ${window.location.pathname === league.path ? 'active' : ''}`} onClick={handleLeagueSelect}>
+                                            {league.name}
+                                        </Link>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
             </div>
             <div className="sportHeaderRight">
                 {/* 추후 검색, 유저 아이콘 등 추가될 공간 */}
             </div>
+            <SidebarPage isLoggedIn={isLoggedIn} onLogout={onLogout} />
         </div>
     )
 }

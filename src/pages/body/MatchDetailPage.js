@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+// import { useParams } from 'react-router-dom';
 import MatchCard from './home/MatchCard';
 import liverpool from '../../img/soccerTeam/epl/리버풀 FC 로고.svg';
 import chelsea from '../../img/soccerTeam/epl/첼시 FC 로고.svg';
@@ -69,8 +69,21 @@ const HeadToHead = ({ team1, team2, likedMatches, onLikeMatch, onChatOpen }) => 
 };
 
 export default function MatchDetailPage({ matches, likedMatches, onLikeMatch, onOpenChat }) {
-    const { matchId } = useParams();
-    const match = matches.find(m => m.id === parseInt(matchId));
+    // const { matchId } = useParams();
+    // const match = matches.find(m => m.id === parseInt(matchId));
+
+    // 예시용 더미 데이터
+    const match = {
+        id: 1,
+        home: '리버풀',
+        away: '첼시',
+        homeScore: 3,
+        awayScore: 1,
+        date: '2024.08.18',
+        time: '22:30',
+        homeLogo: liverpool,
+        awayLogo: chelsea
+    };
 
     if (!match) return <div>경기를 찾을 수 없습니다.</div>;
 

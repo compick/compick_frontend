@@ -20,7 +20,6 @@ import kbo from "./img/icon/baseball/kboicon.png";
 import arsenalLogo from "./img/soccerTeam/epl/아스날 FC 로고.svg";
 import manUtdLogo from "./img/soccerTeam/epl/맨체스터 유나이티드 FC 로고.svg";
 import GetTeamLogo from "./utils/GetTeamLogo";
-import { getMatches } from "./api/MatchApi";
 
 
 function App() {
@@ -85,49 +84,13 @@ function App() {
   });
 
   const [selectedLeague, setSelectedLeague] = useState('all'); // 'all', 'epl', 'laliga', 'kbo', 'ufc'
-  const [currentDate, setCurrentDate] = useState(new Date());
-
+  
   const handleLeagueChange = useCallback((league) => {
     setSelectedLeague(league);
   }, []);
 
-  const handleDateChange = useCallback((date) => {
-    setCurrentDate(date);
-  }, []);
-
   const [likedMatches, setLikedMatches] = useState([]);
-  const [matches, setMatches] = useState([]);
-
-  useEffect(() => {
-    const fetchMatches = async () => {
-        const year = currentDate.getFullYear();
-        const month = currentDate.getMonth();
-        const data = await getMatches(year, month, selectedLeague);
-        setMatches(data);
-    };
-    fetchMatches();
-  }, [currentDate, selectedLeague]);
-
-  const filteredMatches = matches
-    .filter(match => {
-        const league = selectedLeague.toLowerCase();
-        if (league === 'all') return true;
-        if (league === 'soccer') return ['epl', 'laliga'].includes(match.league.toLowerCase());
-        if (league === 'baseball') return match.league.toLowerCase() === 'kbo';
-        if (league === 'mma') return match.league.toLowerCase() === 'ufc';
-        return match.league.toLowerCase() === league;
-    })
-    .map(match => {
-        if (match.league.toLowerCase() === 'kbo' && !match.homeLogo) {
-            return {
-                ...match,
-                homeLogo: GetTeamLogo(match.league, match.home),
-                awayLogo: GetTeamLogo(match.league, match.away)
-            };
-        }
-        return match;
-    });
-
+  
   const [chatState, setChatState] = useState({
       openChats: [],
       minimizedChats: [],
@@ -293,7 +256,6 @@ function App() {
             onProfileUpdate={handleProfileUpdate}
             likedMatches={likedMatches}
             onLikeMatch={handleLikeMatch}
-            matches={filteredMatches}
             chatState={chatState}
             onOpenChat={handleOpenChat}
             onCloseChat={handleCloseChat}
@@ -308,7 +270,6 @@ function App() {
             currentUser={currentUser}
             handleLeagueChange={handleLeagueChange}
             selectedLeague={selectedLeague}
-            onDateChange={handleDateChange} // CalendarView에 전달할 prop
             isLoggedIn={isLoggedIn}
             onLogin={handleLogin}
             onLogout={handleLogout}

@@ -6,20 +6,20 @@ import RecommendedPosts from "./home/RecommendedPosts";
 import TeamRankings from "./home/TeamRankings";
 // 이미지 import 및 useEffect 로직 제거
 
-export default function HomeBodyPage({ posts, matches, likedMatches, onLikeMatch, onOpenChat, onDateChange, league }) {
+export default function HomeBodyPage({ posts, likedMatches, onLikeMatch, onOpenChat, league, sport }) {
     const [activeView, setActiveView] = useState('calendar');
     // matches 상태 및 useEffect 제거
 
     const renderContent = () => {
         switch (activeView) {
             case 'calendar':
-                return <CalendarView matches={matches} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onDateChange={onDateChange} />;
+                return <CalendarView likedMatches={likedMatches} onLikeMatch={onLikeMatch} sport={sport} league={league} />;
             case 'date':
-                return <DateMatchList matches={matches} likedMatches={likedMatches} onLikeMatch={onLikeMatch} />;
+                return <DateMatchList likedMatches={likedMatches} onLikeMatch={onLikeMatch} sport={sport} league={league} />;
             case 'favorite':
-                return <FavoriteTeamMatchList matches={matches} likedMatches={likedMatches} onLikeMatch={onLikeMatch} />;
+                return <FavoriteTeamMatchList likedMatches={likedMatches} onLikeMatch={onLikeMatch} />;
             default:
-                return <CalendarView matches={matches} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onDateChange={onDateChange} />;
+                return <CalendarView likedMatches={likedMatches} onLikeMatch={onLikeMatch} sport={sport} league={league} />;
         }
     };
 
@@ -69,7 +69,7 @@ export default function HomeBodyPage({ posts, matches, likedMatches, onLikeMatch
                 </div>
                 <div className="teamRankings">
                     <h3>구단 순위</h3>
-                    <TeamRankings />
+                    <TeamRankings league={league} />
                 </div>
             </div>
         </div>
