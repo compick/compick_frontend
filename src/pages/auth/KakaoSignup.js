@@ -2,7 +2,7 @@ import { API_BASE } from "../../config";
 import { page, card, kakaoStyle, plain } from "../../components/ui";
 
 export default function KakaoSignup(){
-    const go = () => { window.location.href = `${API_BASE}/api/auth/login/kakao` };
+    const go = () => { window.location.href = `${API_BASE}/api/auth/signup/kakao` };
     return(
         <div className={page} style={{background: "#f9fafb", fontFamily: "system-ui, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif" }}>
             <div style={card}>
