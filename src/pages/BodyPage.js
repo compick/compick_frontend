@@ -2,8 +2,14 @@ import { Routes, Route, useParams, useLocation } from 'react-router-dom';
 import React, { useEffect } from 'react';
 import SidebarPage from "./component/SidebarPage"
 import HomeBodyPage from './body/HomeBodyPage';
-import LoginPage from "./login/LoginUser";
-import RegisterUserPage from "./login/RegisterUser";
+
+import SelectLogin from "./auth/SelectLogin";
+import LocalLogin from './auth/LocalLogin';
+import KakaoLogin from './auth/KakaoLogin';
+import SelectSignup from "./auth/SelectSignup";
+import LocalSignup from './auth/LocalSignup';
+import KakaoSignup from './auth/KakaoSignup';
+
 import AddBody from './body/AddBody';
 import EditImage from './body/add/EditImage';
 import WritePost from './body/add/WritePost';
@@ -17,6 +23,7 @@ import RankingPage from './user/RankingPage';
 import TeamRankingPage from './user/TeamRankingPage'; // 새로 만든 페이지 import
 import PostDetailPage from './body/PostDetailPage';
 import SportHeader from './component/SportHeader';
+
 
 // URL 파라미터를 읽어 HomeBodyPage에 league prop을 전달하는 래퍼 컴포넌트
 const HomePageWrapper = ({ posts, likedMatches, onLikeMatch, onOpenChat, handleLeagueChange, selectedLeague }) => {
@@ -55,8 +62,14 @@ export default function BodyPage({ posts, userScores, capturedImage, setCaptured
                         <Route path='/add' element={<AddBody setCapturedImage={setCapturedImage} />}/>
                         <Route path='/editImage' element={<AddBody setCapturedImage={setCapturedImage} />}/>
                         <Route path='/writePost' element={<AddBody capturedImage={capturedImage} />}/>
-                        <Route path="/login" element={ <LoginPage onLogin={onLogin} /> }/>
-                        <Route path="/regist" element={ <RegisterUserPage/> }/>
+
+                        <Route path="/login" element={ <SelectLogin onLogin={onLogin} /> }/>
+                        <Route path="/signup" element={ <SelectSignup/> }/>
+                        <Route path="/login/local" element={ <LocalLogin/> }/>
+                        <Route path="/login/kakao" element={ <KakaoLogin/> }/>
+                        <Route path="/signup/local" element={ <LocalSignup/> }/>
+                        <Route path="/signup/kakao" element={ <KakaoSignup />}/>
+
                         <Route path="/myProfile" element={<MyProfile userScores={userScores} userInfo={userInfo} />}/>
                         <Route path="/edit-profile" element={<EditProfilePage currentUser={userInfo} onSave={onProfileUpdate} />} />
                         <Route path="/tier/:category" element={<TierDetailPage userScores={userScores} />}/>

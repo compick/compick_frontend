@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getCookie } from '../../utils/Cookie';
+import {API_BASE} from "../../config"
 
-export default function LoginUser() {
+export default function LocalLogin() {
     const [form, setForm] = useState({ userId: "", password: "" });
     const navigate = useNavigate();
     const handleChange = (e) => {
@@ -12,7 +14,7 @@ export default function LoginUser() {
     const handleSubmit = async () => {
         try {
 
-            const res = await fetch("/api/user/login/normal", {
+            const res = await fetch(`${API_BASE}/api/user/login/normal`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(form)
@@ -21,11 +23,12 @@ export default function LoginUser() {
             console.log(data);
             if (data.code === 200) {
                 alert("로그인 성공");
+                document.cookie = `jwt=${data.data}; path=/;`
                 window.location.href = "/";
             } else {
                 alert("로그인 실패: " + data.message);
             }
-        } catch (e) {
+        } catch(e) {
             alert("오류 발생");
         }
     };
@@ -55,7 +58,7 @@ export default function LoginUser() {
                     <span> 또는 </span>
                     <div className="shortLine" />
                 </div>
-                <button className="registerButton" onClick={() => navigate('/regist')}>회원가입</button>
+                <button className="registerButton" onClick={() => navigate('/signup')}>회원가입</button>
                 <span> 로그인 api 추가</span>
             </div>
         </div>
