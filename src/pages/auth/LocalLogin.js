@@ -58,7 +58,7 @@ export default function LocalLogin() {
                     <span> 또는 </span>
                     <div className="shortLine" />
                 </div>
-                <button className="registerButton" onClick={() => navigate('/regist')}>회원가입</button>
+                <button className="registerButton" onClick={() => navigate('/signup')}>회원가입</button>
                 <span> 로그인 api 추가</span>
             </div>
         </div>
