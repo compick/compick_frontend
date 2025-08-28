@@ -38,7 +38,7 @@ export default function RankingPage() {
     const list = searchTerm ? filteredRankings : filteredRankings.filter(user => user.rank > 3);
 
     return (
-        <div className="ranking-page-container">
+        <div className="homeContainer_new">
             <header className="ranking-header">
                 <h1>🏆 MMR 랭킹</h1>
             </header>

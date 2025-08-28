@@ -15,7 +15,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-     margin: 20px;
 }
 .profileImg img{
     width: 100%;
@@ -865,4 +864,22 @@
         margin-top: 0;
         width: 100%;
     }
+}
+
+.profile-header {
+    display: flex;
+    align-items: flex-end; /* 아이템들을 하단 기준으로 정렬 */
+    gap: 15px; /* 닉네임과 버튼 사이의 간격 */
+    margin-bottom: 10px; /* 소개글과의 간격 */
+}
+
+.profileNickName {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.edit-profile-button {
+    /* action-button 클래스의 스타일을 기본으로 사용 */
+    padding: 8px 16px; /* 버튼 크기 조정 */
+    font-size: 14px;
 }

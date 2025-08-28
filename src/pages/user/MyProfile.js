@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import TierList from "./TierList";
 import MyVotesPage from "./MyVotesPage";
@@ -67,7 +67,7 @@ export default function MyProfile({ userScores, userInfo }) {
         <div className="uploadContainer">
             <div className="profileBox">
                 <div className="container col">
-                    <span className="profileNickName">{nickName}</span>
+                    <span className="profileNickName">{userInfo.nickname}</span>
                     <span className="profileIntroduction">{userInfo.introduction}</span>
                 </div>
                 <div className="container col profileImginBox" onClick={() => handleNavigate('/edit-profile')}>
@@ -82,7 +82,6 @@ export default function MyProfile({ userScores, userInfo }) {
                 <button className={`profileMenuButton ${activeView === 'votes' ? 'active' : ''}`} onClick={() => handleViewChange('votes')}>내 투표함</button>
                 <button className={`profileMenuButton ${activeView === 'favorites' ? 'active' : ''}`} onClick={() => handleViewChange('favorites')}>즐겨찾기</button>
                 <button className={`profileMenuButton ${activeView === 'comments' ? 'active' : ''}`} onClick={() => handleViewChange('comments')}>작성한 댓글</button>
-                <button className="profileMenuButton" onClick={() => handleNavigate('/edit-profile')}>회원정보 수정</button>
             </div>
 
             <div className="profileContentContainer">
