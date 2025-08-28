@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getTeamRankings } from '../../../api/match/Matches';
+import { getEplRankings, getLaligaRankings } from '../../../api/match/soccer';
+import { getKboRankings } from '../../../api/match/baseball';
+import { getUfcRankings } from '../../../api/match/mma';
 import GetTeamLogo from '../../../utils/GetTeamLogo';
 
 // 최근 5경기 결과를 아이콘으로 변환하는 헬퍼 함수
@@ -14,7 +16,7 @@ const renderForm = (form) => {
     });
 };
 
-export default function TeamRankings({ league }) {
+export default function TeamRankings({ league, sport }) {
     const [rankings, setRankings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -34,7 +36,24 @@ export default function TeamRankings({ league }) {
             try {
                 setLoading(true);
                 setError(null);
-                const data = await getTeamRankings(targetLeague);
+                console.log('🏆 TeamRankings API 호출:', { sport, targetLeague });
+                
+                let data;
+                if (sport === 'soccer') {
+                    if (targetLeague === 'epl') {
+                        data = await getEplRankings();
+                    } else if (targetLeague === 'laliga') {
+                        data = await getLaligaRankings();
+                    }
+                } else if (sport === 'baseball') {
+                    if (targetLeague === 'kbo') {
+                        data = await getKboRankings();
+                    }
+                } else if (sport === 'mma') {
+                    if (targetLeague === 'ufc') {
+                        data = await getUfcRankings();
+                    }
+                }
                 
                 // 승점(Points)과 득실차(DIFF) 기준으로 정렬
                 const sortedData = data.sort((a, b) => {
@@ -55,7 +74,7 @@ export default function TeamRankings({ league }) {
         };
 
         fetchRankings();
-    }, [targetLeague]);
+    }, [targetLeague, sport]);
 
     const handleRankingClick = () => {
         if (targetLeague && !['all', 'mma'].includes(targetLeague)) {

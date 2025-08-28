@@ -21,6 +21,7 @@ import MatchDetailPage from './body/MatchDetailPage';
 import ChatManager from './body/ChatManager'; // ChatContainer 대신 ChatManager import
 import RankingPage from './user/RankingPage';
 import TeamRankingPage from './user/TeamRankingPage'; // 새로 만든 페이지 import
+import TeamRankingsPage from './body/TeamRankingsPage'; // 구단순위 페이지 import
 import PostDetailPage from './body/PostDetailPage';
 import SportHeader from './component/SportHeader';
 
@@ -32,17 +33,47 @@ const HomePageWrapper = ({ posts, likedMatches, onLikeMatch, onOpenChat, handleL
 
     useEffect(() => {
         let leagueToSet = 'all'; // 기본값
-        if (league) {
-            leagueToSet = league;
-        } else if (sport) {
-            leagueToSet = sport;
-        } else if (location.pathname === '/') {
+        let sportToSet = 'all'; // 기본값
+        
+        // 홈 페이지인 경우 (루트 경로)
+        if (location.pathname === '/') {
             leagueToSet = 'all';
+            sportToSet = 'all';
+        } else if (league) {
+            // /:sport/:league 형태
+            leagueToSet = league;
+            sportToSet = sport;
+        } else if (sport) {
+            // /:sport 형태 (예: /soccer, /baseball, /mma)
+            leagueToSet = 'all';
+            sportToSet = sport;
         }
-        handleLeagueChange(leagueToSet);
-    }, [sport, league, location, handleLeagueChange]);
+        
+        // 현재 선택된 리그와 다를 때만 변경
+        if (selectedLeague !== leagueToSet) {
+            handleLeagueChange(leagueToSet);
+        }
+    }, [sport, league, location.pathname, selectedLeague, handleLeagueChange]);
 
-    return <HomeBodyPage posts={posts} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} league={selectedLeague} sport={sport} />;
+    // sport와 league 값을 결정
+    let finalSport = 'all';
+    let finalLeague = 'all';
+    
+    if (location.pathname === '/') {
+        finalSport = 'all';
+        finalLeague = 'all';
+    } else if (league) {
+        finalSport = sport;
+        finalLeague = league;
+    } else if (sport) {
+        finalSport = sport;
+        finalLeague = 'all';
+    }
+
+    console.log('🏠 HomePageWrapper - URL 파라미터:', { sport, league });
+    console.log('🏠 HomePageWrapper - Final props:', { finalSport, finalLeague, selectedLeague });
+
+    return <HomeBodyPage posts={posts} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} league={finalLeague} sport={finalSport} />;
 };
 
 
@@ -77,6 +108,7 @@ export default function BodyPage({ posts, userScores, capturedImage, setCaptured
                         <Route path="/match/:matchId" element={<MatchDetailPage likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} />} />
                         <Route path="/ranking" element={<RankingPage />} />
                         <Route path="/ranking/:league" element={<TeamRankingPage />} />
+                        <Route path="/team-rankings/:sport" element={<TeamRankingsPage />} />
                         <Route path="/post/:postId" element={<PostDetailPage posts={posts} onAddComment={onAddComment} onLikeComment={onLikeComment} onAddReply={onAddReply} currentUser={currentUser} onLikePost={onLikePost} onReport={onReport} />} />
                     </Routes>
                 </div>

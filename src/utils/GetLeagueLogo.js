@@ -14,15 +14,33 @@ export default function GetLeagueLogo(leagueName) {
   switch (lowerLeagueName) {
     case "england premium league":
     case "epl":
+    case "premier league":
+    case "프리미어 리그":
+    case "england premier league":
+    case "premier league":
+    case "england premium league":
       return eplLogo;
     case "la liga ea sports":
     case "laliga":
+    case "la liga":
+    case "primera división":
+    case "스페인 라리가":
+    case "라리가":
+    case "스페인 프리메라 디비시온":
       return laligaLogo;
+    case "uefa champions league":
+    case "champions league":
+    case "챔피언스 리그":
+    case "uefa 챔피언스 리그":
     case "uefa champions league":
       return championLogo;
     case "kbo":
+    case "korean baseball organization":
+    case "k리그1":
+    case "k리그2":
       return kboLogo;
     case "ufc":
+    case "ultimate fighting championship":
       return ufcLogo;
     default:
       return null;

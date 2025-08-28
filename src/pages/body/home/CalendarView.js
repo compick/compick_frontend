@@ -2,7 +2,10 @@ import React, { useState, useEffect } from 'react';
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { getMatchesByRange } from '../../../api/match/Matches';
+import { getAllMatchesMonthly } from '../../../api/match/Matches';
+import { getAllSoccerMatchesMonthly, getEplMatchesMonthly, getLaligaMatchesMonthly } from '../../../api/match/soccer';
+import { getAllBaseballMatchesMonthly, getKboMatchesMonthly } from '../../../api/match/baseball';
+import { getAllMmaMatchesMonthly, getUfcMatchesMonthly } from '../../../api/match/mma';
 import MatchCard from './MatchCard';
 import GetLeagueLogo from '../../../utils/GetLeagueLogo';
 import GetTeamLogo from '../../../utils/GetTeamLogo';
@@ -69,7 +72,6 @@ export default function CalendarView({ likedMatches, onLikeMatch, sport, league 
         const fetchMatches = async () => {
             // sport와 league가 없으면 API 호출하지 않음
             if (!sport || !league) {
-                console.log('Sport or league not provided:', { sport, league });
                 setLoading(false);
                 return;
             }
@@ -78,15 +80,57 @@ export default function CalendarView({ likedMatches, onLikeMatch, sport, league 
                 setLoading(true);
                 setError(null);
                 const year = currentDate.getFullYear();
-                const month = currentDate.getMonth();
-                const startDate = new Date(year, month, 1);
-                const endDate = new Date(year, month + 1, 0);
-                console.log('Fetching matches for:', { sport, league, startDate, endDate });
-                const data = await getMatchesByRange(sport, league, startDate.toISOString(), endDate.toISOString());
+                const month = currentDate.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
+                const startDate = new Date(year, currentDate.getMonth(), 1);
+                const endDate = new Date(year, currentDate.getMonth() + 1, 0);
+                
+                console.log('🎯 CalendarView API 호출:', { sport, league, year, month });
+                
+                let data;
+                
+                // 홈 페이지 (전체 경기)인 경우
+                if (sport === 'all' && league === 'all') {
+                    data = await getAllMatchesMonthly(year, month);
+                }
+                // 축구 관련 API 호출
+                else if (sport === 'soccer') {
+                    if (league === 'all') {
+                        data = await getAllSoccerMatchesMonthly(year, month);
+                    } else if (league === 'epl') {
+                        data = await getEplMatchesMonthly(year, month);
+                    } else if (league === 'laliga') {
+                        data = await getLaligaMatchesMonthly(year, month);
+                    }
+                }
+                // 야구 관련 API 호출
+                else if (sport === 'baseball') {
+                    if (league === 'all') {
+                        data = await getAllBaseballMatchesMonthly(year, month);
+                    } else if (league === 'kbo') {
+                        data = await getKboMatchesMonthly(year, month);
+                    }
+                }
+                // MMA 관련 API 호출
+                else if (sport === 'mma') {
+                    if (league === 'all') {
+                        data = await getAllMmaMatchesMonthly(year, month);
+                    } else if (league === 'ufc') {
+                        data = await getUfcMatchesMonthly(year, month);
+                    }
+                }
+                
                 setMatches(normalizeMatches(data));
             } catch (error) {
                 console.error('Error fetching matches:', error);
-                setError('백엔드 서버에 연결할 수 없습니다. 관리자에게 문의해주세요.');
+                if (error.code === 'ERR_NETWORK') {
+                    setError('네트워크 연결을 확인해주세요. 백엔드 서버가 실행 중인지 확인하세요.');
+                } else if (error.response?.status === 404) {
+                    setError('요청한 경기 정보를 찾을 수 없습니다.');
+                } else if (error.response?.status >= 500) {
+                    setError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+                } else {
+                    setError('경기 정보를 불러오는 중 오류가 발생했습니다.');
+                }
                 setMatches([]);
             } finally {
                 setLoading(false);
@@ -96,23 +140,23 @@ export default function CalendarView({ likedMatches, onLikeMatch, sport, league 
         fetchMatches();
     }, [currentDate, sport, league]);
 
-    const getInitialDate = () => {
-        if (matches && matches.length > 0) {
-            // YYYY.MM.DD 형식의 문자열은 직접 정렬해도 안전합니다.
-            const dated = matches.filter((m) => m._dt instanceof Date && !isNaN(m._dt));
-            if (dated.length > 0) {
-                dated.sort((a, b) => a._dt - b._dt);
-                return dated[0]._ymd ?? formatDate(new Date());
-            }
-        }
-        // 경기가 없으면 오늘 날짜 반환
-        return formatDate(new Date());
-    };
-
-    const [selectedDate, setSelectedDate] = useState(() => getInitialDate());
+    const [selectedDate, setSelectedDate] = useState(formatDate(new Date()));
 
     useEffect(() => {
-        setSelectedDate(getInitialDate());
+        if (matches && matches.length > 0) {
+            const today = formatDate(new Date());
+            const todayMatches = matches.filter((m) => m._ymd === today);
+            if (todayMatches.length > 0) {
+                setSelectedDate(today);
+            } else {
+                // 오늘 경기가 없으면 가장 가까운 경기 날짜로 설정
+                const dated = matches.filter((m) => m._dt instanceof Date && !isNaN(m._dt));
+                if (dated.length > 0) {
+                    dated.sort((a, b) => a._dt - b._dt);
+                    setSelectedDate(dated[0]._ymd);
+                }
+            }
+        }
     }, [matches]);
 
     // 날짜 클릭 핸들러
@@ -123,27 +167,76 @@ export default function CalendarView({ likedMatches, onLikeMatch, sport, league 
     // 선택된 날짜의 경기 필터링
     const filteredMatches = matches.filter((m) => m._ymd === selectedDate);
 
+    // 리그별로 경기 그룹화
+    const groupMatchesByLeague = (matches) => {
+        return matches.reduce((groups, match) => {
+            // leagueNickname을 우선 사용하고, 없으면 leagueName 사용
+            const leagueKey = match.leagueNickname || match.leagueName || match.league || 'unknown';
+            const leagueName = match.leagueName || match.leagueNickname || match.league || '기타';
+            
+            if (!groups[leagueKey]) {
+                groups[leagueKey] = {
+                    leagueName: leagueName,
+                    leagueNickname: leagueKey,
+                    matches: []
+                };
+            }
+            groups[leagueKey].matches.push(match);
+            return groups;
+        }, {});
+    };
+
+    const groupedMatches = groupMatchesByLeague(filteredMatches);
+
     // 캘린더에 표시할 이벤트 데이터 생성 (리그 로고)
     const events = matches.reduce((acc, match) => {
         const date = match._ymd;
-        if (!match.date) return acc;
-        const icon = GetLeagueLogo(match.league);
+        if (!date) return acc; // _ymd가 없으면 건너뛰기
+        
+        // 백엔드에서 제공하는 leagueLogo URL을 우선 사용하고, 없으면 로컬 로고 사용
+        const icon = match.leagueLogo || GetLeagueLogo(match.leagueNickname || match.leagueName || match.league);
         
         if (!acc[date]) {
-            acc[date] = { date, icons: new Set() };
+            acc[date] = { 
+                date, 
+                icons: new Set(), // Set으로 변경하여 중복 제거 (각 리그당 하나씩만)
+                leagueNames: new Set(),
+                matchCount: 0 // 해당 날짜의 경기 수 카운트
+            };
         }
+        
+        acc[date].matchCount++;
+        
+        // 아이콘이 있으면 Set에 추가 (중복 자동 제거)
         if (icon) {
             acc[date].icons.add(icon);
+        }
+        
+        // 리그 이름도 저장 (툴팁용)
+        const leagueName = match.leagueNickname || match.leagueName || match.league;
+        if (leagueName) {
+            acc[date].leagueNames.add(leagueName);
         }
         return acc;
     }, {});
 
-    const calendarEvents = Object.values(events).map(event => ({
-        date: event.date,
-        title: '',
-        display: 'block', // 'background'에서 'block'으로 변경
-        extendedProps: { icons: Array.from(event.icons) }
-    }));
+    const calendarEvents = Object.values(events).map(event => {
+        // Set을 배열로 변환하여 각 리그당 하나씩만 아이콘 표시
+        const displayIcons = Array.from(event.icons);
+        
+        return {
+            date: event.date,
+            title: '',
+            display: 'block', // 'background'에서 'block'으로 변경
+            extendedProps: { 
+                icons: displayIcons,
+                leagueNames: Array.from(event.leagueNames),
+                matchCount: event.matchCount
+            }
+        };
+    });
+
+
 
     return (
         <div className="calendarViewContainer">
@@ -159,11 +252,25 @@ export default function CalendarView({ likedMatches, onLikeMatch, sport, league 
                     events={calendarEvents}
                     eventContent={(arg) => {
                         const icons = arg.event.extendedProps.icons;
+                        const leagueNames = arg.event.extendedProps.leagueNames;
+                        const matchCount = arg.event.extendedProps.matchCount;
                         return (
-                            <div className="calendar-event-icons">
-                                {icons && icons.map((icon, i) => (
-                                    <img key={i} src={icon} alt="리그" className="calLogo" />
-                                ))}
+                            <div className="calendar-event-icons" title={`${leagueNames?.join(', ')} (${matchCount}경기)`}>
+                                {icons && icons.length > 0 ? (
+                                    icons.map((icon, i) => (
+                                        <img 
+                                            key={i} 
+                                            src={icon} 
+                                            alt={leagueNames?.[i] || "리그"} 
+                                            className="calLogo" 
+                                            onError={(e) => {
+                                                e.target.style.display = 'none';
+                                            }}
+                                        />
+                                    ))
+                                ) : (
+                                    <span style={{ fontSize: '10px', color: '#666' }}>경기 있음</span>
+                                )}
                             </div>
                         );
                     }}
@@ -194,9 +301,28 @@ export default function CalendarView({ likedMatches, onLikeMatch, sport, league 
                         </p>
                     </div>
                 ) : selectedDate ? (
-                    filteredMatches.length > 0 ? (
-                        filteredMatches.map((match, index) => (
-                            <MatchCard key={index} match={match} likedMatches={likedMatches} onLike={onLikeMatch} />
+                    Object.keys(groupedMatches).length > 0 ? (
+                        Object.entries(groupedMatches).map(([leagueKey, group]) => (
+                            <div key={leagueKey} className="league-group">
+                                <h4>
+                                    {(() => {
+                                        // 첫 번째 매치에서 리그 로고 가져오기
+                                        const firstMatch = group.matches[0];
+                                        const leagueLogo = firstMatch?.leagueLogo || GetLeagueLogo(firstMatch?.leagueNickname || firstMatch?.leagueName || firstMatch?.league);
+                                        return leagueLogo ? (
+                                            <>
+                                                <img src={leagueLogo} alt={group.leagueNickname} className="league-group-logo" />
+                                                {group.leagueNickname}
+                                            </>
+                                        ) : (
+                                            group.leagueNickname
+                                        );
+                                    })()}
+                                </h4>
+                                {group.matches.map((match, index) => (
+                                    <MatchCard key={index} match={match} likedMatches={likedMatches} onLike={onLikeMatch} />
+                                ))}
+                            </div>
                         ))
                     ) : (
                         <p>해당 날짜에 경기가 없습니다.</p>
@@ -208,3 +334,5 @@ export default function CalendarView({ likedMatches, onLikeMatch, sport, league 
         </div>
     );
 }
+
+

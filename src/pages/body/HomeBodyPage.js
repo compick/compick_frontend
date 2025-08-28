@@ -11,6 +11,8 @@ export default function HomeBodyPage({ posts, likedMatches, onLikeMatch, onOpenC
     const [activeView, setActiveView] = useState('calendar');
     // matches 상태 및 useEffect 제거
 
+    console.log('HomeBodyPage props:', { sport, league, activeView });
+
     const renderContent = () => {
         switch (activeView) {
             case 'calendar':
@@ -35,28 +37,33 @@ export default function HomeBodyPage({ posts, likedMatches, onLikeMatch, onOpenC
         ufc: 'UFC'
     }
 
+    // 홈 페이지인지 확인 (sport나 league가 'all'이거나 없을 때)
+    const isHomePage = !sport || !league || sport === 'all' || league === 'all';
+
     return (
         <div className="homeContainer_new">
-            <h2>{leagueTitle[league] || '전체 경기'}</h2>
-            <div className="homeToggleBar">
-                <button 
-                    className={`toggleButton ${activeView === 'calendar' ? 'active' : ''}`}
-                    onClick={() => setActiveView('calendar')}
-                >
-                    캘린더+리스트
-                </button>
-                <button 
-                    className={`toggleButton ${activeView === 'date' ? 'active' : ''}`}
-                    onClick={() => setActiveView('date')}
-                >
-                    날짜별 리스트
-                </button>
-                <button 
-                    className={`toggleButton ${activeView === 'favorite' ? 'active' : ''}`}
-                    onClick={() => setActiveView('favorite')}
-                >
-                    관심 구단
-                </button>
+            <div className="homeContainer_inbox">
+                <h2>{isHomePage ? '전체 경기' : (leagueTitle[league] || '전체 경기')}</h2>
+                <div className="homeToggleBar">
+                    <button 
+                        className={`toggleButton ${activeView === 'calendar' ? 'active' : ''}`}
+                        onClick={() => setActiveView('calendar')}
+                    >
+                        캘린더
+                    </button>
+                    <button 
+                        className={`toggleButton ${activeView === 'date' ? 'active' : ''}`}
+                        onClick={() => setActiveView('date')}
+                    >
+                        날짜별
+                    </button>
+                    <button 
+                        className={`toggleButton ${activeView === 'favorite' ? 'active' : ''}`}
+                        onClick={() => setActiveView('favorite')}
+                    >
+                        관심구단
+                    </button>
+                </div>
             </div>
 
             <div className="homeContentArea">
@@ -69,8 +76,32 @@ export default function HomeBodyPage({ posts, likedMatches, onLikeMatch, onOpenC
                     <RecommendedPosts posts={posts} />
                 </div>
                 <div className="teamRankings">
-                    <h3>구단 순위</h3>
-                    <TeamRankings league={league} />
+                    <div className="teamRankingsHeader">
+                        <h3>구단 순위</h3>
+                        <button 
+                            className="moreButton"
+                            onClick={() => {
+                                // 현재 선택된 리그에 따라 적절한 스포츠와 리그 정보 전달
+                                let targetSport = sport || 'all';
+                                let targetLeague = league || 'all';
+                                
+                                // 리그별 스포츠 매핑
+                                if (targetLeague === 'epl' || targetLeague === 'laliga' || targetLeague === 'champions') {
+                                    targetSport = 'soccer';
+                                } else if (targetLeague === 'kbo') {
+                                    targetSport = 'baseball';
+                                } else if (targetLeague === 'ufc') {
+                                    targetSport = 'mma';
+                                }
+                                
+                                window.location.href = `/team-rankings/${targetSport}?league=${targetLeague}`;
+                            }}
+                            title="더보기"
+                        >
+                            +
+                        </button>
+                    </div>
+                    <TeamRankings league={league} sport={sport} />
                 </div>
             </div>
         </div>

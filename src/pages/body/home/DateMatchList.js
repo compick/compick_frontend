@@ -1,29 +1,107 @@
 import React, { useState, useEffect } from 'react';
 import MatchCard from './MatchCard';
-import { getMatchesByMonth } from '../../../api/match/Matches';
+import { getAllMatchesMonthly } from '../../../api/match/Matches';
+import { getAllSoccerMatchesMonthly, getEplMatchesMonthly, getLaligaMatchesMonthly } from '../../../api/match/soccer';
+import { getAllBaseballMatchesMonthly, getKboMatchesMonthly } from '../../../api/match/baseball';
+import { getAllMmaMatchesMonthly, getUfcMatchesMonthly } from '../../../api/match/mma';
+import GetLeagueLogo from '../../../utils/GetLeagueLogo';
 
 export default function DateMatchList({ likedMatches, onLikeMatch, sport, league }) {
     const [matches, setMatches] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchMatchesForTwoMonths = async () => {
+        const fetchMatches = async () => {
             setLoading(true);
-            const today = new Date();
-            const year = today.getFullYear();
-            const month = today.getMonth();
-
-            // 현재 월과 다음 월의 데이터를 병렬로 가져옵니다.
-            const [currentMonthMatches, nextMonthMatches] = await Promise.all([
-                getMatchesByMonth(sport, league, year, month),
-                getMatchesByMonth(sport, league, month === 11 ? year + 1 : year, (month + 1) % 12)
-            ]);
             
-            setMatches([...currentMonthMatches, ...nextMonthMatches]);
-            setLoading(false);
+            try {
+                console.log('📅 DateMatchList API 호출:', { sport, league });
+                let data;
+                
+                // 홈 페이지 (전체 경기)인 경우
+                if (sport === 'all' && league === 'all') {
+                    const today = new Date();
+                    const year = today.getFullYear();
+                    const month = today.getMonth() + 1;
+                    data = await getAllMatchesMonthly(year, month);
+                }
+                // 축구 관련 API 호출
+                else if (sport === 'soccer') {
+                    const today = new Date();
+                    const year = today.getFullYear();
+                    const month = today.getMonth() + 1;
+                    
+                    if (league === 'all') {
+                        const [currentMonthMatches, nextMonthMatches] = await Promise.all([
+                            getAllSoccerMatchesMonthly(year, month),
+                            getAllSoccerMatchesMonthly(month === 12 ? year + 1 : year, month === 12 ? 1 : month + 1)
+                        ]);
+                        data = [...currentMonthMatches, ...nextMonthMatches];
+                    } else if (league === 'epl') {
+                        const [currentMonthMatches, nextMonthMatches] = await Promise.all([
+                            getEplMatchesMonthly(year, month),
+                            getEplMatchesMonthly(month === 12 ? year + 1 : year, month === 12 ? 1 : month + 1)
+                        ]);
+                        data = [...currentMonthMatches, ...nextMonthMatches];
+                    } else if (league === 'laliga') {
+                        const [currentMonthMatches, nextMonthMatches] = await Promise.all([
+                            getLaligaMatchesMonthly(year, month),
+                            getLaligaMatchesMonthly(month === 12 ? year + 1 : year, month === 12 ? 1 : month + 1)
+                        ]);
+                        data = [...currentMonthMatches, ...nextMonthMatches];
+                    }
+                }
+                // 야구 관련 API 호출
+                else if (sport === 'baseball') {
+                    const today = new Date();
+                    const year = today.getFullYear();
+                    const month = today.getMonth() + 1;
+                    
+                    if (league === 'all') {
+                        const [currentMonthMatches, nextMonthMatches] = await Promise.all([
+                            getAllBaseballMatchesMonthly(year, month),
+                            getAllBaseballMatchesMonthly(month === 12 ? year + 1 : year, month === 12 ? 1 : month + 1)
+                        ]);
+                        data = [...currentMonthMatches, ...nextMonthMatches];
+                    } else if (league === 'kbo') {
+                        const [currentMonthMatches, nextMonthMatches] = await Promise.all([
+                            getKboMatchesMonthly(year, month),
+                            getKboMatchesMonthly(month === 12 ? year + 1 : year, month === 12 ? 1 : month + 1)
+                        ]);
+                        data = [...currentMonthMatches, ...nextMonthMatches];
+                    }
+                }
+                // MMA 관련 API 호출
+                else if (sport === 'mma') {
+                    const today = new Date();
+                    const year = today.getFullYear();
+                    const month = today.getMonth() + 1;
+                    
+                    if (league === 'all') {
+                        const [currentMonthMatches, nextMonthMatches] = await Promise.all([
+                            getAllMmaMatchesMonthly(year, month),
+                            getAllMmaMatchesMonthly(month === 12 ? year + 1 : year, month === 12 ? 1 : month + 1)
+                        ]);
+                        data = [...currentMonthMatches, ...nextMonthMatches];
+                    } else if (league === 'ufc') {
+                        const [currentMonthMatches, nextMonthMatches] = await Promise.all([
+                            getUfcMatchesMonthly(year, month),
+                            getUfcMatchesMonthly(month === 12 ? year + 1 : year, month === 12 ? 1 : month + 1)
+                        ]);
+                        data = [...currentMonthMatches, ...nextMonthMatches];
+                    }
+                }
+                
+                setMatches(data);
+            } catch (error) {
+                console.error('Error fetching matches:', error);
+                setMatches([]);
+            } finally {
+                setLoading(false);
+            }
         };
 
-        fetchMatchesForTwoMonths();
+        fetchMatches();
     }, [sport, league]);
 
 
@@ -49,6 +127,25 @@ export default function DateMatchList({ likedMatches, onLikeMatch, sport, league
         }, {});
     };
 
+    // 리그별로 경기 그룹화
+    const groupMatchesByLeague = (matches) => {
+        return matches.reduce((groups, match) => {
+            // leagueNickname을 우선 사용하고, 없으면 leagueName 사용
+            const leagueKey = match.leagueNickname || match.leagueName || match.league || 'unknown';
+            const leagueName = match.leagueName || match.leagueNickname || match.league || '기타';
+            
+            if (!groups[leagueKey]) {
+                groups[leagueKey] = {
+                    leagueName: leagueName,
+                    leagueNickname: leagueKey,
+                    matches: []
+                };
+            }
+            groups[leagueKey].matches.push(match);
+            return groups;
+        }, {});
+    };
+
     const groupedByDate = groupByDate(filteredMatches);
     const sortedDates = Object.keys(groupedByDate).sort();
 
@@ -59,14 +156,38 @@ export default function DateMatchList({ likedMatches, onLikeMatch, sport, league
     return (
         <div className="dateMatchListContainer">
             {sortedDates.length > 0 ? (
-                sortedDates.map((date) => (
-                    <div key={date}>
-                        <h4 className="dateHeader">📅 {date}</h4>
-                        {groupedByDate[date].map((match, idx) => (
-                            <MatchCard key={idx} match={match} likedMatches={likedMatches} onLike={onLikeMatch} />
-                        ))}
-                    </div>
-                ))
+                sortedDates.map((date) => {
+                    const dateMatches = groupedByDate[date];
+                    const groupedMatches = groupMatchesByLeague(dateMatches);
+                    
+                    return (
+                        <div key={date}>
+                            <h4 className="dateHeader">📅 {date}</h4>
+                            {Object.values(groupedMatches).map((group, groupIndex) => (
+                                <div key={groupIndex} className="league-group">
+                                    <h5>
+                                        {(() => {
+                                            // 첫 번째 매치에서 리그 로고 가져오기
+                                            const firstMatch = group.matches[0];
+                                            const leagueLogo = firstMatch?.leagueLogo || GetLeagueLogo(firstMatch?.leagueNickname || firstMatch?.leagueName || firstMatch?.league);
+                                            return leagueLogo ? (
+                                                <>
+                                                    <img src={leagueLogo} alt={group.leagueNickname} className="league-group-logo" />
+                                                    {group.leagueNickname}
+                                                </>
+                                            ) : (
+                                                group.leagueNickname
+                                            );
+                                        })()}
+                                    </h5>
+                                    {group.matches.map((match, idx) => (
+                                        <MatchCard key={idx} match={match} likedMatches={likedMatches} onLike={onLikeMatch} />
+                                    ))}
+                                </div>
+                            ))}
+                        </div>
+                    );
+                })
             ) : (
                 <p>앞으로 2주간 예정된 경기가 없습니다.</p>
             )}

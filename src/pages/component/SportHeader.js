@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../img/icon/homeLogo.gif';
 import '../../styles/component.css';
 import SidebarPage from './SidebarPage'; // SidebarPage import 추가
@@ -7,12 +7,13 @@ import SidebarPage from './SidebarPage'; // SidebarPage import 추가
 export default function SportHeader({ selectedLeague, isLoggedIn, onLogout }){
     const [openSport, setOpenSport] = useState(null);
     const menuRef = useRef(null);
+    const navigate = useNavigate();
 
     const sports = {
         '축구': {
             basePath: '/soccer',
             leagues: [
-                { name: '전체보기', path: '/soccer' },
+                { name: '전체보기', path: '/soccer/all' },
                 { name: 'EPL', path: '/soccer/epl' },
                 { name: '라리가', path: '/soccer/laliga' }
             ]
@@ -20,14 +21,14 @@ export default function SportHeader({ selectedLeague, isLoggedIn, onLogout }){
         '야구': {
             basePath: '/baseball',
             leagues: [
-                { name: '전체보기', path: '/baseball' },
+                { name: '전체보기', path: '/baseball/all' },
                 { name: 'KBO', path: '/baseball/kbo' }
             ]
         },
         'MMA': {
             basePath: '/mma',
             leagues: [
-                { name: '전체보기', path: '/mma' },
+                { name: '전체보기', path: '/mma/all' },
                 { name: 'UFC', path: '/mma/ufc' }
             ]
         }
@@ -63,13 +64,21 @@ export default function SportHeader({ selectedLeague, isLoggedIn, onLogout }){
         setOpenSport(null); // 리그 선택 후 메뉴 닫기
     };
 
+    const handleHomeClick = () => {
+        // 홈 로고 클릭 시 전체 경기 페이지로 이동
+        navigate('/');
+    };
+
     return(
         <div className="container col sportHeader ">
             <div className="container width">
                 <div className="sportHeaderLeft">
-                    <Link to="/">
-                        <img src={logo} alt="logo" style={{cursor: 'pointer'}}/>
-                    </Link>
+                    <img 
+                        src={logo} 
+                        alt="logo" 
+                        style={{cursor: 'pointer'}}
+                        onClick={handleHomeClick}
+                    />
                 </div>
                 <div className="sportHeaderCenter" ref={menuRef}>
                     {Object.entries(sports).map(([sportName, sportData]) => (
