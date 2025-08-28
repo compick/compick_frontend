@@ -5,6 +5,7 @@ import MyVotesPage from "./MyVotesPage";
 import FavoritesPage from "./FavoritesPage";
 import MyCommentsPage from "./MyCommentsPage";
 import { getCookie, deleteCookie } from '../../utils/Cookie';
+import { API_BASE } from "../../config"; 
 // PasswordConfirmModal 및 checkPassword import 제거
 
 export default function MyProfile({ userScores, userInfo }) {
@@ -17,7 +18,7 @@ export default function MyProfile({ userScores, userInfo }) {
         const token = getCookie('jwt');
         if (!token) return;
 
-        fetch("/api/user/info", {
+        fetch(`${API_BASE}/api/user/info`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -25,9 +26,8 @@ export default function MyProfile({ userScores, userInfo }) {
         })
             .then(res => res.json())
             .then(data => {
-                console.log(data.data.userName);
                 if (data.code === 200) {
-                    setNickName(data.data.userName);
+                    setNickName(data.data.userNickname);
                 } else {
                     setNickName("알수없음");
                 }

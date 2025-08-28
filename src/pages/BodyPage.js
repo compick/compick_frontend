@@ -10,6 +10,8 @@ import SelectSignup from "./auth/SelectSignup";
 import LocalSignup from './auth/LocalSignup';
 import KakaoSignup from './auth/KakaoSignup';
 
+import GuestRoute from './auth/GuestRoute';
+
 import AddBody from './body/AddBody';
 import EditImage from './body/add/EditImage';
 import WritePost from './body/add/WritePost';
@@ -24,6 +26,9 @@ import TeamRankingPage from './user/TeamRankingPage'; // 새로 만든 페이지
 import TeamRankingsPage from './body/TeamRankingsPage'; // 구단순위 페이지 import
 import PostDetailPage from './body/PostDetailPage';
 import SportHeader from './component/SportHeader';
+
+import AuthBootstrap from '../AuthBootstrap';
+
 
 
 // URL 파라미터를 읽어 HomeBodyPage에 league prop을 전달하는 래퍼 컴포넌트
@@ -76,34 +81,38 @@ const HomePageWrapper = ({ posts, likedMatches, onLikeMatch, onOpenChat, handleL
     return <HomeBodyPage posts={posts} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} league={finalLeague} sport={finalSport} />;
 };
 
+export default function BodyPage({ posts, matches, userScores, capturedImage, setCapturedImage, userInfo, onProfileUpdate, likedMatches, onLikeMatch, onOpenChat, onCloseChat, chatState, onMinimizeChat, onSetActiveChat, onAddComment, onLikeComment, onAddReply, currentUser, onLikePost, onReport, handleLeagueChange, selectedLeague, isLoggedIn, onLogin, onLogout, onDateChange }) {
 
-export default function BodyPage({ posts, userScores, capturedImage, setCapturedImage, userInfo, onProfileUpdate, likedMatches, onLikeMatch, onOpenChat, onCloseChat, chatState, onMinimizeChat, onSetActiveChat, onAddComment, onLikeComment, onAddReply, currentUser, onLikePost, onReport, handleLeagueChange, selectedLeague, isLoggedIn, onLogin, onLogout }){
 
-    return(
+    
+    return (
         <>
             <SportHeader selectedLeague={selectedLeague} isLoggedIn={isLoggedIn} onLogout={onLogout} />
             <div className="bodyContainer">
-                {/* <SidebarPage> 는 SportHeader로 이동 */}
-                <div style={{flex: 1 }}>
+
+                <SidebarPage isLoggedIn={isLoggedIn} onLogout={onLogout} />
+                <div style={{ flex: 1 }}>
+                    <AuthBootstrap onLogin={onLogin} onLogout={onLogout} />
+
                     <Routes>
                         <Route path="/" element={<HomePageWrapper handleLeagueChange={handleLeagueChange} posts={posts} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} selectedLeague={selectedLeague} />} />
                         <Route path="/:sport" element={<HomePageWrapper handleLeagueChange={handleLeagueChange} posts={posts} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} selectedLeague={selectedLeague} />} />
                         <Route path="/:sport/:league" element={<HomePageWrapper handleLeagueChange={handleLeagueChange} posts={posts} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} selectedLeague={selectedLeague} />} />
 
-                        <Route path='/add' element={<AddBody setCapturedImage={setCapturedImage} />}/>
-                        <Route path='/editImage' element={<AddBody setCapturedImage={setCapturedImage} />}/>
-                        <Route path='/writePost' element={<AddBody capturedImage={capturedImage} />}/>
+                        <Route path='/add' element={<AddBody setCapturedImage={setCapturedImage} />} />
+                        <Route path='/editImage' element={<AddBody setCapturedImage={setCapturedImage} />} />
+                        <Route path='/writePost' element={<AddBody capturedImage={capturedImage} />} />
 
-                        <Route path="/login" element={ <SelectLogin onLogin={onLogin} /> }/>
-                        <Route path="/signup" element={ <SelectSignup/> }/>
-                        <Route path="/login/local" element={ <LocalLogin/> }/>
-                        <Route path="/login/kakao" element={ <KakaoLogin/> }/>
-                        <Route path="/signup/local" element={ <LocalSignup/> }/>
-                        <Route path="/signup/kakao" element={ <KakaoSignup />}/>
+                        <Route path="/login" element={<GuestRoute><SelectLogin onLogin={onLogin} /></GuestRoute>} />
+                        <Route path="/signup" element={<GuestRoute><SelectSignup /></GuestRoute>} />
+                        <Route path="/login/local" element={<LocalLogin />} />
+                        <Route path="/login/kakao" element={<KakaoLogin />} />
+                        <Route path="/signup/local" element={<LocalSignup />} />
+                        <Route path="/signup/kakao" element={<KakaoSignup />} />
 
-                        <Route path="/myProfile" element={<MyProfile userScores={userScores} userInfo={userInfo} />}/>
+                        <Route path="/myProfile" element={<MyProfile userScores={userScores} userInfo={userInfo} />} />
                         <Route path="/edit-profile" element={<EditProfilePage currentUser={userInfo} onSave={onProfileUpdate} />} />
-                        <Route path="/tier/:category" element={<TierDetailPage userScores={userScores} />}/>
+                        <Route path="/tier/:category" element={<TierDetailPage userScores={userScores} />} />
                         <Route path="/heart" element={<HeartPage likedMatches={likedMatches} onLikeMatch={onLikeMatch} />} />
                         <Route path="/match/:matchId" element={<MatchDetailPage likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} />} />
                         <Route path="/ranking" element={<RankingPage />} />
@@ -113,7 +122,7 @@ export default function BodyPage({ posts, userScores, capturedImage, setCaptured
                     </Routes>
                 </div>
             </div>
-            <ChatManager 
+            <ChatManager
                 chatState={chatState}
                 onOpenChat={onOpenChat}
                 onCloseChat={onCloseChat}

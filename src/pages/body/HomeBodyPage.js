@@ -9,7 +9,6 @@ import { getCookie } from "../../utils/Cookie";
 
 export default function HomeBodyPage({ posts, likedMatches, onLikeMatch, onOpenChat, league, sport }) {
     const [activeView, setActiveView] = useState('calendar');
-    // matches 상태 및 useEffect 제거
 
     console.log('HomeBodyPage props:', { sport, league, activeView });
 
