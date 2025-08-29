@@ -64,7 +64,7 @@ export default function MyProfile({ userScores, userInfo }) {
         <div className="uploadContainer">
             <div className="profileBox">
                 <div className="container col">
-                    <span className="profileNickName">{userInfo.nickname}</span>
+                    <span className="profileNickName">{nickName}</span>
                     <span className="profileIntroduction">{userInfo.introduction}</span>
                 </div>
                 <div className="container col profileImginBox" onClick={() => handleNavigate('/edit-profile')}>
