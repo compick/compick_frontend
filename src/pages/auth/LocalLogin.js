@@ -25,8 +25,8 @@ export default function LocalLogin() {
         body: JSON.stringify(form),
       });
 
-      if (data.code === 200 && data.data) {
-        setCookie("jwt", data.data, 3600); // 1시간 유효 예시
+      if (data.code === 200 && data.data?.accessToken) {
+        setCookie("jwt", data.data.accessToken, 3600); // 1시간 유효 예시
         alert("로그인 성공");
         navigate("/", { replace: true });
       } else {

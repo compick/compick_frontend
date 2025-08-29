@@ -1,5 +1,5 @@
 import { API_BASE } from "../config";
-import { getCookie, setCookie } from "../utils/Cookie"; 
+import { getCookie, setCookie } from "../utils/Cookie";
 
 // apiClient.js v 
 const toAbs = (u) => /^https?:\/\//i.test(u) ? u : `${API_BASE}${u.startsWith("/") ? "" : "/"}${u}`;
@@ -15,9 +15,10 @@ async function refreshAccessToken() {
       });
       if (!res.ok) throw new Error("REFRESH_FAILED");
       const data = await res.json();
-      if (!data?.accessToken) throw new Error("NO_ACCESS_TOKEN");
-      setCookie("jwt", data.accessToken);
-      return data.accessToken;
+      const at = data?.accessToken;
+      if (!at) throw new Error("NO_ACCESS_TOKEN");
+      setCookie("jwt", at);
+      return at;
     })().finally(() => { refreshPromise = null; });
   }
   return refreshPromise;
@@ -29,17 +30,19 @@ export async function apiFetch(input, init = {}) {
   const at = getCookie("jwt");
   if (at) headers.set("Authorization", `Bearer ${at}`);
 
-  let res = await fetch(new Request(url, { ...init, headers }));
+  const reqInit = { credentials: 'include', ...init, headers };
+
+  let res = await fetch(new Request(url, reqInit));
 
   if (res.status === 401) {
-    let body; try { body = await res.clone().json(); } catch {}
+    let body; try { body = await res.clone().json(); } catch { }
     if (body?.msg === "ACCESS_TOKEN_EXPIRED") {
       try {
         const newAt = await refreshAccessToken();
         const h2 = new Headers(init.headers || {});
         h2.set("Authorization", `Bearer ${newAt}`);
         res = await fetch(new Request(url, { ...init, headers: h2 }));
-      } catch {}
+      } catch { }
     }
   }
   return res;
