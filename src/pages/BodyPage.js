@@ -9,6 +9,7 @@ import KakaoLogin from './auth/KakaoLogin';
 import SelectSignup from "./auth/SelectSignup";
 import LocalSignup from './auth/LocalSignup';
 import KakaoSignup from './auth/KakaoSignup';
+import KakaoResult from './auth/KakaoResult';
 
 import GuestRoute from './auth/GuestRoute';
 
@@ -90,6 +91,7 @@ export default function BodyPage({ posts, matches, userScores, capturedImage, se
 
                 <SidebarPage isLoggedIn={isLoggedIn} onLogout={onLogout} />
                 <div style={{ flex: 1 }}>
+                    <AuthBootstrap onLogin={onLogin} onLogout={onLogout} />
 
                     <Routes>
                         <Route path="/" element={<HomePageWrapper handleLeagueChange={handleLeagueChange} posts={posts} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} selectedLeague={selectedLeague} />} />
@@ -106,7 +108,8 @@ export default function BodyPage({ posts, matches, userScores, capturedImage, se
                         <Route path="/login/kakao" element={<KakaoLogin />} />
                         <Route path="/signup/local" element={<LocalSignup />} />
                         <Route path="/signup/kakao" element={<KakaoSignup />} />
-
+                        <Route path="/kakao/result" element={<KakaoResult/>} />
+                    
                         <Route path="/myProfile" element={<MyProfile userScores={userScores} userInfo={userInfo} />} />
                         <Route path="/edit-profile" element={<EditProfilePage currentUser={userInfo} onSave={onProfileUpdate} />} />
                         <Route path="/tier/:category" element={<TierDetailPage userScores={userScores} />} />

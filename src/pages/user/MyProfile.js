@@ -4,8 +4,8 @@ import TierList from "./TierList";
 import MyVotesPage from "./MyVotesPage";
 import FavoritesPage from "./FavoritesPage";
 import MyCommentsPage from "./MyCommentsPage";
-import { getCookie, deleteCookie } from '../../utils/Cookie';
-import { API_BASE } from "../../config"; 
+import { deleteCookie } from '../../utils/Cookie';
+import { apiJson } from "../../api/apiClient";
 // PasswordConfirmModal 및 checkPassword import 제거
 
 export default function MyProfile({ userScores, userInfo }) {
@@ -14,30 +14,27 @@ export default function MyProfile({ userScores, userInfo }) {
     const [nickName, setNickName] = useState("");
     // 모달 관련 상태 및 핸들러 모두 제거
 
-    useEffect(() => {
-        const token = getCookie('jwt');
-        if (!token) return;
 
-        fetch(`${API_BASE}/api/user/info`, {
-            method: "GET",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-            },
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.code === 200) {
+    useEffect(() => {
+        // 굳이 쿠키 확인할 필요 없음: apiJson이 알아서 Authorization 헤더 세팅
+        apiJson("/api/user/info")
+            .then((data) => {
+                // 서버 공통 응답 포맷: { code, data, msg } 라고 가정
+                if (data?.code === 200) {
                     setNickName(data.data.userNickname);
                 } else {
                     setNickName("알수없음");
                 }
             })
-            .catch(() => {
+            .catch((err) => {
+                // AT 만료 → RT 갱신 실패 or 진짜 401 등
                 setNickName("에러");
-                deleteCookie('jwt');
-                window.location.href = '/login';
-            })
-    }, [])
+                alert(err.message);
+                deleteCookie("jwt");
+                window.location.href = "/login";
+            });
+    }, []);
+
 
 
     const handleNavigate = (path) => {
@@ -67,7 +64,7 @@ export default function MyProfile({ userScores, userInfo }) {
         <div className="uploadContainer">
             <div className="profileBox">
                 <div className="container col">
-                    <span className="profileNickName">{userInfo.nickname}</span>
+                    <span className="profileNickName">{nickName}</span>
                     <span className="profileIntroduction">{userInfo.introduction}</span>
                 </div>
                 <div className="container col profileImginBox" onClick={() => handleNavigate('/edit-profile')}>
