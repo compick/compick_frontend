@@ -2,7 +2,7 @@ import React, { useState, useCallback, useEffect } from 'react';
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { getMatchesByMonth } from '../../../api/match/';
+import { getMatchesByMonth } from '../../../api/match/Matches';
 import MatchCard from './MatchCard';
 import GetLeagueLogo from '../../../utils/GetLeagueLogo';
 import GetTeamLogo from '../../../utils/GetTeamLogo';

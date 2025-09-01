@@ -1,4 +1,4 @@
-import axiosInstance from '../FetchInstance';
+import api from '../FetchInstance';
 
 /**
  * 사용자의 게시글과 댓글 목록을 가져옵니다.
@@ -37,7 +37,7 @@ export const getUserContent = async (userId) => {
 export const withdrawUser = async (userId) => {
     try {
         // 실제 API 엔드포인트로 수정해야 합니다.
-        const response = await axiosInstance.delete(`/users/${userId}`);
+        const response = await api.delete(`/users/${userId}`);
         return response.data;
     } catch (error) {
         console.error("회원탈퇴 처리 실패:", error);
