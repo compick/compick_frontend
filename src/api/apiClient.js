@@ -13,9 +13,11 @@ async function refreshAccessToken() {
         method: "POST",
         credentials: "include" // RT 쿠키 전송(크로스도메인이면 CORS+SameSite=None 필요)
       });
+
       if (!res.ok) throw new Error("REFRESH_FAILED");
       const data = await res.json();
-      const at = data?.accessToken;
+      const at = data?.data?.accessToken;
+
       if (!at) throw new Error("NO_ACCESS_TOKEN");
       setCookie("jwt", at);
       return at;
@@ -41,7 +43,7 @@ export async function apiFetch(input, init = {}) {
         const newAt = await refreshAccessToken();
         const h2 = new Headers(init.headers || {});
         h2.set("Authorization", `Bearer ${newAt}`);
-        res = await fetch(new Request(url, { ...init, headers: h2 }));
+        res = await fetch(new Request(url, { ...init, headers: h2, credentials: 'include' }));
       } catch { }
     }
   }
