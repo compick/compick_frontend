@@ -1,4 +1,4 @@
-import api from "../../axiosInstance";
+import api from "../../FetchInstance";
 
 /** MMA - UFC 경기 조회 */
 export const getUfcMatches = async (startISO, endISO) => {

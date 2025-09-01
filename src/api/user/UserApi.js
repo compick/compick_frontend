@@ -1,4 +1,4 @@
-import axiosInstance from '../axiosInstance';
+import axiosInstance from '../FetchInstance';
 
 /**
  * 사용자의 게시글과 댓글 목록을 가져옵니다.

@@ -27,8 +27,6 @@ import TeamRankingsPage from './body/TeamRankingsPage'; // 구단순위 페이�
 import PostDetailPage from './body/PostDetailPage';
 import SportHeader from './component/SportHeader';
 
-import AuthBootstrap from '../AuthBootstrap';
-
 
 
 // URL 파라미터를 읽어 HomeBodyPage에 league prop을 전달하는 래퍼 컴포넌트
@@ -92,7 +90,6 @@ export default function BodyPage({ posts, matches, userScores, capturedImage, se
 
                 <SidebarPage isLoggedIn={isLoggedIn} onLogout={onLogout} />
                 <div style={{ flex: 1 }}>
-                    <AuthBootstrap onLogin={onLogin} onLogout={onLogout} />
 
                     <Routes>
                         <Route path="/" element={<HomePageWrapper handleLeagueChange={handleLeagueChange} posts={posts} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} selectedLeague={selectedLeague} />} />

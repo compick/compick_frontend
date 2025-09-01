@@ -1,11 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { getAllMatchesMonthly } from '../../../api/match/Matches';
-import { getAllSoccerMatchesMonthly, getEplMatchesMonthly, getLaligaMatchesMonthly } from '../../../api/match/soccer';
-import { getAllBaseballMatchesMonthly, getKboMatchesMonthly } from '../../../api/match/baseball';
-import { getAllMmaMatchesMonthly, getUfcMatchesMonthly } from '../../../api/match/mma';
+import { getMatchesByMonth } from '../../../api/match/';
 import MatchCard from './MatchCard';
 import GetLeagueLogo from '../../../utils/GetLeagueLogo';
 import GetTeamLogo from '../../../utils/GetTeamLogo';
@@ -65,98 +62,59 @@ const formatDate = (date) => {
 export default function CalendarView({ likedMatches, onLikeMatch, sport, league }) {
     const [matches, setMatches] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [currentDate, setCurrentDate] = useState(new Date()); // 현재 캘린더의 월을 관리
-
-    useEffect(() => {
-        const fetchMatches = async () => {
-            // sport와 league가 없으면 API 호출하지 않음
-            if (!sport || !league) {
-                setLoading(false);
-                return;
-            }
-
-            try {
-                setLoading(true);
-                setError(null);
-                const year = currentDate.getFullYear();
-                const month = currentDate.getMonth() + 1; // getMonth()는 0부터 시작하므로 +1
-                const startDate = new Date(year, currentDate.getMonth(), 1);
-                const endDate = new Date(year, currentDate.getMonth() + 1, 0);
-                
-                console.log('🎯 CalendarView API 호출:', { sport, league, year, month });
-                
-                let data;
-                
-                // 홈 페이지 (전체 경기)인 경우
-                if (sport === 'all' && league === 'all') {
-                    data = await getAllMatchesMonthly(year, month);
-                }
-                // 축구 관련 API 호출
-                else if (sport === 'soccer') {
-                    if (league === 'all') {
-                        data = await getAllSoccerMatchesMonthly(year, month);
-                    } else if (league === 'epl') {
-                        data = await getEplMatchesMonthly(year, month);
-                    } else if (league === 'laliga') {
-                        data = await getLaligaMatchesMonthly(year, month);
-                    }
-                }
-                // 야구 관련 API 호출
-                else if (sport === 'baseball') {
-                    if (league === 'all') {
-                        data = await getAllBaseballMatchesMonthly(year, month);
-                    } else if (league === 'kbo') {
-                        data = await getKboMatchesMonthly(year, month);
-                    }
-                }
-                // MMA 관련 API 호출
-                else if (sport === 'mma') {
-                    if (league === 'all') {
-                        data = await getAllMmaMatchesMonthly(year, month);
-                    } else if (league === 'ufc') {
-                        data = await getUfcMatchesMonthly(year, month);
-                    }
-                }
-                
-                setMatches(normalizeMatches(data));
-            } catch (error) {
-                console.error('Error fetching matches:', error);
-                if (error.code === 'ERR_NETWORK') {
-                    setError('네트워크 연결을 확인해주세요. 백엔드 서버가 실행 중인지 확인하세요.');
-                } else if (error.response?.status === 404) {
-                    setError('요청한 경기 정보를 찾을 수 없습니다.');
-                } else if (error.response?.status >= 500) {
-                    setError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
-                } else {
-                    setError('경기 정보를 불러오는 중 오류가 발생했습니다.');
-                }
-                setMatches([]);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchMatches();
-    }, [currentDate, sport, league]);
-
+    const [error, setError]   = useState(null);
     const [selectedDate, setSelectedDate] = useState(formatDate(new Date()));
-
+    const lastFetchKeyRef = React.useRef("");
+  
+    const fetchByYearMonth = useCallback(async (viewDate, s, l) => {
+      if (!s || !l) return; // 둘 다 있어야 호출
+      const year = viewDate.getFullYear();
+      const month = viewDate.getMonth() + 1;
+  
+      const key = `${s}|${l}|${year}|${month}`;
+      if (lastFetchKeyRef.current === key) return; // 같은 요청이면 생략
+      lastFetchKeyRef.current = key;
+  
+      try {
+        setLoading(true);
+        setError(null);
+        const data = await getMatchesByMonth(s, l, year, month);
+        setMatches(normalizeMatches(data));
+      } catch (err) {
+        console.error('Error fetching matches:', err);
+        setMatches([]);
+        if (err.code === 'ERR_NETWORK') setError('네트워크 연결을 확인해주세요. 백엔드 서버가 실행 중인지 확인하세요.');
+        else if (err.response?.status === 404) setError('요청한 경기 정보를 찾을 수 없습니다.');
+        else if (err.response?.status >= 500) setError('서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+        else setError('경기 정보를 불러오는 중 오류가 발생했습니다.');
+      } finally {
+        setLoading(false);
+      }
+    }, []);
+  
+    // sport/league 바뀌면 현재 캘린더의 날짜로 다시 호출해야 하므로,
+    // 캘린더가 최초 mount된 다음 datesSet이 once 호출되도록 한 번 더 유도.
+    const calendarDateRef = React.useRef(new Date());
     useEffect(() => {
-        if (matches && matches.length > 0) {
-            const today = formatDate(new Date());
-            const todayMatches = matches.filter((m) => m._ymd === today);
-            if (todayMatches.length > 0) {
-                setSelectedDate(today);
-            } else {
-                // 오늘 경기가 없으면 가장 가까운 경기 날짜로 설정
-                const dated = matches.filter((m) => m._dt instanceof Date && !isNaN(m._dt));
-                if (dated.length > 0) {
-                    dated.sort((a, b) => a._dt - b._dt);
-                    setSelectedDate(dated[0]._ymd);
-                }
-            }
+      // sport/league 변경 시에도 현재 view로 refetch
+      fetchByYearMonth(calendarDateRef.current, sport || 'all', league || 'all');
+    }, [sport, league, fetchByYearMonth]);
+  
+    // 날짜 선택 유도 로직(그대로 유지)
+    useEffect(() => {
+      if (matches?.length) {
+        const today = formatDate(new Date());
+        const todayMatches = matches.filter((m) => m._ymd === today);
+        if (todayMatches.length > 0) {
+          setSelectedDate(today);
+        } else {
+          const dated = matches.filter((m) => m._dt instanceof Date && !isNaN(m._dt));
+          if (dated.length > 0) {
+            dated.sort((a, b) => a._dt - b._dt);
+            setSelectedDate(dated[0]._ymd);
+          }
         }
+      }
     }, [matches]);
 
     // 날짜 클릭 핸들러
@@ -244,10 +202,12 @@ export default function CalendarView({ likedMatches, onLikeMatch, sport, league 
                 <FullCalendar
                     plugins={[dayGridPlugin, interactionPlugin]}
                     initialView="dayGridMonth"
-                    dateClick={handleDateClick}
+                    dateClick={(arg) => setSelectedDate(formatDate(arg.date))}
                     datesSet={(arg) => {
-                        // 뷰가 변경되면 (예: 월 이동) currentDate를 업데이트하여 API 재호출
-                        setCurrentDate(arg.view.currentStart);
+                      // FullCalendar가 알려주는 현재 뷰 시작일(해당 월의 시작 주의 월요일)
+                      const viewStart = arg.view.currentStart;
+                      calendarDateRef.current = viewStart; // sport/league 변화 시 재사용
+                      fetchByYearMonth(viewStart, sport || 'all', league || 'all');
                     }}
                     events={calendarEvents}
                     eventContent={(arg) => {

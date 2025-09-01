@@ -1,4 +1,4 @@
-import api from "../../axiosInstance";
+import api from "../../FetchInstance";
 
 /** 야구 - KBO 경기 조회 */
 export const getKboMatches = async (startISO, endISO) => {
