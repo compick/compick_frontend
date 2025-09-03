@@ -1,7 +1,8 @@
 import axios from 'axios';
+import { API_BASE } from "../config";
 
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:8080/api', // API 기본 URL을 설정합니다.
+    baseURL: API_BASE, // API 기본 URL을 설정합니다.
     timeout: 3000, // 타임아웃을 10초로 증가
     headers: {
         'Content-Type': 'application/json',

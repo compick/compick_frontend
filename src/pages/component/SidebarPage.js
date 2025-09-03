@@ -24,7 +24,7 @@ export default function SidebarPage() {
     const handleLogoutClick = () => {
         console.log("JWT Token:", token);
         deleteCookie('jwt'); // JWT 쿠키 삭제
-        navigate('/'); // 로그아웃 후 홈으로 이동
+        navigate('/login'); // 로그아웃 후 홈으로 이동
     };
 
     return (
