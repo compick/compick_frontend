@@ -10,7 +10,10 @@ export function setCookie(name, val) {
 }
 
 // utils/cookie.js
-export function deleteCookie(name) {
-  document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/; Secure; SameSite=Lax`;
+export function deleteCookie(name, { path='/', sameSite='Lax' } = {}) {
+  document.cookie =
+    `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; Path=${path}; SameSite=${sameSite}`;
+  // Domain은 처음에 안 썼으니 쓰지 말기. (localhost ↔ 192.168.x.x 다르면 원래 못 지움)
 }
+
 
