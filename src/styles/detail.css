@@ -1,0 +1,800 @@
+.match-detail-layout {
+    display: flex;
+    min-height: 100vh;
+    background-color: var(--page-bg);
+    transition: background-color 0.3s ease;
+}
+
+.left-sidebar {
+    width: 250px;
+    background-color: var(--card-bg);
+    border-right: 1px solid var(--card-border);
+    padding: 20px;
+    box-shadow: var(--shadow-md);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.right-sidebar {
+    width: 300px;
+    background-color: var(--card-bg);
+    border-left: 1px solid var(--card-border);
+    padding: 20px;
+    box-shadow: var(--shadow-md);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.match-detail-container{
+    flex: 1;
+    padding: 20px;
+    background-color: var(--page-bg);
+    transition: background-color 0.3s ease;
+}
+
+/* 매치 헤더 */
+.match-header {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--card-border);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.match-header .team-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.match-header .team-logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--text-primary);
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+.match-header .team-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.match-header .match-info {
+    text-align: center;
+    flex: 1;
+}
+
+.match-header .match-status {
+    font-size: 14px;
+    opacity: 0.9;
+    margin-bottom: 5px;
+    color: var(--text-primary);
+}
+
+.match-header .match-time {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--text-primary);
+}
+
+.match-header .match-venue {
+    font-size: 12px;
+    opacity: 0.8;
+    color: var(--text-muted);
+}
+
+.match-header .match-score {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--text-primary);
+    margin: 10px 0;
+}
+
+/* 네비게이션 탭 */
+.match-nav-tabs {
+    display: flex;
+    background: var(--card-bg);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--card-border);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.match-nav-tabs .tab {
+    flex: 1;
+    padding: 15px 20px;
+    text-align: center;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: all 0.3s ease;
+    color: var(--text-primary);
+    background-color: var(--card-bg);
+}
+
+.match-nav-tabs .tab.active {
+    border-bottom-color: var(--link-color);
+    color: var(--link-color);
+    font-weight: bold;
+}
+
+.match-nav-tabs .tab:hover {
+    background-color: var(--button-secondary);
+}
+
+/* 팀 통계 섹션 */
+.team-stats-section {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--card-border);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-stats-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.team-stats-header h3 {
+    margin: 0;
+    color: var(--text-primary);
+    font-size: 20px;
+}
+
+.team-comparison {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+}
+
+.team-stats {
+    flex: 1;
+    text-align: center;
+}
+
+.team-stats .team-name {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+}
+
+.team-stats .team-record {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 15px;
+}
+
+.team-stats .recent-form {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-bottom: 15px;
+}
+
+.team-stats .form-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+    font-size: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+.team-stats .form-indicator.win {
+    background-color: #28a745;
+}
+
+.team-stats .form-indicator.draw {
+    background-color: #ffc107;
+}
+
+.team-stats .form-indicator.loss {
+    background-color: #dc3545;
+}
+
+.team-stats .stat-bar {
+    margin-bottom: 10px;
+}
+
+.team-stats .stat-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+}
+
+.team-stats .stat-value {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--text-primary);
+    margin-bottom: 5px;
+}
+
+.team-stats .stat-bar-container {
+    background-color: var(--button-secondary);
+    height: 8px;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.team-stats .stat-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.team-stats .stat-bar-fill.red {
+    background-color: #dc3545;
+}
+
+.team-stats .stat-bar-fill.blue {
+    background-color: var(--link-color);
+}
+
+.vs-divider {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--text-primary);
+    margin: 0 20px;
+}
+
+/* 맞대결 섹션 */
+.head-to-head-section {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--card-border);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.head-to-head-section h3 {
+    margin: 0 0 20px 0;
+    color: var(--text-primary);
+    font-size: 18px;
+}
+
+.h2h-matches {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.h2h-match {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    background-color: var(--button-secondary);
+    border-radius: 8px;
+    border-left: 4px solid var(--link-color);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.h2h-match .match-date {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+}
+
+.h2h-match .match-league {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.h2h-match .match-teams {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex: 1;
+    justify-content: center;
+}
+
+.h2h-match .team {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.h2h-match .team-logo {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.h2h-match .team-name {
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--text-primary);
+}
+
+.h2h-match .score {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--text-primary);
+    margin: 0 10px;
+}
+
+/* 광고 섹션 */
+.ad-section {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--card-border);
+    position: relative;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.ad-section .ad-label {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    background-color: #ffc107;
+    color: #333;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.ad-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.ad-content .ad-image {
+    width: 80px;
+    height: 80px;
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+.ad-content .ad-text {
+    flex: 1;
+}
+
+.ad-content .ad-title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--text-primary);
+}
+
+.ad-content .ad-subtitle {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+}
+
+.ad-content .ad-button {
+    background-color: var(--link-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.ad-content .ad-button:hover {
+    background-color: #0056b3;
+}
+
+/* 왼쪽 사이드바 스타일 */
+.left-sidebar h3 {
+    margin-bottom: 15px;
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.recent-matches-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.recent-match-item {
+    padding: 10px;
+    background-color: var(--button-secondary);
+    border-radius: 8px;
+    border: 1px solid var(--card-border);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.recent-match-item:hover {
+    background-color: var(--button-secondary);
+}
+
+.recent-match-item .match-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.recent-match-item .match-league {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.recent-match-item .match-id {
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* 오른쪽 사이드바 스타일 */
+.right-sidebar h3 {
+    margin-bottom: 15px;
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.chat-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.chat-messages {
+    flex: 1;
+    background-color: var(--page-bg);
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+    min-height: 300px;
+}
+
+.chat-placeholder {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-top: 50px;
+}
+
+/* 최근 경기 기록 스타일 */
+.team-recent-matches {
+    margin-bottom: 30px;
+}
+
+.team-recent-matches h3 {
+    margin-bottom: 15px;
+    color: var(--text-primary);
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.recent-matches-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+}
+
+.recent-match {
+    background-color: var(--card-bg);
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid var(--card-border);
+    box-shadow: var(--shadow-sm);
+}
+
+.recent-match .match-date {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 5px;
+}
+
+.recent-match .match-status {
+    font-size: 12px;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    font-weight: 500;
+}
+
+.recent-match .match-teams {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.recent-match .team {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+}
+
+.recent-match .team-name {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.recent-match .score {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    min-width: 60px;
+    text-align: center;
+}
+
+/* 경기 점수 표시 */
+.match-score {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* 팀 전력 비교 섹션 */
+.team-power-comparison {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--card-border);
+}
+
+.team-power-comparison h3 {
+    margin: 0 0 20px 0;
+    color: var(--text-primary);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.power-stats {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 30px;
+}
+
+.team-power {
+    flex: 1;
+    text-align: center;
+    padding: 20px;
+    background-color: var(--button-secondary);
+    border-radius: 8px;
+    border: 2px solid var(--card-border);
+}
+
+.team-power .team-name {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--text-primary);
+}
+
+.team-power .win-rate {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--link-color);
+    margin-bottom: 5px;
+}
+
+.team-power .recent-matches-count {
+    font-size: 14px;
+    color: var(--text-muted);
+}
+
+/* MatchCard 컨테이너 */
+.match-cards-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.no-matches {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-muted);
+    font-size: 14px;
+    background-color: var(--button-secondary);
+    border-radius: 8px;
+    border: 1px dashed var(--card-border);
+}
+
+/* 로그인 모달 스타일 */
+.login-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.login-modal {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: var(--shadow-lg);
+    animation: modalFadeIn 0.3s ease-out;
+    border: 1px solid var(--card-border);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.login-modal-content h3 {
+    margin: 0 0 15px 0;
+    color: var(--text-primary);
+    font-size: 20px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.login-modal-content p {
+    margin: 0 0 10px 0;
+    color: var(--text-muted);
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.5;
+}
+
+.login-modal-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+    justify-content: center;
+}
+
+.login-modal-cancel,
+.login-modal-confirm {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.login-modal-cancel {
+    background-color: var(--button-secondary);
+    color: var(--text-muted);
+    border: 1px solid var(--card-border);
+}
+
+.login-modal-cancel:hover {
+    background-color: var(--button-secondary);
+}
+
+.login-modal-confirm {
+    background-color: var(--link-color);
+    color: white;
+}
+
+.login-modal-confirm:hover {
+    background-color: #0056b3;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .match-detail-layout {
+        flex-direction: column;
+    }
+    
+    .left-sidebar,
+    .right-sidebar {
+        width: 100%;
+        border: none;
+        box-shadow: none;
+        border-bottom: 1px solid var(--card-border);
+    }
+    
+    .match-detail-container {
+        padding: 10px;
+    }
+    
+    .match-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .team-comparison {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .vs-divider {
+        margin: 10px 0;
+    }
+    
+    .h2h-match .match-teams {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .recent-matches-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .power-stats {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .team-power {
+        padding: 15px;
+    }
+    
+    .team-power .win-rate {
+        font-size: 20px;
+    }
+    
+    .login-modal {
+        margin: 20px;
+        padding: 20px;
+    }
+    
+    .login-modal-buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .login-modal-cancel,
+    .login-modal-confirm {
+        width: 100%;
+        padding: 12px;
+    }
+}

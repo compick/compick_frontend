@@ -5,9 +5,155 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--page-bg);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* 전체 페이지 다크모드 적용 */
+* {
+  box-sizing: border-box;
+}
+
+/* 기본 배경색 */
+html {
+  background-color: var(--page-bg);
+  transition: background-color 0.3s ease;
+}
+
+/* 헤더 스타일 */
+header, .header, [class*="header"] {
+  background-color: var(--header-bg) !important;
+  color: var(--header-text) !important;
+  border-bottom: 1px solid var(--header-border) !important;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* 사이드바 스타일 */
+aside, .sidebar, [class*="sidebar"] {
+  background-color: var(--sidebar-bg) !important;
+  color: var(--sidebar-text) !important;
+  
+}
+
+/* 카드 스타일 */
+.card, [class*="card"] {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--card-border) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* 버튼 스타일 */
+button:not(.theme-toggle):not(.kakaoButton):not(.authButton) {
+  background-color: var(--button-primary) !important;
+  color: white !important;
+  border: 1px solid var(--button-primary) !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+button:not(.theme-toggle):not(.kakaoButton):not(.authButton):hover {
+  background-color: var(--button-secondary) !important;
+  border-color: var(--button-secondary-hover) !important;
+}
+
+/* 입력 필드 스타일 */
+input:not(.verification-input), textarea, select {
+  background-color: var(--input-bg) !important;
+  border: 1px solid var(--input-border) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+input:not(.verification-input):focus, textarea:focus, select:focus {
+  border-color: var(--input-focus) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(96, 165, 250, 0.2) !important;
+}
+
+/* 링크 스타일 */
+a {
+  color: var(--link-color) !important;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--link-hover) !important;
+}
+
+/* 텍스트 스타일 */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--text-primary) !important;
+  transition: color 0.3s ease;
+}
+
+p, span, div {
+  color: var(--text-secondary) !important;
+  transition: color 0.3s ease;
+}
+
+/* 테이블 스타일 */
+table {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--card-border) !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+th, td {
+  border: 1px solid var(--card-border) !important;
+  color: var(--text-primary) !important;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+/* 네비게이션 스타일 */
+nav, .nav, [class*="nav"] {
+  background-color: var(--header-bg) ;
+  color: var(--header-text) ;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 메뉴 스타일 */
+.menu, [class*="menu"] {
+  background-color: var(--card-bg) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* 모달 스타일 */
+.modal, [class*="modal"] {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--card-border) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* 드롭다운 스타일 */
+.dropdown, [class*="dropdown"] {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--card-border) !important;
+  color: var(--text-primary) !important;
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* 스크롤바 스타일 */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--sidebar-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--card-border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
 }

@@ -15,7 +15,7 @@ export default function GetLeagueLogo(leagueName) {
     case "england premium league":
     case "epl":
     case "premier league":
-    case "프리미어 리그":
+    case "영국 프리미어 리그":
     case "england premier league":
     case "premier league":
     case "england premium league":

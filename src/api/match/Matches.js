@@ -1,151 +1,153 @@
 // src/api/matches.js
-import api from "../axiosInstance";
+import { apiFetch, apiJson } from "../apiClient";
+import { useState } from "react";
 
-/** FullCalendar 뷰 범위 기반 조회: [start, end) */
+// 공용 안전 추출기
+const extractData = (res, fallback = []) =>
+  (res && typeof res === "object" && "data" in res)
+    ? res.data
+    : (res ?? fallback);
+
+// 공용 결과 빌더
+const buildResult = (status, data, error, requestUrl, response = null, startedAt) => ({
+  status,
+  data,
+  error,
+  meta: {
+    requestUrl,
+    startedAt,
+    finishedAt: Date.now(),
+    response, // ← 원본 응답 저장
+  },
+});
+// [1] 범위 조회 [start, end)
 export const getMatchesByRange = async (sport, league, startISO, endISO) => {
-  console.log('Calling getMatchesByRange with:', { sport, league, startISO, endISO });
-  const { data } = await api.get(`/matches/${sport}/${league}`, {
-    params: { start: startISO, end: endISO },
-  });
-  return data; // MatchCardDto[]
+  const params = new URLSearchParams({ start: startISO, end: endISO });
+  const requestUrl = `/api/match/${sport}/${league}?${params}`;
+  const startedAt = Date.now();
+
+  try {
+    const response = await apiJson(requestUrl);
+    const payload = extractData(response, []);
+    return buildResult('success', payload, null, requestUrl, response, startedAt);
+  } catch (error) {
+    return buildResult('error', [], error?.message ?? 'Request failed', requestUrl, null, startedAt);
+  }
 };
 
-/** (옵션) 월 그리드 조회: year/month */
+// [2] 월별 조회 (year/month)
 export const getMatchesByMonth = async (sport, league, year, month) => {
-  console.log('Calling getMatchesByMonth with:', { sport, league, year, month });
-  const { data } = await api.get(`/matches/${sport}/${league}`, {
-    params: { year, month }, // 컨트롤러에서 params = {"year","month"}로 매핑
-  });
-  return data; // MatchCardDto[]
+  const params = new URLSearchParams({ year, month });
+  const requestUrl = `/api/match/${sport}/${league}/monthly?${params}`;
+  console.log('[API] monthly requestUrl =', requestUrl);  // ★
+  const startedAt = Date.now();
+
+  try {
+    const response = await apiJson(requestUrl);
+    const payload = extractData(response, []);
+    return buildResult('success', payload, null, requestUrl, response, startedAt);
+  } catch (error) {
+    return buildResult('error', [], error?.message ?? 'Request failed', requestUrl, null, startedAt);
+  }
 };
 
-/** 경기 상세 */
+
+// [3] 경기 상세
 export const getMatchDetail = async (sport, league, matchId) => {
-  const { data } = await api.get(`/matches/${sport}/${league}/${matchId}`);
-  return data; // MatchCardDto (or 상세 DTO)
+  const requestUrl = `/api/match/${sport}/${league}/${matchId}`;
+  const startedAt = Date.now();
+  try {
+    
+    const response = await apiJson(requestUrl);
+     console.log("[API] match detail response =", response);
+    const payload = extractData(response, null);
+    return {
+      status: 'success',
+      data: payload,
+      error: null,
+      meta: { requestUrl, startedAt, finishedAt: Date.now() }
+    };
+  } catch (error) {
+    return {
+      status: 'error',
+      data: null,
+      error: error.message,
+      meta: { requestUrl, startedAt, finishedAt: Date.now() }
+    };
+  }
 };
 
-/** 팀 순위 조회 */
+// [4] 팀 순위
 export const getTeamRankings = async (leagueType, leagueId = "all", season = new Date().getFullYear()) => {
-  // 새로운 API 경로 사용: /api/soccer/epl/rank 형태
   const path = leagueId === "all"
-    ? `/${leagueType}/all/rank`
-    : `/${leagueType}/${leagueId}/rank`;
-
-  const { data } = await api.get(path, {
-    params: { season },
-  });
-
-  return data; // 서버에서 반환되는 RankDto[] (예: { teamName, wins, losses, rank, ... })
+    ? `/api/${leagueType}/all/rank`
+    : `/api/${leagueType}/${leagueId}/rank`;
+  const params = new URLSearchParams({ season });
+  const requestUrl = `${path}?${params}`;
+  const startedAt = Date.now();
+  try {
+    const response = await apiJson(requestUrl);
+    const payload = extractData(response, []);
+    return {
+      status: 'success',
+      data: payload,
+      error: null,
+      meta: { requestUrl, startedAt, finishedAt: Date.now() }
+    };
+  } catch (error) {
+    return {
+      status: 'error',
+      data: [],
+      error: error.message,
+      meta: { requestUrl, startedAt, finishedAt: Date.now() }
+    };
+  }
 };
 
-// 홈 API 함수들
-/** 홈 - 모든 경기 조회 (기본: 이번 주 월~일) */
-export const getHomeMatches = async (startISO, endISO) => {
-  console.log('Calling getHomeMatches with:', { startISO, endISO });
-  const { data } = await api.get('/home/matches', {
-    params: { start: startISO, end: endISO },
-  });
-  return data;
-};
+// ===== 커스텀 훅 =====
+export const useMatchesState = () => {
+  const [matches, setMatches] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [lastRequestUrl, setLastRequestUrl] = useState("");
 
-/** 홈 - 오늘 경기만 조회 */
-export const getHomeMatchesToday = async () => {
-  console.log('Calling getHomeMatchesToday');
-  const { data } = await api.get('/home/matches/today');
-  return data;
-};
+  const fetchMatches = async (sport, league, year, month) => {
+    setLoading(true);
+    setError(null);
+    const result = await getMatchesByMonth(sport, league, year, month);
+    if (result.status === 'success') {
+      setMatches(Array.isArray(result.data) ? result.data : []);
+    } else {
+      setError(result.error);
+    }
+    if (result.meta?.requestUrl) setLastRequestUrl(result.meta.requestUrl);
+    setLoading(false);
+    return result;
+  };
 
-/** 홈 - 이번 주 경기 조회 */
-export const getHomeMatchesThisWeek = async () => {
-  console.log('Calling getHomeMatchesThisWeek');
-  const { data } = await api.get('/home/matches/this-week');
-  return data;
-};
+  const fetchMatchesByRange = async (sport, league, startISO, endISO) => {
+    setLoading(true);
+    setError(null);
+    const result = await getMatchesByRange(sport, league, startISO, endISO);
+    if (result.status === 'success') {
+      setMatches(Array.isArray(result.data) ? result.data : []);
+    } else {
+      setError(result.error);
+    }
+    if (result.meta?.requestUrl) setLastRequestUrl(result.meta.requestUrl);
+    setLoading(false);
+    return result;
+  };
 
-/** 홈 - 캘린더 월별 조회 */
-export const getHomeMatchesMonthly = async (year, month) => {
-  console.log('Calling getHomeMatchesMonthly with:', { year, month });
-  const { data } = await api.get('/home/matches/monthly', {
-    params: { year, month },
-  });
-  return data;
+  return {
+    matches,
+    loading,
+    error,
+    lastRequestUrl,        // 👈 여기서 URL을 노출
+    fetchMatches,
+    fetchMatchesByRange,
+    setMatches,
+    setLoading,
+    setError
+  };
 };
-
-/** 홈 - 특정 날짜의 경기 조회 */
-export const getHomeMatchesByDate = async (date) => {
-  console.log('Calling getHomeMatchesByDate with:', { date });
-  const { data } = await api.get('/home/matches/date', {
-    params: { date },
-  });
-  return data;
-};
-
-// All API 함수들
-/** All - 모든 스포츠의 모든 리그 경기 조회 */
-export const getAllMatches = async (startISO, endISO) => {
-  console.log('Calling getAllMatches with:', { startISO, endISO });
-  const { data } = await api.get('/all/matches', {
-    params: { start: startISO, end: endISO },
-  });
-  return data;
-};
-
-/** All - 오늘 경기만 조회 */
-export const getAllMatchesToday = async () => {
-  console.log('Calling getAllMatchesToday');
-  const { data } = await api.get('/all/matches/today');
-  return data;
-};
-
-/** All - 이번 주 경기 조회 */
-export const getAllMatchesThisWeek = async () => {
-  console.log('Calling getAllMatchesThisWeek');
-  const { data } = await api.get('/all/matches/this-week');
-  return data;
-};
-
-/** All - 캘린더 월별 조회 */
-export const getAllMatchesMonthly = async (year, month) => {
-  console.log('Calling getAllMatchesMonthly with:', { year, month });
-  const { data } = await api.get('/all/matches/monthly', {
-    params: { year, month },
-  });
-  return data;
-};
-
-/** All - 특정 날짜의 경기 조회 */
-export const getAllMatchesByDate = async (date) => {
-  console.log('Calling getAllMatchesByDate with:', { date });
-  const { data } = await api.get('/all/matches/date', {
-    params: { date },
-  });
-  return data;
-};
-
-/** All - 특정 스포츠의 모든 리그 경기 조회 */
-export const getAllMatchesBySport = async (sport, startISO, endISO) => {
-  console.log('Calling getAllMatchesBySport with:', { sport, startISO, endISO });
-  const { data } = await api.get(`/all/matches/${sport}`, {
-    params: { start: startISO, end: endISO },
-  });
-  return data;
-};
-
-// 새로운 API 접근 경로 함수들
-/** 특정 스포츠/리그의 경기 조회 - /api/soccer/epl/match 형태 */
-export const getMatchesBySportLeague = async (sport, league, startISO, endISO) => {
-  console.log('Calling getMatchesBySportLeague with:', { sport, league, startISO, endISO });
-  const { data } = await api.get(`/${sport}/${league}/match`, {
-    params: { start: startISO, end: endISO },
-  });
-  return data;
-};
-
-/** 특정 스포츠/리그의 월별 경기 조회 - /api/soccer/epl/match/monthly 형태 */
-export const getMatchesBySportLeagueMonthly = async (sport, league, year, month) => {
-  const { data } = await api.get(`/${sport}/${league}/match/monthly`, {
-    params: { year, month },
-  });
-  return data;
-}; 

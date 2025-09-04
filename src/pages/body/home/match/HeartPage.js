@@ -1,5 +1,5 @@
 import React from 'react';
-import MatchCard from './body/home/MatchCard'; // MatchCard 재사용
+import MatchCard from './MatchCard'; // MatchCard 재사용
 
 export default function HeartPage({ likedMatches, onLikeMatch }) {
     return (

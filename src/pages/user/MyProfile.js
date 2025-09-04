@@ -12,6 +12,10 @@ export default function MyProfile({ userScores, userInfo }) {
     const navigate = useNavigate();
     const [activeView, setActiveView] = useState('tiers');
     const [nickName, setNickName] = useState("");
+    const [userData, setUserData] = useState({
+        introduction: "",
+        profileImg: "/img/icon/defaultProfile.jpeg"
+    });
     // 모달 관련 상태 및 핸들러 모두 제거
 
 
@@ -22,6 +26,13 @@ export default function MyProfile({ userScores, userInfo }) {
                 // 서버 공통 응답 포맷: { code, data, msg } 라고 가정
                 if (data?.code === 200) {
                     setNickName(data.data.userNickname);
+                    // userInfo가 없으면 API에서 받은 데이터로 설정
+                    if (!userInfo) {
+                        setUserData({
+                            introduction: data.data.introduction || "",
+                            profileImg: data.data.profileImg || "/img/icon/defaultProfile.jpeg"
+                        });
+                    }
                 } else {
                     setNickName("알수없음");
                 }
@@ -33,7 +44,7 @@ export default function MyProfile({ userScores, userInfo }) {
                 deleteCookie("jwt");
                 window.location.href = "/login";
             });
-    }, []);
+    }, [userInfo]);
 
 
 
@@ -65,11 +76,11 @@ export default function MyProfile({ userScores, userInfo }) {
             <div className="profileBox">
                 <div className="container col">
                     <span className="profileNickName">{nickName}</span>
-                    <span className="profileIntroduction">{userInfo.introduction}</span>
+                    <span className="profileIntroduction">{userInfo?.introduction || userData.introduction}</span>
                 </div>
                 <div className="container col profileImginBox" onClick={() => handleNavigate('/edit-profile')}>
                     <div className="profileImg">
-                        <img src={userInfo.profileImg} alt="프로필" />
+                        <img src={userInfo?.profileImg || userData.profileImg} alt="프로필" />
                     </div>
                 </div>
             </div>

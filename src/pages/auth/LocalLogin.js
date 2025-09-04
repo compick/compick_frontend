@@ -67,8 +67,13 @@ export default function LocalLogin() {
             {busy ? "로그인 중..." : "로그인"}
           </button>
         </form>
-
-        <span>비밀번호 찾기</span>
+        <button
+          className="kakaoButton"
+          onClick={() => navigate("/login/kakao")}
+          disabled={busy}
+        >
+          카카오 로그인
+        </button>
 
         <div className="container or">
           <div className="shortLine" />
@@ -76,6 +81,7 @@ export default function LocalLogin() {
           <div className="shortLine" />
         </div>
 
+        
         <button
           className="registerButton"
           onClick={() => navigate("/signup")}
@@ -83,7 +89,6 @@ export default function LocalLogin() {
         >
           회원가입
         </button>
-        <span> 로그인 api 추가</span>
       </div>
     </div>
   );

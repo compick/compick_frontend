@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getUserContent, withdrawUser, checkPassword } from "../../api/user/UserApi"; // checkPassword 추가
 
 // EditProfilePage는 currentUser, onSave 프롭을 받습니다.
 // 이 프롭들은 App.js의 라우트 설정에서 전달될 것입니다.
@@ -38,22 +37,22 @@ export default function EditProfilePage({ currentUser, onSave }) {
         alert("사용 가능한 닉네임입니다.");
     };
 
-    const handlePasswordCheck = async () => {
-        setIsLoading(true);
-        try {
-            const response = await checkPassword(currentUser.id, password);
-            if (response.success) {
-                setIsPasswordConfirmed(true);
-                alert("비밀번호가 확인되었습니다. 이제 정보를 수정할 수 있습니다.");
-            } else {
-                alert("비밀번호가 일치하지 않습니다.");
-            }
-        } catch (error) {
-            alert("비밀번호 확인 중 오류가 발생했습니다.");
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    // const handlePasswordCheck = async () => {
+    //     setIsLoading(true);
+    //     try {
+    //         const response = await checkPassword(currentUser.id, password);
+    //         if (response.success) {
+    //             setIsPasswordConfirmed(true);
+    //             alert("비밀번호가 확인되었습니다. 이제 정보를 수정할 수 있습니다.");
+    //         } else {
+    //             alert("비밀번호가 일치하지 않습니다.");
+    //         }
+    //     } catch (error) {
+    //         alert("비밀번호 확인 중 오류가 발생했습니다.");
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
 
     const handleSave = () => {
         const updatedUserInfo = {
@@ -70,34 +69,34 @@ export default function EditProfilePage({ currentUser, onSave }) {
         navigate(-1); // 이전 페이지로 이동
     };
 
-    const handleShowWithdrawal = async () => {
-        setIsLoading(true);
-        try {
-            // API를 호출하여 게시글/댓글 데이터를 가져옵니다.
-            const content = await getUserContent(currentUser.id); // currentUser.id를 사용 (id가 없으면 다른 식별자 사용)
-            setUserContent(content);
-            setShowWithdrawalConfirmation(true);
-        } catch (error) {
-            alert("정보를 가져오는 데 실패했습니다.");
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    // const handleShowWithdrawal = async () => {
+    //     setIsLoading(true);
+    //     try {
+    //         // API를 호출하여 게시글/댓글 데이터를 가져옵니다.
+    //         const content = await getUserContent(currentUser.id); // currentUser.id를 사용 (id가 없으면 다른 식별자 사용)
+    //         setUserContent(content);
+    //         setShowWithdrawalConfirmation(true);
+    //     } catch (error) {
+    //         alert("정보를 가져오는 데 실패했습니다.");
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
 
-    const handleWithdrawal = async () => {
-        setIsLoading(true);
-        try {
-            // API를 호출하여 회원탈퇴 처리
-            await withdrawUser(currentUser.id);
-            alert("회원탈퇴가 처리되었습니다.");
-            // 로그아웃 처리 및 메인 페이지로 이동 등 추가 로직 필요
-            navigate("/"); 
-        } catch (error) {
-            alert("회원탈퇴에 실패했습니다.");
-        } finally {
-            setIsLoading(false);
-        }
-    };
+    // const handleWithdrawal = async () => {
+    //     setIsLoading(true);
+    //     try {
+    //         // API를 호출하여 회원탈퇴 처리
+    //         await withdrawUser(currentUser.id);
+    //         alert("회원탈퇴가 처리되었습니다.");
+    //         // 로그아웃 처리 및 메인 페이지로 이동 등 추가 로직 필요
+    //         navigate("/"); 
+    //     } catch (error) {
+    //         alert("회원탈퇴에 실패했습니다.");
+    //     } finally {
+    //         setIsLoading(false);
+    //     }
+    // };
 
     return (
         <div className="profile-edit-page">
@@ -115,9 +114,9 @@ export default function EditProfilePage({ currentUser, onSave }) {
                             onChange={(e) => setPassword(e.target.value)}
                             disabled={isPasswordConfirmed}
                         />
-                        <button onClick={handlePasswordCheck} disabled={isPasswordConfirmed || isLoading}>
+                        {/* <button onClick={handlePasswordCheck} disabled={isPasswordConfirmed || isLoading}>
                             {isLoading && !showWithdrawalConfirmation ? "확인 중..." : "확인"}
-                        </button>
+                        </button> */}
                     </div>
                 </div>
 
@@ -167,13 +166,13 @@ export default function EditProfilePage({ currentUser, onSave }) {
                         </div>
 
                         <div className="withdrawal-section">
-                            <button 
+                            {/* {/* <button 
                                 onClick={handleShowWithdrawal} 
                                 className="withdrawal-btn" 
                                 disabled={isLoading}
-                            >
+                            > 
                                 {isLoading && showWithdrawalConfirmation ? '로딩 중...' : '회원탈퇴'}
-                            </button>
+                            </button> */}
                             {showWithdrawalConfirmation && (
                                 <div className="withdrawal-confirmation">
                                     <h4>회원탈퇴 확인</h4>
@@ -188,7 +187,7 @@ export default function EditProfilePage({ currentUser, onSave }) {
                                             {userContent.comments.map(comment => <li key={comment.id}>{comment.content}</li>)}
                                         </ul>
                                     </div>
-                                    <p>정말로 탈퇴하시겠습니까? <span className="confirm-text" onClick={handleWithdrawal}>예, 탈퇴합니다.</span></p>
+                                    {/* <p>정말로 탈퇴하시겠습니까? <span className="confirm-text" onClick={handleWithdrawal}>예, 탈퇴합니다.</span></p> */}
                                 </div>
                             )}
                         </div>

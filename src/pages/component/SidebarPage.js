@@ -1,64 +1,96 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+// SidebarPage.js
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getCookie, deleteCookie } from '../../utils/Cookie';
+import '../../styles/component.css';
 
+export default function SidebarPage({ onLogout }) {
+  const [showPopup, setShowPopup] = useState(false);
+  const navigate = useNavigate();
 
-const icons = [
-    { name: "", svg: <path d="M4 10v10h5v-6h6v6h5V10L12 3z" /> },
-    { name: "search", svg: <circle cx="11" cy="11" r="6" />, extra: <line x1="15.5" y1="15.5" x2="20" y2="20" /> },
-    { name: "add", svg: <><line x1="12" y1="6" x2="12" y2="18" /><line x1="6" y1="12" x2="18" y2="12" /></> },
-    { name: "heart", svg: <path d="M12 21s-6-4.35-6-8a4 4 0 0 1 8 0 4 4 0 0 1 8 0c0 3.65-6 8-6 8z" /> },
-    { name: "ranking", svg: <><path d="M8 4h8v2h2v2c0 2.2-1.5 4-3.5 4H9.5C7.5 12 6 10.2 6 8V6h2V4z" /><path d="M10 18h4v2h-4z" /></> },
-    { name: "myProfile", svg: <circle cx="12" cy="8" r="4" />, extra: <path d="M6 20c0-2 4-4 6-4s6 2 6 4" /> },
-];
+  // 쿠키로 로그인 여부 판단
+  const token = getCookie('jwt');
+  const loggedIn = !!token;
 
-const loginIcon = { name: "login", svg: <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3" /> };
-const logoutIcon = { name: "logout", svg: <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" /> };
+  const handleLogout = () => {
+    console.log('JWT Token:', token);
+    deleteCookie('jwt');       // JWT 쿠키 삭제
+    onLogout?.();              // 부모에 알림(선택)
+    navigate('/');             // 홈으로 이동
+  };
 
-export default function SidebarPage() {
-    const [activeIcon, setActiveIcon] = useState("");
-    const navigate = useNavigate();
-
-    const token = getCookie('jwt');
-    const isLoggedIn = !!token;
-    const handleLogoutClick = () => {
-        console.log("JWT Token:", token);
-        deleteCookie('jwt'); // JWT 쿠키 삭제
-        navigate('/login'); // 로그아웃 후 홈으로 이동
-    };
-
-    return (
-        <div className="sidebarContainer">
-            <div className="sidebar">
-                {icons.map((icon) => (
-                    <Link to={`/${icon.name}`} key={icon.name} style={{ textDecoration: "none" }}>
-                        <div
-                            className={`tabIcon ${activeIcon === icon.name ? "active" : ""}`}
-                            onClick={() => setActiveIcon(icon.name)}
-                        >
-                            <svg viewBox="0 0 24 24" className="tabItem" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                {icon.svg}
-                                {icon.extra}
-                            </svg>
-                        </div>
-                    </Link>
-                ))}
-                {isLoggedIn ? (
-                    <div className={`tabIcon ${activeIcon === logoutIcon.name ? "active" : ""}`} onClick={handleLogoutClick} style={{cursor: 'pointer'}}>
-                        <svg viewBox="0 0 24 24" className="tabItem" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            {logoutIcon.svg}
-                        </svg>
-                    </div>
-                ) : (
-                    <Link to={`/${loginIcon.name}`} style={{ textDecoration: "none" }}>
-                        <div className={`tabIcon ${activeIcon === loginIcon.name ? "active" : ""}`} onClick={() => setActiveIcon(loginIcon.name)}>
-                            <svg viewBox="0 0 24 24" className="tabItem" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                {loginIcon.svg}
-                            </svg>
-                        </div>
-                    </Link>
-                )}
-            </div>
+  return (
+    <div className="sidebarContainer">
+      <div className="sidebar">
+        <div className="tabIcon" onClick={() => navigate('/')}>
+          {/* 홈 아이콘 SVG */}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M9 22V12H15V22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
         </div>
-    );
+
+        <div className="tabIcon" onClick={() => navigate('/add')}>
+          {/* 추가 아이콘 SVG */}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 5V19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+
+        <div className="tabIcon">
+          {/* 검색 아이콘 SVG */}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/>
+            <path d="M21 21L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+
+        <div className="tabIcon" onClick={() => setShowPopup((v) => !v)}>
+          {/* 메뉴 아이콘 SVG */}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3 12H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M3 6H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M3 18H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+
+        <div className="tabIcon" onClick={() => navigate('/myProfile')}>
+          {/* 프로필 아이콘 SVG */}
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
+          </svg>
+        </div>
+      </div>
+
+      {showPopup && (
+        <div className="popupOverlay">
+          <div className="popupBox">
+            <div className="popupContent">
+              {loggedIn ? (
+                <>
+                  <div className="popupIcon" onClick={() => navigate('/myProfile')}>
+                    <span>내 프로필</span>
+                  </div>
+                  <div className="popupIcon" onClick={handleLogout}>
+                    <span>로그아웃</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="popupIcon" onClick={() => navigate('/login')}>
+                    <span>로그인</span>
+                  </div>
+                  <div className="popupIcon" onClick={() => navigate('/signup')}>
+                    <span>회원가입</span>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }

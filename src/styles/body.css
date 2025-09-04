@@ -3,6 +3,8 @@
     flex-direction: column;
     margin: 0 auto;
     padding-top: 60px; /* 고정된 SportHeader의 높이만큼 여백 */
+    background-color: var(--page-bg);
+    transition: background-color 0.3s ease;
 }
 .HomeContainer{
   width: 630px;
@@ -11,6 +13,8 @@
   flex-direction: column;
   margin: 0 auto;
   align-items: center;
+  background-color: var(--page-bg);
+  transition: background-color 0.3s ease;
 }
 .container.width{
     width: 630px;
@@ -22,9 +26,10 @@
   flex-direction: row;
   gap: 2%;
   padding: 0.7% 0px;  
-  background-color: #f9fbff;
+  background-color: var(--sidebar-bg);
   border-radius: 2%;
   margin-bottom: 2%;
+  transition: background-color 0.3s ease;
 }
 .HomeContainer .menuTab{
   padding: 0.7% 0.7%;
@@ -32,10 +37,12 @@
   margin-left: 1.2%;
   display: flex;
   gap: 3%;
+  color: var(--text-primary);
+  transition: color 0.3s ease;
 }
 .HomeContainer .menuTab:hover{
-      background-color: #38c0e9;
-      color: #fefefe;
+      background-color: var(--button-primary);
+      color: white;
       border-radius: 10px;
 }
 .container.col{
@@ -52,7 +59,7 @@
     width: 91%;
     max-height: 90px;
     position: relative;
-    background: #f9fbff;
+    background: var(--card-bg);
     border-radius: 16px;
     padding: 10px;
     margin: 12px auto;
@@ -60,7 +67,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-sm);
     transition: all 0.3s ease;
     border: 2px solid transparent; /* 기본 테두리는 투명하게 */
     user-select: none; /* 텍스트 선택(드래그) 방지 */
@@ -84,7 +91,7 @@
 /* ✅ hover 효과 */
 .matchCard:hover {
   transform: scale(1.001);
-  box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--shadow-md);
 }
 
 /* 배경 이미지 */
@@ -397,47 +404,59 @@
     overflow-y: auto; /* 내용이 많아지면 스크롤 생성 */
 }
 
+/* 날짜 헤더 */
 .dateHeader {
-    background-color: #f0f0f0;
+    background-color: var(--button-secondary);
+    color: var(--text-primary);
     padding: 8px 12px;
     border-radius: 5px;
     margin-top: 15px;
+    border: 1px solid var(--card-border);
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Bottom Section Styles */
+/* 포스트 아이템 */
 .postItem {
     padding: 10px 5px;
-    border-bottom: 1px solid #f2f2f2;
+    border-bottom: 1px solid var(--card-border);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    transition: border-color 0.3s ease;
 }
+
 .post-item-title {
     flex-grow: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: var(--text-primary);
 }
+
 .post-item-meta {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-left: 10px; /* 제목과의 간격 */
-    flex-shrink: 0; /* 너비가 줄어들지 않도록 */
+    margin-left: 10px;
+    flex-shrink: 0;
 }
+
 .comment-count {
     font-size: 0.9em;
-    color: #007bff;
+    color: var(--link-color);
     font-weight: bold;
 }
+
 .postItem:last-child {
     border-bottom: none;
 }
 
+/* 랭킹 아이템 */
 .rankingItem {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color: var(--text-primary);
 }
 
 .rankingItem span:first-child {
@@ -449,33 +468,83 @@
     flex-grow: 1;
 }
 
-/* CalendarView Styles */
+/* 홈 토글 바 */
+.homeToggleBar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.toggleButton {
+    padding: 10px 20px;
+    border: 1px solid var(--card-border);
+    background-color: var(--card-bg);
+    color: var(--text-primary);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.toggleButton:hover {
+    background-color: var(--button-primary);
+    color: white;
+    border-color: var(--button-primary);
+}
+
+.toggleButton.active {
+    background-color: var(--button-primary);
+    color: white;
+    border-color: var(--button-primary);
+}
+
+/* 홈 컨텐츠 영역 */
+.homeContentArea {
+    flex: 1;
+}
+
+/* 홈 하단 섹션 */
+.homeBottomSection {
+    margin-top: 20px;
+}
+
+/* 추천 포스트 */
+.recommendedPosts {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--card-border);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 캘린더 이벤트 아이콘 */
 .calendar-event-icons {
     display: flex;
-    justify-content: center; /* 아이콘을 중앙 정렬 */
+    justify-content: center;
     align-items: center;
-    gap: 2px; /* 간격 줄임 */
-    margin-top: 4px; /* 날짜와의 간격 */
-    flex-wrap: wrap; /* 아이콘이 많으면 다음 줄로 */
+    gap: 2px;
+    margin-top: 4px;
+    flex-wrap: wrap;
     min-height: 20px;
     width: 100%;
     padding: 2px;
     max-width: 100%;
-    pointer-events: none; /* 클릭 이벤트를 부모 요소로 통과시킴 */
+    pointer-events: none;
 }
 
 .calLogo {
-    width: 18px; /* 아이콘 크기 증가 */
+    width: 18px;
     height: 18px;
     border-radius: 50%;
     object-fit: contain;
-    background: white;
+    background: var(--card-bg);
     padding: 1px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-    border: 1px solid #e0e0e0;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--card-border);
     display: block;
     flex-shrink: 0;
-    pointer-events: none; /* 클릭 이벤트를 부모 요소로 통과시킴 */
+    pointer-events: none;
 }
 
 .fc-daygrid-day-number {
@@ -1152,49 +1221,54 @@
 
 /* 캘린더 섹션 */
 .calendarSection {
-    background: white;
+    background: var(--card-bg);
     border-radius: 16px;
     padding: 20px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--card-border);
     overflow: hidden;
     height: 100%;
     display: flex;
     flex-direction: column;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 /* 리스트 섹션 */
 .listSection {
-    background: white;
+    background: var(--card-bg);
     border-radius: 16px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--card-border);
     overflow-y: auto;
     height: 100%;
     padding: 20px;
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .listSection h3 {
     margin: 0 0 20px 0;
     font-size: 1.3rem;
+    color: var(--text-primary);
     font-weight: 600;
-    color: #333;
-    padding-bottom: 10px;
-    border-bottom: 2px solid #f0f0f0;
 }
 
 /* 리그 그룹 스타일 개선 */
 .league-group {
     margin-bottom: 20px;
-    background: #f8f9fa;
+    background: var(--card-bg);
     border-radius: 12px;
     padding: 15px;
-    border-left: 4px solid #667eea;
+    border-left: 4px solid var(--link-color);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--shadow-sm);
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
 .league-group h4 {
     margin: 0 0 15px 0;
     font-size: 1.1rem;
     font-weight: 600;
-    color: #333;
+    color: var(--text-primary);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -1204,7 +1278,7 @@
     margin: 0 0 15px 0;
     font-size: 1rem;
     font-weight: 600;
-    color: #333;
+    color: var(--text-primary);
     display: flex;
     align-items: center;
     gap: 8px;
@@ -1222,7 +1296,7 @@
     width: 95%;
     max-height: 70px;
     position: relative;
-    background: linear-gradient(135deg, #f9fbff 0%, #f0f4ff 100%);
+    background: var(--card-bg);
     border-radius: 12px;
     padding: 8px 12px;
     margin: 6px auto;
@@ -1230,7 +1304,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+    box-shadow: var(--shadow-sm);
     transition: all 0.3s ease;
     border: 2px solid transparent;
     user-select: none;
@@ -1240,12 +1314,12 @@
 .matchCard.liked {
     border-color: #ffc107;
     box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
-    background: linear-gradient(135deg, #fffbf0 0%, #fff8e1 100%);
+    background: var(--card-bg);
 }
 
 .matchCard:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    box-shadow: var(--shadow-md);
 }
 
 /* 팀 섹션 스타일 */
@@ -1263,10 +1337,10 @@
     height: 28px;
     object-fit: contain;
     border-radius: 50%;
-    background: white;
+    background: var(--card-bg);
     padding: 2px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    border: 2px solid #f0f0f0;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid var(--card-border);
 }
 
 .teamName {
@@ -1276,7 +1350,7 @@
     word-break: break-word;
     line-height: 1.2;
     max-width: 80px;
-    color: #333;
+    color: var(--text-primary);
 }
 
 /* 스코어 박스 개선 */
@@ -1292,28 +1366,27 @@
 .scoreText {
     font-size: 1.3rem;
     font-weight: 700;
-    color: #333;
+    color: var(--text-primary);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
     letter-spacing: 1px;
 }
 
 .matchTime {
     font-size: 0.8rem;
-    color: #666;
+    color: var(--text-muted);
     font-weight: 500;
-    background: rgba(255, 255, 255, 0.8);
+    background: var(--button-secondary);
     padding: 2px 8px;
     border-radius: 12px;
 }
 
 .matchStatus {
     font-size: 0.7rem;
-    color: #888;
+    color: var(--text-muted);
     font-weight: 500;
-    padding: 3px 8px;
-    background: #f8f9fa;
-    border-radius: 10px;
-    border: 1px solid #e9ecef;
+    background: var(--button-secondary);
+    padding: 2px 6px;
+    border-radius: 8px;
 }
 
 /* 매치 정보 레이아웃 */
