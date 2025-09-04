@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { getEplRankings, getLaligaRankings } from '../../api/match/soccer';
-import { getKboRankings } from '../../api/match/baseball';
-import { getUfcRankings } from '../../api/match/mma';
-import GetTeamLogo from '../../utils/GetTeamLogo';
-import GetLeagueLogo from '../../utils/GetLeagueLogo';
+import { getTeamRankings } from '../../../../api/match/Matches';
+import GetTeamLogo from '../../../../utils/GetTeamLogo';
+import GetLeagueLogo from '../../../../utils/GetLeagueLogo';
 
 // 스포츠별 리그 매핑
 const sportLeagues = {
@@ -68,22 +66,11 @@ export default function TeamRankingsPage() {
                 setLoading(true);
                 setError(null);
                 
-                let data;
-                if (sport === 'soccer') {
-                    if (selectedLeague === 'epl') {
-                        data = await getEplRankings();
-                    } else if (selectedLeague === 'laliga') {
-                        data = await getLaligaRankings();
-                    }
-                } else if (sport === 'baseball') {
-                    if (selectedLeague === 'kbo') {
-                        data = await getKboRankings();
-                    }
-                } else if (sport === 'mma') {
-                    if (selectedLeague === 'ufc') {
-                        data = await getUfcRankings();
-                    }
+                const result = await getTeamRankings(sport, selectedLeague);
+                if (result.status === 'error') {
+                    throw new Error(result.error);
                 }
+                const data = result.data;
                 
                 // 승점(Points)과 득실차(DIFF) 기준으로 정렬
                 const sortedData = data.sort((a, b) => {

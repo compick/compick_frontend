@@ -1,10 +1,7 @@
 .sidebarContainer {
     position: sticky; /* 스크롤 되어도 상단에 고정 */
-    top: 60px; /* 고정된 헤더의 높이만큼 아래에 붙도록 */
-    border-bottom: 1px solid #e0e0e0;
+    top: 40px; /* 헤더와 바로 붙도록 */
     z-index: 999;
-    
-    /* 기존 가로 정렬 스타일 활용 */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,9 +13,8 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  padding: 10px 3px;
   gap: 12px;
-  width: 100%;
+  width: 38vw;
   justify-content: space-between;
 }
 
@@ -43,27 +39,60 @@
   width: 40px;        /* 아이콘 클릭 영역 확보 */
   height: 40px;
   border-radius: 12px;
-  transition: background-color 0.3s;
+  border: 1px solid transparent;
+  transition: all 0.3s ease;
   cursor: pointer;
+  background-color: transparent;
 }
 
 .tabIcon:hover {
-  background-color: #e6e6e6;
+  background-color: var(--button-secondary);
+  border-color: var(--card-border);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.tabIcon:active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 
 .tabItem {
   width: 24px;
   height: 24px;
-  stroke: gray;
+  stroke: var(--text-muted);
   fill: none;
   stroke-width: 2;
   stroke-linecap: round;
   stroke-linejoin: round;
-  transition: stroke 0.3s;
+  transition: stroke 0.3s ease;
+}
+
+.tabIcon:hover .tabItem {
+  stroke: var(--text-primary);
 }
 
 .tabIcon.active .tabItem {
-  stroke: black;
+  stroke: var(--link-color);
+}
+
+.tabIcon svg {
+  width: 24px;
+  height: 24px;
+  stroke: var(--text-muted);
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: stroke 0.3s ease;
+}
+
+.tabIcon:hover svg {
+  stroke: var(--text-primary);
+}
+
+.tabIcon.active svg {
+  stroke: var(--link-color);
 }
 
 .popupOverlay {
@@ -116,7 +145,7 @@
         top: auto; /* sticky의 top 속성 초기화 */
         bottom: 0;
         left: 0;
-        width: 100%;
+        width: 100vw;
         height: 60px; /* 탭 바 높이 */
         background-color: #ffffff;
         border-top: 1px solid #e0e0e0;
@@ -139,16 +168,15 @@
 
 /* SportHeader styles */
 .sportHeader {
-    width: 630px;
+    width: 100vw;
     display: flex;
     position: fixed;
-    width: 100%;
     justify-content: space-between;
     align-items: center;
-    background-color: #fff;
-    border-bottom: 1px solid #e0e0e0;
+    background-color: var(--header-bg);
     z-index: 1000;
-    height: auto; /* 고정 높이 추가 */
+    height: 40px; /* 고정 높이 추가 */
+    transition: background-color 0.3s ease;
 }
 
 .sportHeaderLeft img {
@@ -165,7 +193,7 @@
     position: relative;
     align-items: center;
     text-decoration: none;
-    color: #111;
+    color: var(--text-primary);
     width: 80px;
 }
 
@@ -177,19 +205,20 @@
     padding: 10px;
     transition: color 0.3s;    
     text-align: center;
-    
+    color: var(--text-primary);
+    background-color: rgba(0,0,0,0);
 }
 
 .sport-menu-item button:hover {
-    color: #007bff;
+    color: var(--link-color);
 }
 
 .league-menu {
     position: absolute;
     top: 100%;
     left: 0;
-    background-color: white;
-    border: 1px solid #e0e0e0;
+    background-color: var(--card-bg);
+    border: 1px solid var(--card-border);
     border-radius: 4px;
     margin-top: 5px;
     padding: 5px;
@@ -197,17 +226,24 @@
     flex-direction: column;
     z-index: 100;
     font-size: 13px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .league-menu button {
     width: 100%;
     text-align: left;
     font-size: 13px;
+    color: var(--text-primary);
+    background: none;
+    border: none;
+    padding: 5px;
+    cursor: pointer;
+    transition: color 0.3s ease;
 }
 
 .sport-menu-item button.active,
 .league-menu button.active {
-    color: #007bff;
+    color: var(--link-color);
     font-weight: bold;
 }
 
@@ -257,12 +293,12 @@
 /* SportHeader의 Link 스타일 초기화 */
 .sport-button, .league-button {
     text-decoration: none;
-    color: inherit;
     background: none;
     border: none;
     padding: 10px 15px;
     cursor: pointer;
     font-size: 16px;
+    background-color: rgba(0,0,0,0);
     display: inline-block; /* Link가 올바른 영역을 차지하도록 */
 }
 
@@ -295,7 +331,7 @@
 .sidebarContainer .top-section,
 .sidebarContainer .bottom-section {
     flex-direction: row;
-    width: 630px;
+    width: 100vw;
     height: 50px;
     padding: 0;
     border: none;

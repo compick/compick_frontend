@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getEplRankings, getLaligaRankings } from '../../../api/match/soccer';
-import { getKboRankings } from '../../../api/match/baseball';
-import { getUfcRankings } from '../../../api/match/mma';
-import GetTeamLogo from '../../../utils/GetTeamLogo';
+import GetTeamLogo from '../../../../utils/GetTeamLogo';
+import { getTeamRankings } from '../../../../api/match/Matches';
 
 // 최근 5경기 결과를 아이콘으로 변환하는 헬퍼 함수
 const renderForm = (form) => {
@@ -22,11 +20,8 @@ export default function TeamRankings({ league, sport }) {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    // 'soccer' 나 'baseball' 같은 상위 카테고리는 특정 리그로 변환
-    const targetLeague = league === 'soccer' ? 'epl' : league === 'baseball' ? 'kbo' : league;
-
     useEffect(() => {
-        if (!targetLeague || ['all', 'mma'].includes(targetLeague)) {
+        if (!league || !sport || league === 'all' || sport === 'all') {
             setRankings([]);
             setLoading(false);
             return;
@@ -36,24 +31,13 @@ export default function TeamRankings({ league, sport }) {
             try {
                 setLoading(true);
                 setError(null);
-                console.log('🏆 TeamRankings API 호출:', { sport, targetLeague });
+                console.log('🏆 TeamRankings API 호출:', { sport, league });
                 
-                let data;
-                if (sport === 'soccer') {
-                    if (targetLeague === 'epl') {
-                        data = await getEplRankings();
-                    } else if (targetLeague === 'laliga') {
-                        data = await getLaligaRankings();
-                    }
-                } else if (sport === 'baseball') {
-                    if (targetLeague === 'kbo') {
-                        data = await getKboRankings();
-                    }
-                } else if (sport === 'mma') {
-                    if (targetLeague === 'ufc') {
-                        data = await getUfcRankings();
-                    }
+                const result = await getTeamRankings(sport, league);
+                if (result.status === 'error') {
+                    throw new Error(result.error);
                 }
+                const data = result.data;
                 
                 // 승점(Points)과 득실차(DIFF) 기준으로 정렬
                 const sortedData = data.sort((a, b) => {
@@ -74,11 +58,11 @@ export default function TeamRankings({ league, sport }) {
         };
 
         fetchRankings();
-    }, [targetLeague, sport]);
+    }, [league, sport]);
 
     const handleRankingClick = () => {
-        if (targetLeague && !['all', 'mma'].includes(targetLeague)) {
-            navigate(`/ranking/${targetLeague}`);
+        if (league && league !== 'all') {
+            navigate(`/ranking/${league}`);
         }
     };
 
@@ -121,7 +105,7 @@ export default function TeamRankings({ league, sport }) {
                         <tr key={item.teamId || index}>
                             <td>{index + 1}</td>
                             <td className="team-cell">
-                                <img src={GetTeamLogo(targetLeague, item.team)} alt={item.team} className="team-logo-small" />
+                                <img src={GetTeamLogo(league, item.team)} alt={item.team} className="team-logo-small" />
                                 {item.team}
                             </td>
                             <td>{item.played}</td>

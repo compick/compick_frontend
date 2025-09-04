@@ -1,9 +1,9 @@
 // AddBody.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import UploadImage from "./add/UploadImage";
-import EditImage from "./add/EditImage";
-import WritePost from "./add/WritePost";
+import UploadImage from "./UploadImage";
+import EditImage from "./EditImage";
+import WritePost from "./WritePost";
 
 const TITLE_MAP = {
   "/add": "이미지 업로드",

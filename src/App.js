@@ -3,6 +3,7 @@ import { BrowserRouter } from "react-router-dom"
 
 
 import BodyPage from "./pages/BodyPage";
+import ThemeToggle from "./components/ThemeToggle";
 import profileImg from "./img/icon/defaultProfile.jpeg"; // 이미지 경로 수정
 
 import "./styles/login.css";
@@ -10,16 +11,6 @@ import "./styles/component.css";
 import "./styles/body.css";
 import "./styles/add.css";
 import "./styles/user.css";
-import liverpool from "./img/soccerTeam/epl/리버풀 FC 로고.svg";
-import chelsea from "./img/soccerTeam/epl/첼시 FC 로고.svg";
-import tottenham from "./img/soccerTeam/epl/토트넘 홋스퍼 FC 로고.svg";
-import manchesterCity from "./img/soccerTeam/epl/맨체스터 시티 FC 로고.svg";
-import realMadrid from "./img/soccerTeam/laligaSpain/레알 마드리드 CF 로고.svg";
-import barcelona from "./img/soccerTeam/laligaSpain/FC 바르셀로나 로고.svg";
-import kbo from "./img/icon/baseball/kboicon.png";
-import arsenalLogo from "./img/soccerTeam/epl/아스날 FC 로고.svg";
-import manUtdLogo from "./img/soccerTeam/epl/맨체스터 유나이티드 FC 로고.svg";
-import GetTeamLogo from "./utils/GetTeamLogo";
 
 
 function App() {
@@ -78,12 +69,11 @@ function App() {
   });
   const [capturedImage, setCapturedImage] = useState(null); // 캡처 이미지 상태 추가
   const [userInfo, setUserInfo] = useState({
-    nickname: "홍길동1234",
-    profileImg: profileImg,
-    introduction: "안녕하세요! 축구를 사랑하는 유저입니다.",
+    introduction: "",
+    profileImg: profileImg
   });
 
-  const [selectedLeague, setSelectedLeague] = useState('all'); // 'all', 'epl', 'laliga', 'kbo', 'ufc'
+  const [selectedLeague, setSelectedLeague] = useState('all');
   
   const handleLeagueChange = useCallback((league) => {
     setSelectedLeague(league);
@@ -246,34 +236,35 @@ function App() {
       alert('신고가 접수되었습니다. 검토 후 처리하겠습니다.');
   };
 
-  return (
+    return (
     <BrowserRouter>
-         <BodyPage 
-            userScores={userScores} 
-            capturedImage={capturedImage}
-            setCapturedImage={setCapturedImage}
-            userInfo={userInfo}
-            onProfileUpdate={handleProfileUpdate}
-            likedMatches={likedMatches}
-            onLikeMatch={handleLikeMatch}
-            chatState={chatState}
-            onOpenChat={handleOpenChat}
-            onCloseChat={handleCloseChat}
-            onMinimizeChat={handleMinimizeChat}
-            onSetActiveChat={handleSetActiveChat}
-            posts={posts}
-            onAddComment={handleAddComment}
-            onLikeComment={handleLikeComment}
-            onAddReply={handleAddReply}
-            onLikePost={handleLikePost}
-            onReport={handleReport}
-            currentUser={currentUser}
-            handleLeagueChange={handleLeagueChange}
-            selectedLeague={selectedLeague}
-            isLoggedIn={isLoggedIn}
-            onLogin={handleLogin}
-            onLogout={handleLogout}
-         />
+      <ThemeToggle />
+      <BodyPage 
+         userScores={userScores} 
+         capturedImage={capturedImage}
+         setCapturedImage={setCapturedImage}
+         userInfo={userInfo}
+         onProfileUpdate={handleProfileUpdate}
+         likedMatches={likedMatches}
+         onLikeMatch={handleLikeMatch}
+         chatState={chatState}
+         onOpenChat={handleOpenChat}
+         onCloseChat={handleCloseChat}
+         onMinimizeChat={handleMinimizeChat}
+         onSetActiveChat={handleSetActiveChat}
+         posts={posts}
+         onAddComment={handleAddComment}
+         onLikeComment={handleLikeComment}
+         onAddReply={handleAddReply}
+         onLikePost={handleLikePost}
+         onReport={handleReport}
+         currentUser={currentUser}
+         handleLeagueChange={handleLeagueChange}
+         selectedLeague={selectedLeague}
+         isLoggedIn={isLoggedIn}
+         onLogin={handleLogin}
+         onLogout={handleLogout}
+      />
     </BrowserRouter>
   );
 }

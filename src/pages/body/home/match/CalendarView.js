@@ -2,10 +2,10 @@ import React, { useState, useCallback, useEffect } from 'react';
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import interactionPlugin from "@fullcalendar/interaction";
-import { getMatchesByMonth } from '../../../api/match/Matches';
+import { getMatchesByMonth } from '../../../../api/match/Matches';
 import MatchCard from './MatchCard';
-import GetLeagueLogo from '../../../utils/GetLeagueLogo';
-import GetTeamLogo from '../../../utils/GetTeamLogo';
+import GetLeagueLogo from '../../../../utils/GetLeagueLogo';
+import GetTeamLogo from '../../../../utils/GetTeamLogo';
 
 // 안전 문자열
 const safeStr = (v) => (v == null ? "" : String(v));
@@ -78,8 +78,11 @@ export default function CalendarView({ likedMatches, onLikeMatch, sport, league 
       try {
         setLoading(true);
         setError(null);
-        const data = await getMatchesByMonth(s, l, year, month);
-        setMatches(normalizeMatches(data));
+        const result = await getMatchesByMonth(s, l, year, month);
+        if (result.status === 'error') {
+          throw new Error(result.error);
+        }
+        setMatches(normalizeMatches(result.data));
       } catch (err) {
         console.error('Error fetching matches:', err);
         setMatches([]);

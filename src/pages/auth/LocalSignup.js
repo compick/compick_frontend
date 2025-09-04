@@ -118,8 +118,8 @@ export default function LocalSignup() {
 
   return (
     <div className="loginContainer">
-      <h2 className="signupTitle">회원가입</h2>
       <form className="loginBox" onSubmit={handleSubmit}>
+        <h2 className="signupTitle">회원가입</h2>
         <div className="container" style={{ display:"flex", gap:8 }}>
           <input type="text" name="userId" placeholder="아이디"
                  value={form.userId} onChange={handleChange} required autoComplete="username" />
@@ -127,7 +127,7 @@ export default function LocalSignup() {
             {busy.id ? "확인중..." : "아이디 중복확인"}
           </button>
         </div>
-        {idCheck.msg && <div style={{ fontSize:12, marginTop:4 }}>{idCheck.msg}</div>}
+        {idCheck.msg && <div className={`status-message ${idCheck.available ? 'success' : 'error'}`}>{idCheck.msg}</div>}
 
         <input type="password" name="password" placeholder="비밀번호"
                value={form.password} onChange={handleChange} required autoComplete="new-password" />
@@ -139,7 +139,7 @@ export default function LocalSignup() {
             {busy.nick ? "확인중..." : "닉네임 중복확인"}
           </button>
         </div>
-        {nickCheck.msg && <div style={{ fontSize:12, marginTop:4 }}>{nickCheck.msg}</div>}
+        {nickCheck.msg && <div className={`status-message ${nickCheck.available ? 'success' : 'error'}`}>{nickCheck.msg}</div>}
 
         <div className="container" style={{ display:"flex", gap:8, marginTop:8 }}>
           <input type="email" name="email" placeholder="이메일"
@@ -152,7 +152,9 @@ export default function LocalSignup() {
 
         {emailState.sent && !emailState.verified && (
           <div className="container" style={{ display:"flex", gap:8, marginTop:8 }}>
-            <input type="text" placeholder="인증코드 입력" value={emailState.code}
+            <input type="text" placeholder="인증코드 입력" 
+                   className="verification-input"
+                   value={emailState.code}
                    onChange={(e)=>setEmailState((s)=>({ ...s, code:e.target.value }))}/>
             <button type="button" className="authButton"
                     onClick={verifyEmailCode} disabled={emailState.verifying || busy.verify}>
@@ -160,9 +162,9 @@ export default function LocalSignup() {
             </button>
           </div>
         )}
-        {emailState.msg && <div style={{ fontSize:12, marginTop:4 }}>{emailState.msg}</div>}
+        {emailState.msg && <div className={`status-message ${emailState.verified ? 'success' : emailState.sent ? 'info' : 'error'}`}>{emailState.msg}</div>}
 
-        <button type="submit" className="submitButton" style={{ marginTop:12 }} disabled={busy.submit}>
+        <button type="submit" disabled={busy.submit}>
           {busy.submit ? "처리중..." : "회원가입"}
         </button>
       </form>

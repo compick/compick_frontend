@@ -1,8 +1,8 @@
 // src/pages/body/home/DateMatchList.js
 import React, { useState, useEffect } from 'react';
 import MatchCard from './MatchCard';
-import { getMatchesByMonth } from '../../../api/match/Matches';
-import GetLeagueLogo from '../../../utils/GetLeagueLogo';
+import { getMatchesByMonth } from '../../../../api/match/Matches';
+import GetLeagueLogo from '../../../../utils/GetLeagueLogo';
 
 // 안전 문자열
 const safeStr = (v) => (v == null ? "" : String(v));
@@ -59,10 +59,13 @@ export default function DateMatchList({ likedMatches, onLikeMatch, sport, league
         const l = league || 'all';
 
         // 현재월 + 다음월 동시 호출 → 향후 2주 커버
-        const [curr, next] = await Promise.all([
+        const [currResult, nextResult] = await Promise.all([
           getMatchesByMonth(s, l, year, month),
           getMatchesByMonth(s, l, nextYear, nextMonth),
         ]);
+
+        const curr = currResult.status === 'success' ? currResult.data : [];
+        const next = nextResult.status === 'success' ? nextResult.data : [];
 
         setMatches(normalizeMatches([...(curr || []), ...(next || [])]));
       } catch (err) {

@@ -31,17 +31,32 @@ export default function TeamRankingPage() {
 
         const fetchRankings = async () => {
             setLoading(true);
-            const data = await getTeamRankings(league);
-            
-            const sortedData = data.sort((a, b) => {
-                if (b.points !== a.points) {
-                    return b.points - a.points;
+            try {
+                // league에서 sport 추출 (예: 'epl' -> 'soccer', 'kbo' -> 'baseball')
+                let sport = 'soccer'; // 기본값
+                if (['kbo'].includes(league)) sport = 'baseball';
+                else if (['ufc'].includes(league)) sport = 'mma';
+                
+                const result = await getTeamRankings(sport, league);
+                if (result.status === 'error') {
+                    throw new Error(result.error);
                 }
-                return b.diff - a.diff;
-            });
+                
+                const data = result.data;
+                const sortedData = data.sort((a, b) => {
+                    if (b.points !== a.points) {
+                        return b.points - a.points;
+                    }
+                    return b.diff - a.diff;
+                });
 
-            setRankings(sortedData);
-            setLoading(false);
+                setRankings(sortedData);
+            } catch (error) {
+                console.error('Error fetching rankings:', error);
+                setRankings([]);
+            } finally {
+                setLoading(false);
+            }
         };
 
         fetchRankings();
