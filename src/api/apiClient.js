@@ -1,9 +1,17 @@
 // apiClient.js  (proxy/same-origin ver.)
 import { getCookie, setCookie } from "../utils/Cookie";
 
-// 상대 경로만 유지(호스트/포트 붙이지 않음)
-const toAbs = (u) => /^https?:\/\//i.test(u) ? u : (u.startsWith("/") ? u : `/${u}`);
 
+const API_BASE = process.env.REACT_APP_API_BASE || "";
+// 상대 경로만 유지(호스트/포트 붙이지 않음)
+const toAbs = (u) => {
+  if (process.env.NODE_ENV === "development" && !API_BASE) {
+    // dev에서 proxy 쓸 때는 상대경로 유지
+    return /^https?:\/\//i.test(u) ? u : (u.startsWith("/") ? u : `/${u}`);
+  }
+  // 운영/직접 호출
+  return /^https?:\/\//i.test(u) ? u : API_BASE + (u.startsWith("/") ? u : `/${u}`);
+};
 let refreshPromise = null;
 
 async function refreshAccessToken() {
@@ -30,7 +38,7 @@ export async function apiFetch(input, init = {}) {
   const at = getCookie("jwt");
   if (at) headers.set("Authorization", `Bearer ${at}`);
 
-  const reqInit = { credentials: "include", ...init, headers };
+  const reqInit = { credentials: "include", cache: "no-store", ...init, headers };
   let res = await fetch(new Request(url, reqInit));
 
   if (res.status === 401) {
@@ -40,7 +48,7 @@ export async function apiFetch(input, init = {}) {
         const newAt = await refreshAccessToken();
         const h2 = new Headers(init.headers || {});
         h2.set("Authorization", `Bearer ${newAt}`);
-        res = await fetch(new Request(url, { ...init, headers: h2, credentials: "include" }));
+        res = await fetch(new Request(url, { ...init, headers: h2, credentials: "include" ,cache:"no-store"}));
       } catch {}
     }
   }
