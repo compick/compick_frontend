@@ -1,3 +1,5 @@
+
+
 .match-detail-layout {
     display: flex;
     min-height: 100vh;
@@ -345,6 +347,7 @@
     margin: 0 10px;
 }
 
+
 /* 광고 섹션 */
 .ad-section {
     background: var(--card-bg);
@@ -420,6 +423,9 @@
 }
 
 /* 왼쪽 사이드바 스타일 */
+.match-teams.leftSidebar{
+    display: flex;
+}
 .left-sidebar h3 {
     margin-bottom: 15px;
     color: var(--text-primary);
@@ -453,15 +459,51 @@
 }
 
 .recent-match-item .match-league {
+    border: 1px solid var(--text-primary);
+    margin: 0 auto;
+    border-radius: 10%;
+    padding  : 0.2rem;
     font-weight: 600;
     color: var(--text-primary);
     font-size: 14px;
+}
+.match-league.no-border {
+  border: none;
 }
 
 .recent-match-item .match-id {
     font-size: 12px;
     color: var(--text-muted);
 }
+.match-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* 왼쪽 로고+팀명 / 오른쪽 점수 */
+  gap: 6px;
+}
+
+.match-row .team-logo {
+  width: 20px;
+  height: 20px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.match-row .team-name {
+  flex: 1;
+  font-size: 14px;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* 긴 이름은 ... 처리 */
+}
+
+.match-row .team-score {
+  font-weight: 600;
+  min-width: 16px;
+  text-align: right;
+}
+
 
 /* 오른쪽 사이드바 스타일 */
 .right-sidebar h3 {

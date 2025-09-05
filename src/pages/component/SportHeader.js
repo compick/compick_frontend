@@ -83,7 +83,7 @@ export default function SportHeader({ selectedLeague, isLoggedIn, onLogout }){
                     </div>
                     <div className="sportHeaderCenter" ref={menuRef}>
                         {Object.entries(sports).map(([sportName, sportData]) => (
-                            <div key={sportName} className="sport-menu-item">
+                            <div key={sportName} className="sport-heder-item">
                                 <Link to={sportData.basePath} className={`sport-button ${activeSport === sportName ? 'active' : ''}`} onClick={() => handleSportClick(sportName)}>
                                     {sportName}
                                 </Link>
@@ -100,11 +100,8 @@ export default function SportHeader({ selectedLeague, isLoggedIn, onLogout }){
                         ))}
                     </div>
                 </div>
-                <div className="sportHeaderRight">
-                    {/* 추후 검색, 유저 아이콘 등 추가될 공간 */}
-                </div>
-            </div>
             <SidebarPage isLoggedIn={isLoggedIn} onLogout={onLogout} />
+            </div>
         </>
     )
 }

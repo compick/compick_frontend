@@ -44,31 +44,31 @@ const extractData = (res, fallback = []) =>
   export const getRecentMatchesByHome = async (sport, league, homeTeamId) => {
     const requestUrl = `/api/match/${encodeURIComponent(sport)}/${encodeURIComponent(league)}/recent/home?teamId=${homeTeamId}`;
     const startedAt = Date.now();
-    console.log("[RECENT] requestUrl =", requestUrl);
+    console.log("[RECENTHOME] requestUrl =", requestUrl);
     try {
       const res = await apiJson(requestUrl);
-      console.log("[RECENT] raw response =", res, "data =", res?.data ?? res);
+      console.log("[RECENTHOME] raw response =", res, "data =", res?.data ?? res);
       const payload = extractData(res, []);
       return buildResult("success", payload, null, requestUrl, res, startedAt);
     } catch (error) {
-      console.error("[RECENT] 요청 실패:", { url: requestUrl, message: error?.message, stack: error?.stack });
+      console.error("[RECENTHOME] 요청 실패:", { url: requestUrl, message: error?.message, stack: error?.stack });
       return buildResult("error", [], error?.message ?? "Request failed", requestUrl, null, startedAt);
     }
     };
     
-    // GET /api/match/{sport}/{league}/recent/home?team={id}
+    // GET /api/match/{sport}/{league}/recent/away?team={id}
   export const getRecentMatchesByAway = async (sport, league, awayTeamId) => {
     const requestUrl = `/api/match/${encodeURIComponent(sport)}/${encodeURIComponent(league)}/recent/away?teamId=${awayTeamId}`;
     const startedAt = Date.now();
-    console.log("[RECENT] requestUrl =", requestUrl);
+    console.log("[RECENTAWAY] requestUrl =", requestUrl);
     try {
       const res = await apiJson(requestUrl);
-      console.log("[RECENT] raw response =", res, "data =", res?.data ?? res);
+      console.log("[RECENTAWAY] raw response =", res, "data =", res?.data ?? res);
       const payload = extractData(res, []);
       return buildResult("success", payload, null, requestUrl, res, startedAt);
     } catch (error) {
-      console.error("[RECENT] 요청 실패:", { url: requestUrl, message: error?.message, stack: error?.stack });
+      console.error("[RECENTAWAY] 요청 실패:", { url: requestUrl, message: error?.message, stack: error?.stack });
       return buildResult("error", [], error?.message ?? "Request failed", requestUrl, null, startedAt);
     }
-
+ 
   };

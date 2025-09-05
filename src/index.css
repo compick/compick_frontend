@@ -36,7 +36,17 @@ header, .header, [class*="header"] {
 
 /* 사이드바 스타일 */
 aside, .sidebar, [class*="sidebar"] {
-  background-color: var(--sidebar-bg) !important;
+  background-color: var(--secondary-bg) !important;
+  color: var(--sidebar-text) !important;
+  
+}
+.sportHeader, [class*="sportHeader"] {
+  background-color: var(--secondary-bg) !important;
+  color: var(--sidebar-text) !important;
+  
+}
+.sport-heder-item, [class*="sport-heder-item"] {
+  background-color: var(--secondary-bg) !important;
   color: var(--sidebar-text) !important;
   
 }
