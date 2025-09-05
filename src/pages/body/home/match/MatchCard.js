@@ -22,6 +22,7 @@ export default function MatchCard({ match, likedMatches = [], onLike }) {
       match.leagueCode,
       match.leagueName
     );
+   
     
     const rawId = pick(match.matchId, match.id);
 
@@ -55,7 +56,56 @@ export default function MatchCard({ match, likedMatches = [], onLike }) {
     match.homeTeamLogo || GetTeamLogo(match.homeTeamName || match.home);
   const awayTeamLogo =
     match.awayTeamLogo || GetTeamLogo(match.awayTeamName || match.away);
+ const getStatusText = (status) => {
+  switch (status) {
+    case 'Not Started':        // 0
+      return '경기예정';       // notstarted
 
+    case 'First Half':         // 1
+    case 'Second Half':        // 12
+      return '진행중';         // inprogress
+
+    case 'Halftime':           // 11
+      return '하프타임';       // halftime
+
+    case 'Break Time':         // 13
+      return '휴식시간';       // break
+
+    case 'Extra Time First Half':   // 20
+    case 'Extra Time Halftime':     // 21
+    case 'Extra Time Second Half':  // 22
+      return '연장전';              // extra
+
+    case 'Penalty Shootout':        // 30
+    case 'Penalty Shootout Halftime': // 31
+    case 'Penalty Shootout End':    // 32
+      return '승부차기';            // penalty
+
+    case 'Ended':              // 100
+      return '경기종료';       // finished
+
+    case 'Awarded':            // 110
+      return '몰수승';         // awarded
+
+    case 'Abandoned':          // 120
+      return '중단됨';         // abandoned
+
+    case 'Postponed':          // 130
+      return '연기됨';         // postponed
+
+    case 'Cancelled':          // 140
+      return '취소됨';         // cancelled
+
+    case 'Suspended':          // 150
+      return '일시중단';       // suspended
+
+    case 'Interrupted':        // 160
+      return '중단됨';         // interrupted
+
+    default:
+      return status || '경기 상태';
+  }
+};
   return (
     <div
       className={cardClassName}
@@ -88,8 +138,12 @@ export default function MatchCard({ match, likedMatches = [], onLike }) {
           </div>
           <div className="matchTime">{match.time}</div>
           {match.matchStatus && (
-            <div className="matchStatus">{match.matchStatus}</div>
-          )}
+          <div className={`matchStatus ${
+              !match.matchStatus || match.matchStatus === "" ? "no-border" : ""
+            }`}>
+            {getStatusText(match.matchStatus)}
+          </div>
+        )}
         </div>
 
         <div className="teamSection">

@@ -1,6 +1,5 @@
 .sidebarContainer {
-    position: sticky; /* 스크롤 되어도 상단에 고정 */
-    top: 40px; /* 헤더와 바로 붙도록 */
+    
     z-index: 999;
     display: flex;
     justify-content: center;
@@ -187,9 +186,10 @@
     display: flex;
     gap: 25px;
     margin: 0 auto;
+    height: 40px;
 }
 
-.sport-menu-item {
+.sport-heder-item {
     position: relative;
     align-items: center;
     text-decoration: none;
@@ -197,7 +197,7 @@
     width: 80px;
 }
 
-.sport-menu-item button {
+.sport-heder-item button {
     background: none;
     border: none;
     font-size: 16px;
@@ -209,7 +209,7 @@
     background-color: rgba(0,0,0,0);
 }
 
-.sport-menu-item button:hover {
+.sport-heder-item button:hover {
     color: var(--link-color);
 }
 
@@ -241,7 +241,7 @@
     transition: color 0.3s ease;
 }
 
-.sport-menu-item button.active,
+.sport-heder-item button.active,
 .league-menu button.active {
     color: var(--link-color);
     font-weight: bold;
@@ -272,11 +272,11 @@
     color: inherit !important; /* 공휴일 텍스트 색상 원래대로 */
 }
 
-.sport-menu-item {
+.sport-heder-item {
     position: relative; /* 하위 메뉴의 기준점 역할을 하도록 설정 */
 }
 
-.sport-menu-item .league-menu {
+.sport-heder-item .league-menu {
     position: absolute;
     top: 100%; /* 부모 요소 바로 아래에 위치 */
     left: 50%;

@@ -19,6 +19,10 @@
 .container.width{
     width: 630px;
     justify-content: space-between;
+    margin: 0;
+    gap: 0;
+    padding: 0;
+    height: 40px;
 }
 .HomeContainer .scheduleTab{
   width: 95%;
@@ -96,13 +100,13 @@
 
 /* 배경 이미지 */
 .teamBg {
-      position: absolute;
-    top: -22%;
-    width: 28%;
-    height: 140%;
+    position: absolute;
+    top: 13%;
+    width: 3vw;
+    height: 5vh;
     background-repeat: no-repeat;
     background-position: center;
-    opacity: 0.38;
+    opacity: 0.88;
     z-index: 0;
     pointer-events: none;
 
@@ -111,11 +115,11 @@
 }
 
 .teamBg.left {
-  left: -2%;
+  left: 4%;
 }
 
 .teamBg.right {
-  right: -2%
+  right: 4%
 }
 
 

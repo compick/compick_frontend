@@ -44,6 +44,7 @@ const RecentMatch = ({ match }) => {
       case 'scheduled': return '예정';
       case 'live': return '진행중';
       case 'finished': return '종료';
+
       default: return status;
     }
   };
@@ -153,23 +154,39 @@ export default function MatchDetailPage({
   const [awayRecent, setAwayRecent] = useState([]);
   const [recentLoading, setRecentLoading] = useState(false);
 
-  // 최근 접속한 경기 저장
-  useEffect(() => {
-    const savedMatches = JSON.parse(localStorage.getItem('recentMatches') || '[]');
-    const currentMatch = { sport, league, matchId, timestamp: Date.now() };
-    
-    // 이미 있는 경기면 제거
-    const filteredMatches = savedMatches.filter(match => 
-      !(match.sport === sport && match.league === league && match.matchId === matchId)
-    );
-    
-    // 새 경기를 맨 앞에 추가하고 최대 5개만 유지
-    const newMatches = [currentMatch, ...filteredMatches].slice(0, 5);
-    setRecentMatches(newMatches);
-    localStorage.setItem('recentMatches', JSON.stringify(newMatches));
-  }, [sport, league, matchId]);
+  /// 최근 접속한 경기 저장
+useEffect(() => {
+  if (!detail) return;
 
-  
+  const savedMatches = JSON.parse(localStorage.getItem("recentMatches") || "[]");
+
+  const currentMatch = {
+    matchId: detail.matchId,
+    leagueNickname: detail.leagueNickname,
+    homeTeamName: detail.homeTeamName || detail.homeTeam || detail.home_team,
+    awayTeamName: detail.awayTeamName || detail.awayTeam || detail.away_team,
+    homeScore: detail.homeScore ?? detail.home_score ?? null,
+    awayScore: detail.awayScore ?? detail.away_score ?? null,
+    matchStatus: detail.matchStatus,
+    startTime: detail.startTime,
+    homeTeamLogo: detail.homeTeamLogo || detail.home_team_logo,
+    awayTeamLogo: detail.awayTeamLogo || detail.away_team_logo,
+    timestamp: Date.now(),
+  };
+
+  const filteredMatches = savedMatches.filter(
+    (match) => match.matchId !== detail.matchId
+  );
+
+  const newMatches = [currentMatch, ...filteredMatches].slice(0, 5);
+  setRecentMatches(newMatches);
+  localStorage.setItem("recentMatches", JSON.stringify(newMatches));
+}, [detail]);
+
+
+// 홈 최근 경기
+// 어웨이 최근 경기
+// 홈 어웨이 맞대결
 useEffect(() => {
   if (!detail) return;
   // 백엔드가 내려주는 팀 ID 키에 맞춰 안전 추출
@@ -180,6 +197,29 @@ useEffect(() => {
     setH2hMatches([]); // 아이디 없으면 비움
     return;
   }
+  let hoemalive = true;
+  (async () =>{
+    const homeRes = await getRecentMatchesByHome(sport, league,homeId);
+    if(!hoemalive) return;
+    if(homeRes.status === "success"){
+      setHomeRecent(Array.isArray(homeRes.data) ? homeRes.data : []);
+    }else{
+      setHomeRecent([]);
+      console.log("[HOMERECENT} ",homeRes.error);
+    }
+  })();
+  let awayalive = true;
+  (async () =>{
+    const awayRes = await getRecentMatchesByHome(sport, league,awayId);
+    if(!awayalive) return;
+    if(awayRes.status === "success"){
+      setAwayRecent(Array.isArray(awayRes.data) ? awayRes.data : []);
+    }else{
+      setAwayRecent([]);
+      console.log("[AWAYRECENT} ",awayRes.error);
+    }
+  })();
+
 
   let alive = true;
   (async () => {
@@ -227,129 +267,129 @@ useEffect(() => {
       alive = false;
     };
   }, [sport, league, matchId]);
-  // useEffect(() => {
-  //   if (!detail) return;
-  
-  //   // detail에서 팀 ID 안전 추출
-  //   const homeId =
-  //     detail.homeTeamId ??
-  //     detail.home_team_id ??
-  //     detail.homeId ??
-  //     detail.homeTeam?.id;
-  
-  //   const awayId =
-  //     detail.awayTeamId ??
-  //     detail.away_team_id ??
-  //     detail.awayId ??
-  //     detail.awayTeam?.id;
-  
-  //   if (!homeId || !awayId) {
-  //     // id가 없으면 호출하지 않음
-  //     setHomeRecent([]);
-  //     setAwayRecent([]);
-  //     return;
-  //   }
-  
-  //   let alive = true;
-  //   (async () => {
-  //     try {
-  //       setRecentLoading(true);
-  //       const resHome = await getRecentMatchesByHome(sport, league, homeId);
-  //       const resAway = await getRecentMatchesByAway(sport, league, awayId);
-  
-  //       if (!alive) return;
-  
-  //       if (res.status === "success") {
-  //         // 백엔드가 { homeRecent: [...], awayRecent: [...] } 형태로 내려오도록 구성
-  //         const data = res.data ?? {};
-  //         setHomeRecent(Array.isArray(data.homeRecent) ? data.homeRecent : []);
-  //         setAwayRecent(Array.isArray(data.awayRecent) ? data.awayRecent : []);
-  //       } else {
-  //         console.error("[RECENT] error:", res.error);
-  //         setHomeRecent([]);
-  //         setAwayRecent([]);
-  //       }
-  //     } catch (e) {
-  //       console.error("[RECENT] exception:", e);
-  //       setHomeRecent([]);
-  //       setAwayRecent([]);
-  //     } finally {
-  //       if (alive) setRecentLoading(false);
-  //     }
-  //   })();
-  
-  //   return () => {
-  //     alive = false;
-  //   };
-  // }, [detail, sport, league]);
+
 
   
 
   const getStatusText = (status) => {
-    switch (status) {
-      case 'scheduled': return '경기전';
-      case 'live': return '진행중';
-      case 'finished': return '경기종료';
-      default: return status || '경기 상태';
-    }
-  };
+  switch (status) {
+    case 'Not Started':        // 0
+      return '경기예정';       // notstarted
+
+    case 'First Half':         // 1
+    case 'Second Half':        // 12
+      return '진행중';         // inprogress
+
+    case 'Halftime':           // 11
+      return '하프타임';       // halftime
+
+    case 'Break Time':         // 13
+      return '휴식시간';       // break
+
+    case 'Extra Time First Half':   // 20
+    case 'Extra Time Halftime':     // 21
+    case 'Extra Time Second Half':  // 22
+      return '연장전';              // extra
+
+    case 'Penalty Shootout':        // 30
+    case 'Penalty Shootout Halftime': // 31
+    case 'Penalty Shootout End':    // 32
+      return '승부차기';            // penalty
+
+    case 'Ended':              // 100
+      return '경기종료';       // finished
+
+    case 'Awarded':            // 110
+      return '몰수승';         // awarded
+
+    case 'Abandoned':          // 120
+      return '중단됨';         // abandoned
+
+    case 'Postponed':          // 130
+      return '연기됨';         // postponed
+
+    case 'Cancelled':          // 140
+      return '취소됨';         // cancelled
+
+    case 'Suspended':          // 150
+      return '일시중단';       // suspended
+
+    case 'Interrupted':        // 160
+      return '중단됨';         // interrupted
+
+    default:
+      return status || '경기 상태';
+  }
+};
+
 
   const shouldShowScore = (status) => {
     return status === 'live' || status === 'finished';
   };
 
-  // 승률 계산 함수
-  const calculateWinRate = (matches, teamName) => {
-    if (!matches || matches.length === 0) return 0;
-    
-    const finishedMatches = matches.filter(match => 
-      match.status === 'finished' || match.matchStatus === 'finished'
-    );
-    
-    if (finishedMatches.length === 0) return 0;
-    
-    const wins = finishedMatches.filter(match => {
-      const homeScore = parseInt(match.homeScore || match.home_score || 0);
-      const awayScore = parseInt(match.awayScore || match.away_score || 0);
-      const homeTeam = match.homeTeam || match.homeTeamName || match.home_team;
-      const awayTeam = match.awayTeam || match.awayTeamName || match.away_team;
-      
-      // 해당 팀이 홈팀인지 원정팀인지 확인
-      const isHomeTeam = homeTeam === teamName;
-      const isAwayTeam = awayTeam === teamName;
-      
-      if (isHomeTeam) {
-        return homeScore > awayScore;
-      } else if (isAwayTeam) {
-        return awayScore > homeScore;
-      }
-      return false;
-    }).length;
-    
-    return Math.round((wins / finishedMatches.length) * 100);
-  };
+  // 승률 계산 함수 (teamId 기준)
+const calculateWinRate = (matches, teamId) => {
+  if (!matches || matches.length === 0) return 0;
 
-  // 팀별 최근 5경기 가져오기
-  const homeTeamRecentMatches = useMemo(() => {
-    return (homeRecent.length ? homeRecent : (detail?.homeRecentMatches || detail?.home_recent_matches || []))
-      .slice(0, 5);
-  }, [homeRecent, detail]);
+  // 종료된 경기만 필터링
+  const finishedMatches = matches.filter(
+    (match) =>
+      match.matchStatus === "Ended" ||
+      match.status === "finished" ||
+      match.status === "Ended"
+  );
 
-  const awayTeamRecentMatches = useMemo(() => {
-    return (awayRecent.length ? awayRecent : (detail?.awayRecentMatches || detail?.away_recent_matches || []))
-      .slice(0, 5);
-  }, [awayRecent, detail]);
+  if (finishedMatches.length === 0) return 0;
 
-  // 승률 계산
-  const homeWinRate = useMemo(() => {
-    const homeTeamName = detail?.homeTeam || detail?.home_team || detail?.homeTeamName;
-    return calculateWinRate(homeTeamRecentMatches, homeTeamName);
-  }, [homeTeamRecentMatches, detail]);
+  // 이긴 경기 수 카운트
+  const wins = finishedMatches.filter((match) => {
+    const homeScore = parseInt(match.homeScore ?? match.home_score ?? 0, 10);
+    const awayScore = parseInt(match.awayScore ?? match.away_score ?? 0, 10);
+    const homeId = match.homeTeamId ?? match.home_team_id;
+    const awayId = match.awayTeamId ?? match.away_team_id;
 
-  const awayWinRate = useMemo(() => {
-    const awayTeamName = detail?.awayTeam || detail?.away_team || detail?.awayTeamName;
-    return calculateWinRate(awayTeamRecentMatches, awayTeamName);
-  }, [awayTeamRecentMatches, detail]);
+    if (homeId === teamId) {
+      return homeScore > awayScore;
+    } else if (awayId === teamId) {
+      return awayScore > homeScore;
+    }
+    return false;
+  }).length;
+
+  return Math.round((wins / finishedMatches.length) * 100);
+};
+
+// 팀별 최근 5경기 가져오기
+const homeTeamRecentMatches = useMemo(() => {
+  return (homeRecent.length
+    ? homeRecent
+    : detail?.homeRecentMatches || detail?.home_recent_matches || []
+  ).slice(0, 5);
+}, [homeRecent, detail]);
+
+const awayTeamRecentMatches = useMemo(() => {
+  return (awayRecent.length
+    ? awayRecent
+    : detail?.awayRecentMatches || detail?.away_recent_matches || []
+  ).slice(0, 5);
+}, [awayRecent, detail]);
+
+// 승률 계산 (teamId 사용)
+const homeWinRate = useMemo(() => {
+  const homeId =
+    detail?.homeTeamId ??
+    detail?.home_team_id ??
+    detail?.homeTeam?.id;
+  return calculateWinRate(homeTeamRecentMatches, homeId);
+}, [homeTeamRecentMatches, detail]);
+
+const awayWinRate = useMemo(() => {
+  const awayId =
+    detail?.awayTeamId ??
+    detail?.away_team_id ??
+    detail?.awayTeam?.id;
+  return calculateWinRate(awayTeamRecentMatches, awayId);
+}, [awayTeamRecentMatches, detail]);
 
   // 로그인 상태 확인
   const isLoggedIn = useMemo(() => {
@@ -418,22 +458,57 @@ useEffect(() => {
     );
   }
 
-  return (
-    <div className="match-detail-layout">
-      {/* 왼쪽 사이드바 - 최근 접속한 경기 */}
-      <div className="left-sidebar">
-        <h3>최근 접속한 경기</h3>
-        <div className="recent-matches-list">
-          {recentMatches.map((match, index) => (
-            <div key={index} className="recent-match-item">
+return (
+  <div className="match-detail-layout">
+  {/* 왼쪽 사이드바 - 최근 접속한 경기 */}
+    <div className="left-sidebar">
+      <h3>최근 접속한 경기</h3>
+      <div className="recent-matches-list">
+        {recentMatches.length > 0 ? (
+          recentMatches.map((match, index) => (
+             <div key={index} className="recent-match-item"  onClick={() =>
+                navigate(`/match/${match.sport}/${match.leagueName}/${match.matchId}`)}>
               <div className="match-info">
-                <div className="match-league">{match.league}</div>
-                <div className="match-id">ID: {match.matchId}</div>
+                <span>{match.leagueNickname}</span>
+                <div className={`match-league ${
+                  !match.matchStatus || match.matchStatus === "" ? "no-border" : ""
+                  }`}>
+                  {getStatusText(match.matchStatus)}
+                </div>
+
+                {/* 홈팀 */}
+                <div className="match-row">
+                  {match.homeTeamLogo && (
+                    <img
+                      src={match.homeTeamLogo}
+                      alt={match.homeTeamName}
+                      className="team-logo"
+                    />
+                  )}
+                  <span className="team-name">{match.homeTeamName || ""}</span>
+                  <span className="team-score">{match.homeScore ?? ""}</span>
+                </div>
+
+                {/* 원정팀 */}
+                <div className="match-row">
+                  {match.awayTeamLogo && (
+                    <img
+                      src={match.awayTeamLogo}
+                      alt={match.awayTeamName}
+                      className="team-logo"
+                    />
+                  )}
+                  <span className="team-name">{match.awayTeamName || ""}</span>
+                  <span className="team-score">{match.awayScore ?? ""}</span>
+                </div>
               </div>
             </div>
-          ))}
-        </div>
+         ))) : (
+          <div className="no-matches">""</div>
+        )}
       </div>
+    </div>
+
 
 
    
@@ -444,7 +519,7 @@ useEffect(() => {
         <div className="match-header">
           <div className="team-info">
             <TeamLogo teamName={detail.homeTeam || detail.home_team || detail.homeTeamName} logoUrl={detail.homeTeamLogo || detail.home_team_logo} />
-            <div className="team-name">홈 {detail.homeTeam || detail.home_team || detail.homeTeamName || '홈팀'}</div>
+            <div className="team-name">{detail.homeTeam || detail.home_team || detail.homeTeamName || '홈팀'}</div>
           </div>
           
           <div className="match-info">
@@ -541,7 +616,7 @@ useEffect(() => {
                     <MatchCard 
                       key={index} 
                       match={match} 
-          likedMatches={likedMatches}
+                      likedMatches={likedMatches}
                       onLike={onLikeMatch} 
                     />
                   ))
@@ -583,23 +658,19 @@ useEffect(() => {
         )}
       </div>
 
-             {/* 오른쪽 사이드바 - 오픈톡 채팅 */}
-       <div className="right-sidebar">
-         <div className="chat-container">
-           <h3>오픈톡</h3>
-           <div className="chat-messages">
-             {isLoggedIn ? (
-               <div className="chat-placeholder">
-                 실시간 채팅 기능이 준비 중입니다.
-               </div>
-             ) : (
-               <div className="chat-placeholder">
-                 로그인이 필요한 기능입니다.
-               </div>
-             )}
-           </div>
-         </div>
+      {/* 오른쪽 사이드바 - 오픈톡 채팅 */}
+     {activeTab === "opentalk" && isLoggedIn && (
+  <div className="right-sidebar">
+    <div className="chat-container">
+      <h3>오픈톡</h3>
+      <div className="chat-messages">
+        <div className="chat-placeholder">
+          실시간 채팅 기능이 준비 중입니다.
         </div>
+      </div>
+    </div>
+  </div>
+)}
 
        {/* 로그인 확인 모달 */}
        <LoginModal 
