@@ -18,9 +18,17 @@ pipeline {
         sh '''
           set -e
 
-          echo "[before] npm registry = $(npm config get registry || true)"
+          echo "=== npm env sanity ==="
+          node -v
+          npm -v
 
-          # 1) 모든 오염 설정 해제 (env/proxy/.npmrc)
+          echo "=== BEFORE configs ==="
+          npm config get registry || true
+          npm config get proxy || true
+          npm config get https-proxy || true
+          npm config list -l | grep -i registry || true
+
+          # 0) 환경변수/프록시 해제
           unset NPM_CONFIG_REGISTRY NPM_REGISTRY_URL npm_config_registry
           unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy NO_PROXY no_proxy
 
@@ -28,9 +36,23 @@ pipeline {
           npm config delete https-proxy || true
           npm config delete registry || true
 
-          rm -f .npmrc ~/.npmrc /var/jenkins_home/.npmrc || true
+          # 1) 사용자/시스템 npmrc 흔적 제거 (있는 경우만)
+          rm -f ~/.npmrc /var/jenkins_home/.npmrc || true
+          rm -f ~/.config/npm/npmrc || true
+          sudo rm -f /etc/npmrc /usr/local/etc/npmrc 2>/dev/null || true
 
-          # 2) 공식 레지스트리로 *CLI 플래그* 사용(최우선)
+          # 2) 워크스페이스 .npmrc를 "정답"으로 강제
+          cat > .npmrc <<'EOF'
+registry=https://registry.npmjs.org/
+@*:registry=https://registry.npmjs.org/
+audit=false
+fund=false
+EOF
+
+          echo "=== AFTER enforcing workspace .npmrc ==="
+          npm config list -l | grep -i registry || true
+
+          # 3) 설치 & 빌드 (CLI --registry도 최우선으로 지정)
           if [ -f package-lock.json ]; then
             npm ci --registry=https://registry.npmjs.org/
           else
