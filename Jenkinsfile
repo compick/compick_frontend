@@ -16,8 +16,11 @@ pipeline {
     stage('Build') {
       steps {
         sh '''
-          npm ci || npm install
-          npm run build
+          # 항상 공식 npm 레지스트리 사용 (빌드 시점만 적용)
+          NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ npm ci || \
+          NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ npm install
+
+          NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ npm run build
         '''
       }
     }
@@ -47,7 +50,7 @@ pipeline {
   }
 
   post {
-    failure { echo '❌ React build/deploy 실패 — Node.js 환경 & SSH 확인 필요' }
+    failure { echo '❌ React build/deploy 실패 — Node.js 환경 & SSH/레지스트리 확인 필요' }
     success { echo '✅ React 프론트엔드 배포 성공!' }
   }
 }
