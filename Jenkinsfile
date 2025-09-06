@@ -21,6 +21,9 @@ pipeline {
           node -v
           npm -v
 
+          # Node.js 메모리 제한 해제 (빌드 안정화)
+          export NODE_OPTIONS=--max_old_space_size=2048
+
           # 안전하게 npm 공식 레지스트리 강제
           unset NPM_CONFIG_REGISTRY NPM_REGISTRY_URL npm_config_registry
           unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy NO_PROXY no_proxy
