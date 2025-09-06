@@ -1,9 +1,9 @@
 pipeline {
   agent any
-  tools { nodejs 'node18' }   // Jenkins Global Tool에 Node.js 등록 필요
+  tools { nodejs 'node18' }   // Manage Jenkins > Global Tool Configuration > NodeJS installations: name=node18, version=18.20.4
   options { skipDefaultCheckout(true) }
   environment {
-    SSH_CRED   = 'deploy-ssh'       // SSH key
+    SSH_CRED   = 'deploy-ssh'              // Jenkins Credentials: SSH key (username=ec2-user)
     DEPLOY_DIR = '/home/ec2-user/app/compick'
   }
   triggers { githubPush() }
@@ -16,11 +16,28 @@ pipeline {
     stage('Build') {
       steps {
         sh '''
-          # 항상 공식 npm 레지스트리 사용 (빌드 시점만 적용)
-          NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ npm ci || \
-          NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ npm install
+          set -e
 
-          NPM_CONFIG_REGISTRY=https://registry.npmjs.org/ npm run build
+          echo "[before] npm registry = $(npm config get registry || true)"
+
+          # 1) 모든 오염 설정 해제 (env/proxy/.npmrc)
+          unset NPM_CONFIG_REGISTRY NPM_REGISTRY_URL npm_config_registry
+          unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy NO_PROXY no_proxy
+
+          npm config delete proxy || true
+          npm config delete https-proxy || true
+          npm config delete registry || true
+
+          rm -f .npmrc ~/.npmrc /var/jenkins_home/.npmrc || true
+
+          # 2) 공식 레지스트리로 *CLI 플래그* 사용(최우선)
+          if [ -f package-lock.json ]; then
+            npm ci --registry=https://registry.npmjs.org/
+          else
+            npm install --registry=https://registry.npmjs.org/
+          fi
+
+          npm run build
         '''
       }
     }
@@ -50,7 +67,7 @@ pipeline {
   }
 
   post {
-    failure { echo '❌ React build/deploy 실패 — Node.js 환경 & SSH/레지스트리 확인 필요' }
+    failure { echo '❌ React build/deploy 실패 — Node.js, 레지스트리, SSH 설정 확인' }
     success { echo '✅ React 프론트엔드 배포 성공!' }
   }
 }
