@@ -1,10 +1,17 @@
 pipeline {
   agent any
-  tools { nodejs 'node18' }   // Jenkins Global Tool Configuration > NodeJS installations
-  options { skipDefaultCheckout(true) }
+  tools { nodejs 'node22' } // Node.js 22.17.0 (Global Tool에 등록)
+  options {
+    skipDefaultCheckout(true)
+    timeout(time: 25, unit: 'MINUTES')    // 전체 파이프라인 보호
+    disableConcurrentBuilds()             // 동시에 2개 이상 실행 금지
+    buildDiscarder(logRotator(numToKeepStr: '30'))
+  }
   environment {
-    SSH_CRED   = 'deploy-ssh'       // Jenkins Credentials: SSH key (username=ec2-user)
+    SSH_CRED   = 'deploy-ssh'
     DEPLOY_DIR = '/home/ec2-user/app/compick'
+    NODE_OPTIONS = '--max_old_space_size=2048'
+    CI = 'true'                           // react-scripts 최적동작 플래그
   }
   triggers { githubPush() }
 
@@ -17,21 +24,18 @@ pipeline {
       steps {
         sh '''
           set -e
-          echo "=== npm version check ==="
+          echo "=== versions ==="
           node -v
           npm -v
 
-          # Node.js 메모리 제한 해제 (빌드 안정화)
-          export NODE_OPTIONS=--max_old_space_size=2048
-
-          # 안전하게 npm 공식 레지스트리 강제
+          # 프록시/레지스트리 강제 초기화
           unset NPM_CONFIG_REGISTRY NPM_REGISTRY_URL npm_config_registry
           unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy NO_PROXY no_proxy
           npm config delete proxy || true
           npm config delete https-proxy || true
           npm config delete registry || true
 
-          # 워크스페이스 .npmrc를 강제로 생성
+          # 워크스페이스 .npmrc 고정
           cat > .npmrc <<'EOF'
 registry=https://registry.npmjs.org/
 @*:registry=https://registry.npmjs.org/
@@ -42,11 +46,10 @@ EOF
           echo "=== effective registry ==="
           npm config get registry
 
-          # 패키지 설치 & 빌드
           if [ -f package-lock.json ]; then
-            npm ci --registry=https://registry.npmjs.org/
+            npm ci --no-audit --no-fund --registry=https://registry.npmjs.org/
           else
-            npm install --registry=https://registry.npmjs.org/
+            npm install --no-audit --no-fund --registry=https://registry.npmjs.org/
           fi
 
           npm run build
@@ -62,11 +65,9 @@ EOF
               set -e
               for h in $FRONTENDS; do
                 echo "Deploying to $h ..."
-                # build 결과물을 대상 서버로 전송
                 rsync -az --delete ./build/ ec2-user@$h:${DEPLOY_DIR}/compick_frontend/build_new/
-
-                # 대상 서버에서 원자적 교체 및 컨테이너 재기동
-                ssh ec2-user@$h "
+                ssh -o StrictHostKeyChecking=accept-new ec2-user@$h "
+                  set -e
                   cd ${DEPLOY_DIR} &&
                   TS=\\$(date +%F-%H%M%S) &&
                   [ -d compick_frontend/build ] && mv compick_frontend/build compick_frontend/build_old_\\$TS || true &&
@@ -82,7 +83,14 @@ EOF
   }
 
   post {
-    failure { echo '❌ React build/deploy 실패 — Node.js, 레지스트리, SSH 확인 필요' }
+    aborted {
+      sh 'pkill -f "react-scripts build" || true'
+      sh 'pkill -f "node .*react-scripts build" || true'
+    }
+    always {
+      cleanWs() // 임시파일 정리로 다음 빌드 안정화
+    }
+    failure { echo '❌ React build/deploy 실패 — Node/레지스트리/SSH 점검' }
     success { echo '✅ React 프론트엔드 SSH 배포 성공!' }
   }
 }
