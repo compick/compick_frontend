@@ -1,7 +1,6 @@
 // apiClient.js  (proxy/same-origin ver.)
 import { getCookie, setCookie } from "../utils/Cookie";
 
-
 const API_BASE = process.env.REACT_APP_API_BASE || "";
 // 상대 경로만 유지(호스트/포트 붙이지 않음)
 const toAbs = (u) => {
@@ -30,6 +29,9 @@ async function refreshAccessToken() {
     })().finally(() => { refreshPromise = null; });
   }
   return refreshPromise;
+}
+export function getAuthUrl(path) {
+  return toAbs(path); // 내부 toAbs 재사용
 }
 
 export async function apiFetch(input, init = {}) {

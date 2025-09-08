@@ -1,17 +1,17 @@
-// src/pages/KakaoLogin.jsx
+//src/pages/KakaoLogin.jsx
 import React, { useState, useCallback } from "react";
 import { API_BASE } from "../../config";
 import { page, card, kakaoStyle, plain } from "../../components/ui";
+import { getAuthUrl } from "../../api/apiClient";
 
 export default function KakaoLogin() {
   const [busy, setBusy] = useState(false);
 
-  const go = useCallback(() => {
-    if (busy) return;
-    setBusy(true);
-    // OAuth 시작: 백엔드로 리다이렉트
-    window.location.replace(`${API_BASE}/api/auth/signup/kakao`);
-  }, [busy]);
+   const go = useCallback(() => {
+      if (busy) return;
+      setBusy(true);
+      window.location.replace(getAuthUrl("/api/auth/signup/kakao")); // ✅ API_BASE 직접 안 씀
+    }, [busy]);
 
   return (
     <div className={page} style={{ background: "#f9fafb", fontFamily: "system-ui, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif" }}>

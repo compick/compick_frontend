@@ -2,7 +2,7 @@
     display: flex;
     flex-direction: column;
     margin: 0 auto;
-    padding-top: 60px; /* 고정된 SportHeader의 높이만큼 여백 */
+    padding-top: 80px; /* 고정된 SportHeader의 높이만큼 여백 */
     background-color: var(--page-bg);
     transition: background-color 0.3s ease;
 }
