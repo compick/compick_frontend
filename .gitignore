@@ -35,7 +35,5 @@ utils/*_[0-9]*.js
 *.history
 .history/
 
-.env*
-
 .package-lock.json
 .package.json
