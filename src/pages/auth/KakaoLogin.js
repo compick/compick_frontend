@@ -10,7 +10,7 @@ export default function KakaoLogin() {
     if (busy) return;
     setBusy(true);
     // OAuth 시작: 백엔드로 리다이렉트
-    window.location.replace(`${API_BASE}/api/auth/signup/kakao`);
+    window.location.replace("/api/auth/signup/kakao");
   }, [busy]);
 
   return (
