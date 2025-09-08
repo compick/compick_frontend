@@ -1,41 +1,37 @@
 pipeline {
   agent any
-  tools { nodejs 'node22' } // Node.js 22.17.0 (Global Tool에 등록)
+  tools { nodejs 'node22' }
   options {
     skipDefaultCheckout(true)
-    timeout(time: 25, unit: 'MINUTES')    // 전체 파이프라인 보호
-    disableConcurrentBuilds()             // 동시에 2개 이상 실행 금지
+    timeout(time: 25, unit: 'MINUTES')
+    disableConcurrentBuilds()
     buildDiscarder(logRotator(numToKeepStr: '30'))
   }
   environment {
-    SSH_CRED   = 'deploy-ssh'
+    SSH_CRED = 'deploy-ssh'
     DEPLOY_DIR = '/home/ec2-user/app/compick'
-    NODE_OPTIONS = '--max_old_space_size=2048'
-    CI = 'true'                           // react-scripts 최적동작 플래그
+    NODE_OPTIONS = '--max_old_space_size=1024'
+    CI = 'true'
+    GENERATE_SOURCEMAP = 'false'
+    DISABLE_ESLINT_PLUGIN = 'true'
   }
   triggers { githubPush() }
 
   stages {
-    stage('Checkout') {
-      steps { checkout scm }
-    }
+    stage('Checkout'){ steps { checkout scm } }
 
-    stage('Build') {
+    stage('Build'){
       steps {
         sh '''
           set -e
-          echo "=== versions ==="
-          node -v
-          npm -v
+          echo "node=$(node -v) npm=$(npm -v)"
 
-          # 프록시/레지스트리 강제 초기화
           unset NPM_CONFIG_REGISTRY NPM_REGISTRY_URL npm_config_registry
           unset HTTP_PROXY HTTPS_PROXY http_proxy https_proxy NO_PROXY no_proxy
           npm config delete proxy || true
           npm config delete https-proxy || true
           npm config delete registry || true
 
-          # 워크스페이스 .npmrc 고정
           cat > .npmrc <<'EOF'
 registry=https://registry.npmjs.org/
 @*:registry=https://registry.npmjs.org/
@@ -43,21 +39,19 @@ audit=false
 fund=false
 EOF
 
-          echo "=== effective registry ==="
-          npm config get registry
-
           if [ -f package-lock.json ]; then
             npm ci --no-audit --no-fund --registry=https://registry.npmjs.org/
           else
             npm install --no-audit --no-fund --registry=https://registry.npmjs.org/
           fi
 
-          npm run build
+          # 메모리 상한 1024MB로 빌드 강제
+          node --max-old-space-size=1024 node_modules/react-scripts/scripts/build.js
         '''
       }
     }
 
-    stage('Deploy') {
+    stage('Deploy'){
       steps {
         withCredentials([string(credentialsId: 'frontends-hosts', variable: 'FRONTENDS')]) {
           sshagent(credentials: [env.SSH_CRED]) {
@@ -87,10 +81,8 @@ EOF
       sh 'pkill -f "react-scripts build" || true'
       sh 'pkill -f "node .*react-scripts build" || true'
     }
-    always {
-      cleanWs() // 임시파일 정리로 다음 빌드 안정화
-    }
-    failure { echo '❌ React build/deploy 실패 — Node/레지스트리/SSH 점검' }
+    always { cleanWs() }
+    failure { echo '❌ React build/deploy 실패 — 메모리·스왑 상태 확인' }
     success { echo '✅ React 프론트엔드 SSH 배포 성공!' }
   }
 }
