@@ -25,7 +25,8 @@ import RankingPage from './user/RankingPage';
 import TeamRankingPage from './user/TeamRankingPage'; // 새로 만든 페이지 import
 import TeamRankingsPage from './body/home/rank/TeamRankingsPage'; // 구단순위 페이지 import
 import PostDetailPage from './body/detail/PostDetailPage';
-import SportHeader from './component/SportHeader';
+import SportHeader from './components/SportHeader';
+import ProtectedRoute from './body/routes/ProtectedRoute';
 
 
 
@@ -90,11 +91,28 @@ export default function BodyPage({ posts, matches, userScores, capturedImage, se
 
                 <div style={{ flex: 1 }}>
                     <Routes>
+                        {/* ✅ 로그인 필요 */}
+                        <Route
+                            path="/add"
+                            element={
+                            <ProtectedRoute>
+                                <AddBody setCapturedImage={setCapturedImage} />
+                            </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/myProfile"
+                            element={
+                            <ProtectedRoute>
+                                <MyProfile userScores={userScores} userInfo={userInfo} />
+                            </ProtectedRoute>
+                            }
+                        />
                         <Route path="/" element={<HomePageWrapper handleLeagueChange={handleLeagueChange} posts={posts} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} selectedLeague={selectedLeague} />} />
                         
                         {/* 구체적인 라우트들을 먼저 정의 */}
                         <Route path="/match/:sport/:league/:matchId" element={<MatchDetailPage likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} />} />
-                        <Route path="/myProfile" element={<MyProfile userScores={userScores} userInfo={userInfo} />} />
+                        {/* <Route path="/myProfile" element={<MyProfile userScores={userScores} userInfo={userInfo} />} /> */}
                         <Route path="/edit-profile" element={<EditProfilePage currentUser={userInfo} onSave={onProfileUpdate} />} />
                         <Route path="/tier/:category" element={<TierDetailPage userScores={userScores} />} />
                         <Route path="/heart" element={<HeartPage likedMatches={likedMatches} onLikeMatch={onLikeMatch} />} />
