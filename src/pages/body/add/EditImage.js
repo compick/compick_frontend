@@ -2,9 +2,9 @@ import React, { useState, useRef, useEffect, useImperativeHandle, forwardRef } f
 import { useLocation } from "react-router-dom";
 import html2canvas from 'html2canvas';
 
-const EditImage = forwardRef(({ setCapturedImage }, ref) => {
+const EditImage = forwardRef(({ setCapturedImage, imageFromProps }, ref) => {
   const location = useLocation();
-  const imageFromState = location.state?.image || null;
+  const imageFromState = imageFromProps || location.state?.image || null;
   // transformFromState 및 boxFromState 관련 로직 제거
 
   // scale, pos 상태 제거
@@ -97,7 +97,12 @@ const EditImage = forwardRef(({ setCapturedImage }, ref) => {
   };
 
   const updateText = (id, changes) => {
-      setTexts((prev) => prev.map((t) => (t.id === id ? { ...t, ...changes } : t)));
+      console.log('updateText 호출:', { id, changes });
+      setTexts((prev) => {
+        const updated = prev.map((t) => (t.id === id ? { ...t, ...changes } : t));
+        console.log('텍스트 업데이트 후:', updated);
+        return updated;
+      });
   };
 
   const handleDoubleClick = (id) => updateText(id, { editing: true });
@@ -198,6 +203,7 @@ const EditImage = forwardRef(({ setCapturedImage }, ref) => {
       >
         <img
           src={imageFromState}
+          alt="편집할 이미지"
           className="previewImage"
           // transform 스타일 제거
         />
@@ -308,7 +314,10 @@ const EditImage = forwardRef(({ setCapturedImage }, ref) => {
             <input
               type="color"
               value={selectedText.color}
-              onChange={(e) => updateText(selectedText.id, { color: e.target.value })}
+              onChange={(e) => {
+                console.log('글자색 변경:', e.target.value);
+                updateText(selectedText.id, { color: e.target.value });
+              }}
             />
           </label>
 
@@ -317,31 +326,31 @@ const EditImage = forwardRef(({ setCapturedImage }, ref) => {
             <input
               type="color"
               value={selectedText.bgHex}
-              onChange={(e) => updateText(selectedText.id, { bgHex: e.target.value })}
+              onChange={(e) => {
+                console.log('배경색 변경:', e.target.value);
+                updateText(selectedText.id, { bgHex: e.target.value });
+              }}
             />
-             <label style={{ display: "flex",  gap: 6 }}>
-          배경 투명도
-          <input
-            type="range"
-            min={0}
-            max={1}
-            step={0.05}
-            value={selectedText.bgOpacity}                     // ✅ 상태와 연결
-            onChange={(e) => {
-              const value = Number(e.target.value);            // ✅ 숫자로 변환
-              setTexts(prev =>
-                prev.map(t => t.id === selectedText.id
-                  ? { ...t, bgOpacity: value }                 // ✅ bgOpacity만 바꿈
-                  : t
-                )
-              );
-            }}
-            style={{ width: 120 }}
-          />
-          <span style={{ width: 34, textAlign: "right" }}>
-            {Math.round(selectedText.bgOpacity * 100)}%
-          </span>
-        </label>
+          </label>
+          
+          <label style={{ display: "flex", gap: 6 }}>
+            배경 투명도
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.05}
+              value={selectedText.bgOpacity}
+              onChange={(e) => {
+                const value = Number(e.target.value);
+                console.log('투명도 변경:', value);
+                updateText(selectedText.id, { bgOpacity: value });
+              }}
+              style={{ width: 120 }}
+            />
+            <span style={{ width: 34, textAlign: "right" }}>
+              {Math.round(selectedText.bgOpacity * 100)}%
+            </span>
           </label>
           <label>
             폰트

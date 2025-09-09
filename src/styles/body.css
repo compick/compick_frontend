@@ -203,7 +203,7 @@
   display: flex;
   width: 100%;
   position: relative;
-  height: 30px;
+  height: 2.5rem;
   align-items: center;  
   padding:  5px 0;
   border-bottom: 3px solid #aaa;
@@ -228,13 +228,12 @@
   
 }
 .nextBtn{
-  position: absolute;
-  right: 9px;
-  top: 8px;
-  background-color: #111;
-  color: #fff;
-  border-radius: 5px;
-  font-size: 18px;
+    position: absolute;
+    right: 5px;
+    top: 4px;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 18px;
 }
 .feedContainer {
   margin-top: 20px;

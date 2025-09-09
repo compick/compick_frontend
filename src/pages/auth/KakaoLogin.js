@@ -7,20 +7,11 @@ import { getAuthUrl } from "../../api/apiClient";
 export default function KakaoLogin() {
   const [busy, setBusy] = useState(false);
 
-<<<<<<< HEAD
    const go = useCallback(() => {
       if (busy) return;
       setBusy(true);
       window.location.replace(getAuthUrl("/api/auth/signup/kakao")); // ✅ API_BASE 직접 안 씀
     }, [busy]);
-=======
-  const go = useCallback(() => {
-    if (busy) return;
-    setBusy(true);
-    // OAuth 시작: 백엔드로 리다이렉트
-    window.location.replace("/api/auth/signup/kakao");
-  }, [busy]);
->>>>>>> main
 
   return (
     <div className={page} style={{ background: "#f9fafb", fontFamily: "system-ui, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif" }}>
