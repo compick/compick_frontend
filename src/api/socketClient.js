@@ -18,6 +18,8 @@ export function connectSocket(matchId, onMessage) {
         ? `${baseUrl}?matchId=${matchId}&token=${token}`
         : `${baseUrl}?matchId=${matchId}`;
 
+    console.log("🔗 WebSocket 연결 시도 URL:", url);
+
     ws = new WebSocket(url);
 
     ws.onopen = () => {
