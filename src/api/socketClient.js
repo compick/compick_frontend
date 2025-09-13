@@ -53,7 +53,7 @@ export function connectSocket(matchId, onMessage) {
                 // 🔄 리프레시 후 재연결
                 await refreshAccessToken();
                 console.log("🔄 토큰 재발급 성공, 소켓 재연결");
-                connectSocket(matchId, onMessage), 1000);
+                connectSocket(matchId, onMessage);
             } catch (err) {
                 alert("세션이 만료되었습니다. 다시 로그인해주세요.");
                 deleteCookie("jwt");
