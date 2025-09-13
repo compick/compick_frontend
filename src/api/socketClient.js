@@ -59,6 +59,9 @@ export function connectSocket(matchId, onMessage) {
                 deleteCookie("jwt");
                 window.location.href = "/login";
             }
+        } else if (event.code === 1000) {
+            // ✅ 정상 종료 (언마운트/탭 전환 등)
+            console.log("ℹ️ 정상 종료로 인한 close 이벤트 → 무시");
         } else {
             // ❌ 다른 오류 타입 → alert + 쿠키 삭제 후 로그인 이동
             alert("토큰 오류: " + (event.reason || "UNKNOWN"));
