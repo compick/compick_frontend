@@ -85,8 +85,16 @@ export function connectSocket(matchId, onMessage) {
     return ws; // ✅ 이제 실제 ws 객체 반환
 }
 
+export function sendMessage(msgObj) {
+    if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify(msgObj));
+    } else {
+        console.warn("⏳ 소켓 아직 준비 안 됨 → 대기");
+        setTimeout(() => sendMessage(msgObj), 300); // 0.3초 후 재시도
+    }
+}
 
-
+/*
 export function sendMessage(msgObj) {
     if (ws && ws.readyState === WebSocket.OPEN) {
         ws.send(JSON.stringify(msgObj));
@@ -94,4 +102,5 @@ export function sendMessage(msgObj) {
         console.error("⚠️ WebSocket이 열려있지 않음");
     }
 }
+*/
 
