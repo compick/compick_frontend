@@ -42,21 +42,26 @@ export function connectSocket(matchId, onMessage) {
     };
 
     ws.onclose = async (event) => {
+        // 🔎 디버깅용 로그 추가
+        console.log(
+            "🔒 onclose fired →",
+            "code:", event.code,
+            "reason:", event.reason,
+            "target === ws?", ws === event.target
+        );
+
         if (ws !== event.target) {
-            // 이미 새 소켓으로 교체된 상태라면 무시
+            console.log("👉 구 소켓 close 이벤트라 무시");
             return;
         }
-        console.warn("🔒 닫힘:", event.code, event.reason);
 
         if (event.code === 1000) {
-            // ✅ 정상 종료 (언마운트/탭 전환 등)
-            console.log("ℹ️ 정상 종료로 인한 close 이벤트 → 무시");
+            console.log("ℹ️ 정상 종료 (언마운트/탭 전환)");
             return;
-        } 
+        }
 
         if (event.reason === "ACCESS_TOKEN_EXPIRED") {
             try {
-                // 🔄 리프레시 후 재연결
                 await refreshAccessToken();
                 console.log("🔄 토큰 재발급 성공, 소켓 재연결");
                 connectSocket(matchId, onMessage);
@@ -65,12 +70,14 @@ export function connectSocket(matchId, onMessage) {
                 deleteCookie("jwt");
                 window.location.href = "/login";
             }
-        } else {
-            // ❌ 다른 오류 타입 → alert + 쿠키 삭제 후 로그인 이동
-            alert("토큰 오류: " + (event.reason || "UNKNOWN"));
-            deleteCookie("jwt");
-            window.location.href = "/login";
+            return;
         }
+
+        // ❌ 여기 걸리는 케이스 확인
+        console.log("❌ else 진입:", { code: event.code, reason: event.reason });
+        alert("토큰 오류: " + (event.reason || "UNKNOWN"));
+        deleteCookie("jwt");
+        window.location.href = "/login";
     };
 
     ws.onerror = (err) => console.error("❌ WebSocket 에러:", err);
