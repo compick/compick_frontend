@@ -93,13 +93,57 @@ function App() {
           author: '축구광팬',
           createdAt: '2025-08-10',
           imageUrl: 'https://via.placeholder.com/600x400.gif', 
+          views: 1250,
           likedBy: ['유저2', '유저3'],
           comments: [
               { id: 101, user: '축구팬', text: '와, 정말 멋진 골이네요!', likedBy: ['유저3'], replies: [] },
               { id: 102, user: '리버풀팬', text: '우리 선수가 최고!', likedBy: [], replies: [] },
           ]
       },
-      // ... other posts
+      { 
+          id: 2, 
+          title: '야구 경기 하이라이트', 
+          author: '야구매니아',
+          createdAt: '2025-08-09',
+          imageUrl: 'https://via.placeholder.com/600x400.jpg', 
+          views: 980,
+          likedBy: ['유저1', '유저4'],
+          comments: [
+              { id: 201, user: '야구팬', text: '정말 멋진 플레이네요!', likedBy: [], replies: [] },
+          ]
+      },
+      { 
+          id: 3, 
+          title: 'UFC 경기 결과', 
+          author: 'MMA팬',
+          createdAt: '2025-08-08',
+          imageUrl: 'https://via.placeholder.com/600x400.png', 
+          views: 750,
+          likedBy: ['유저2'],
+          comments: []
+      },
+      { 
+          id: 4, 
+          title: '축구 선수 인터뷰', 
+          author: '스포츠기자',
+          createdAt: '2025-08-07',
+          imageUrl: 'https://via.placeholder.com/600x400.gif', 
+          views: 650,
+          likedBy: ['유저1', '유저3', '유저4'],
+          comments: [
+              { id: 401, user: '팬1', text: '좋은 인터뷰였습니다!', likedBy: ['유저2'], replies: [] },
+          ]
+      },
+      { 
+          id: 5, 
+          title: '야구장 관람 후기', 
+          author: '야구관람객',
+          createdAt: '2025-08-06',
+          imageUrl: 'https://via.placeholder.com/600x400.jpg', 
+          views: 420,
+          likedBy: ['유저1'],
+          comments: []
+      },
   ]);
 
   const handleLikeMatch = (matchToToggle) => {

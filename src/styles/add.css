@@ -1,9 +1,14 @@
 .uploadContainer {
     width: 100%; /* 너비를 100%로 설정하여 유동적으로 만듦 */
     max-width: 70vw; /* 최대 너비는 742px로 제한 */
-    padding-top: 40px;
     border-radius: 8px;
     margin: 0 auto;
+}
+.uploadContainer h2{
+    margin: 0 0 20px 0;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 .previewBox {
     width: 50%;
@@ -313,5 +318,265 @@ border-radius: 8px;
     .add-button {
         width: 100%;
         margin-top: 15px;
+    }
+}
+
+/* Match Search Styles */
+.matchSearchSection {
+        margin: 0;
+        padding: 0;
+        background: transparent;
+        border-radius: 0; 
+        border: none;
+}
+
+.matchSearchSection h3 {
+    margin: 0 0 15px 0;
+    color: #333;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.matchSearch {
+    position: relative;
+    width: 100%;
+}
+
+.matchSearchInput {
+    position: relative;
+    width: 100%;
+}
+
+.searchInput {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+    box-sizing: border-box;
+}
+
+.searchInput:focus {
+    outline: none;
+    border-color: #38c0e9;
+    box-shadow: 0 0 0 3px rgba(56, 192, 233, 0.1);
+}
+
+.searchLoading {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    font-size: 12px;
+}
+
+.searchResults {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid #e9ecef;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    max-height: 300px;
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+.searchResultItem {
+    padding: 12px 15px;
+    border-bottom: 1px solid #f1f3f4;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--page-bg);
+}
+
+.searchResultItem:hover {
+    background-color: var(--page-bg);
+}
+
+.searchResultItem.selected {
+    background-color: var(--page-bg);
+    color: #1976d2;
+}
+
+.searchResultItem:last-child {
+    border-bottom: none;
+}
+
+.matchInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.matchTeams {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    display: flex;
+    flex-direction: column;
+}
+
+.matchMeta {
+    display: flex;
+    gap: 10px;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.matchLeague {
+    background: #38c0e9;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 500;
+}
+
+.matchDate {
+    color: #6c757d;
+}
+
+.selectedIndicator {
+    color: #28a745;
+    font-weight: 600;
+    font-size: 12px;
+}
+
+.noResults {
+    padding: 20px;
+    text-align: center;
+    color: #6c757d;
+    font-style: italic;
+}
+
+.selectedMatches {
+    margin-top: 15px;
+    padding: 15px;
+    background: var(--page-bg);
+    border-radius: 8px;
+    border: 1px solid #c3e6c3;
+}
+
+.selectedMatches h4 {
+    margin: 0 0 10px 0;
+    color: var(--text-primary);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.selectedMatchItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    background: var(--page-bg);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    border: 1px solid #d4edda;
+    position: relative;
+}
+
+.selectedMatchItem:last-child {
+    margin-bottom: 0;
+}
+
+.selectedMatchName {
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.removeMatchBtn {
+    position: absolute;
+    right: 1.5%;
+    top: 11%;
+    background: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 13px;
+    height: 13px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 9px;
+    transition: background-color 0.2s ease;
+}
+
+.removeMatchBtn:hover {
+    background: #c82333;
+}
+.writeBoardBox{
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+.writeBoardBox > div {
+    flex: 1;
+    padding: 20px;
+    background-color: var(--page-bg);
+    border: 1px solid #eee;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.writeBoardBox img{
+    width: 100%;
+    max-width: 100%;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+/* Responsive Match Search */
+@media (max-width: 768px) {
+    .writeBoardBox {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .writeBoardBox > div {
+        padding: 15px;
+    }
+    
+    .matchSearchSection {
+        margin: 0;
+        padding: 0;
+    }
+    
+    .searchResults {
+        max-height: 250px;
+    }
+    
+    .searchResultItem {
+        padding: 10px 12px;
+        flex-direction: column;
+    }
+    
+    .matchTeams {
+        font-size: 14px;
+    }
+    
+    .matchMeta {
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    .selectedMatches {
+        padding: 12px;
+    }
+    
+    .selectedMatchItem {
+        padding: 6px 10px;
     }
 }

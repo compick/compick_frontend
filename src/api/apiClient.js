@@ -42,7 +42,7 @@ export async function apiFetch(input, init = {}) {
 
   const reqInit = { credentials: "include", cache: "no-store", ...init, headers };
   let res = await fetch(new Request(url, reqInit));
-
+  console.log(at);
   if (res.status === 401) {
     let body; try { body = await res.clone().json(); } catch {}
     if (body?.msg === "ACCESS_TOKEN_EXPIRED") {

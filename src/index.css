@@ -61,9 +61,8 @@ aside, .sidebar, [class*="sidebar"] {
 
 /* 버튼 스타일 */
 button:not(.theme-toggle):not(.kakaoButton):not(.authButton) {
-  background-color: var(--button-primary) !important;
+  background-color: var(--button-primary);
   color: white !important;
-  border: 1px solid var(--button-primary) !important;
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
@@ -103,7 +102,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 p, span, div {
-  color: var(--text-secondary) !important;
+  color: var(--text-primary) !important;
   transition: color 0.3s ease;
 }
 

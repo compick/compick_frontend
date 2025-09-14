@@ -124,6 +124,9 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
+  background: var(--box-bg-light);
+  border-radius: 8px;
+  padding: 10px;
 }
 
 .popupIcon {
@@ -132,6 +135,7 @@
   gap: 8px;
   cursor: pointer;
   padding: 8px;
+  background: var(--box-bg-light);
   border-radius: 8px;
   transition: background-color 0.2s;
 }
@@ -190,6 +194,13 @@
     gap: 25px;
     margin: 0 auto;
     height: 40px;
+    transition: all 0.3s ease;
+}
+
+.sportHeaderCenter.scrolled {
+    background-color: var(--header-bg);
+    border-radius: 8px;
+    padding: 0 10px;
 }
 
 .sport-heder-item {
@@ -338,4 +349,167 @@
     height: 50px;
     padding: 0;
     border: none;
+}
+
+/* AllBoardsPage 카테고리 네비게이션 스타일 */
+.categoryNavigation {
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+    background-color: var(--page-bg);
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.categoryGroup {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.categoryButton {
+    padding: 10px 20px;
+    background-color: var(--button-secondary);
+    color: var(--text-primary);
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 120px;
+}
+
+.categoryButton:hover {
+    background-color: var(--button-primary);
+    color: white;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-sm);
+}
+
+.categoryButton:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+.leagueDropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    min-width: 150px;
+    margin-top: 5px;
+    overflow: hidden;
+}
+
+.leagueLink {
+    display: block;
+    padding: 10px 15px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.leagueLink:last-child {
+    border-bottom: none;
+}
+
+.leagueLink:hover {
+    background-color: #f8f9fa;
+    color: var(--button-primary);
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .categoryNavigation {
+        padding: 15px;
+        gap: 15px;
+    }
+    
+    .categoryButton {
+        padding: 8px 15px;
+        font-size: 14px;
+        min-width: 100px;
+    }
+    
+    .leagueDropdown {
+        min-width: 120px;
+    }
+    
+    .leagueLink {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+}
+
+/* WritePost 스포츠/리그 선택 스타일 */
+.sportLeagueSection {
+    padding: 20px;
+    background-color: var(--page-bg);
+    border: 1px solid #eee;
+    border-radius: 8px;
+}
+
+.sportLeagueSection h3 {
+    padding: 1% 0;
+    color: var(--text-primary);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.sportLeagueSelectors {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 2%;
+}
+
+.selectorGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 150px;
+}
+
+.selectorGroup label {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.sportSelect, .leagueSelect {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: white;
+    color: var(--text-primary);
+    transition: border-color 0.3s ease;
+}
+
+.sportSelect:focus, .leagueSelect:focus {
+    outline: none;
+    border-color: var(--button-primary);
+    box-shadow: 0 0 0 2px rgba(56, 192, 233, 0.2);
+}
+
+/* 리그 선택은 항상 활성화되므로 disabled 스타일 제거 */
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .sportLeagueSelectors {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .selectorGroup {
+        min-width: auto;
+    }
 }
