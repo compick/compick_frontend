@@ -3,11 +3,12 @@ import CalendarView from "./home/match/CalendarView";
 import DateMatchList from "./home/match/DateMatchList";
 import FavoriteTeamMatchList from "./home/match/FavoriteTeamMatchList";
 import RecommendedPosts from "./home/RecommendedPosts";
+import TopBoard from "./board/TopBoard";
 import TeamRankings from "./home/rank/TeamRankings";
 import { getCookie } from "../../utils/Cookie";
 // 이미지 import 및 useEffect 로직 제거
 
-export default function HomeBodyPage({ posts, likedMatches, onLikeMatch, onOpenChat, league, sport }) {
+export default function HomeBodyPage({ posts, likedMatches, onLikeMatch, onOpenChat, league, sport, isLoggedIn }) {
     const [activeView, setActiveView] = useState('calendar');
 
     console.log('HomeBodyPage props:', { sport, league, activeView });
@@ -70,6 +71,9 @@ export default function HomeBodyPage({ posts, likedMatches, onLikeMatch, onOpenC
             </div>
 
             <div className="homeBottomSection">
+                <div className="topPostsSection">
+                    <TopBoard posts={posts}  />
+                </div>
                 <div className="recommendedPosts">
                     <h3>추천 게시글</h3>
                     <RecommendedPosts posts={posts} />

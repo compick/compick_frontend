@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import logo from '../../img/icon/homeLogo.gif';
 import '../../styles/component.css';
 import SidebarPage from './SidebarPage';
 
 export default function SportHeader({ selectedLeague, isLoggedIn, onLogout }){
     const [openSport, setOpenSport] = useState(null);
+    const [isScrolled, setIsScrolled] = useState(false);
     const menuRef = useRef(null);
     const navigate = useNavigate();
 
@@ -15,7 +15,8 @@ export default function SportHeader({ selectedLeague, isLoggedIn, onLogout }){
             leagues: [
                 { name: '전체보기', path: '/soccer/all' },
                 { name: 'EPL', path: '/soccer/epl' },
-                { name: '라리가', path: '/soccer/laliga' }
+                { name: '라리가', path: '/soccer/laliga' },
+                { name: '챔피언스리그', path: '/soccer/ucl' }
             ]
         },
         '야구': {
@@ -56,6 +57,18 @@ export default function SportHeader({ selectedLeague, isLoggedIn, onLogout }){
         };
     }, [menuRef]);
 
+    useEffect(() => {
+        const handleScroll = () => {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            setIsScrolled(scrollTop > 50);
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
     const handleSportClick = (sportName) => {
         setOpenSport(prevOpenSport => prevOpenSport === sportName ? null : sportName);
     };
@@ -72,17 +85,9 @@ export default function SportHeader({ selectedLeague, isLoggedIn, onLogout }){
     return(
         <>
             <div className="container col sportHeader ">
-                <div className="container width">
-                    <div className="sportHeaderLeft">
-                        <img 
-                            src={logo} 
-                            alt="logo" 
-                            style={{cursor: 'pointer'}}
-                            onClick={handleHomeClick}
-                        />
-                    </div>
-                    <div className="sportHeaderCenter" ref={menuRef}>
-                        {Object.entries(sports).map(([sportName, sportData]) => (
+                <div className="container width">                    
+                    <div className={`sportHeaderCenter ${isScrolled ? 'scrolled' : ''}`} ref={menuRef}>
+                        {!isScrolled && Object.entries(sports).map(([sportName, sportData]) => (
                             <div key={sportName} className="sport-heder-item">
                                 <Link to={sportData.basePath} className={`sport-button ${activeSport === sportName ? 'active' : ''}`} onClick={() => handleSportClick(sportName)}>
                                     {sportName}

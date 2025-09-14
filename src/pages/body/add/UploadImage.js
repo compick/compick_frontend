@@ -223,6 +223,7 @@ const UploadImage = forwardRef(function UploadImage(
 
   return (
     <>
+    <div className="container">
       <div
         ref={previewRef}
         className="previewBox"
@@ -262,6 +263,7 @@ const UploadImage = forwardRef(function UploadImage(
           }}
         />
       </div>
+    </div>  
     </>
   );
 });

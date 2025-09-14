@@ -483,12 +483,23 @@
     /* 왼쪽 로고+팀명 / 오른쪽 점수 */
     gap: 6px;
 }
+.match-row img{
+    margin:  0% auto;
+}
+.match-row.detail { 
+    justify-content: space-between;
+
+}
 
 .match-row .team-logo {
     width: 20px;
     height: 20px;
     object-fit: cover;
     border-radius: 50%;
+}
+.match-row .team-logo-left {
+    display: flex;
+    margin: auto 0%;
 }
 
 .match-row .team-name {

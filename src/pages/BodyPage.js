@@ -25,12 +25,14 @@ import RankingPage from './user/RankingPage';
 import TeamRankingPage from './user/TeamRankingPage'; // 새로 만든 페이지 import
 import TeamRankingsPage from './body/home/rank/TeamRankingsPage'; // 구단순위 페이지 import
 import PostDetailPage from './body/detail/PostDetailPage';
-import SportHeader from './component/SportHeader';
+import AllBoardsPage from './body/board/AllBoardsPage';
+import SportHeader from './components/SportHeader';
+import ProtectedRoute from './body/routes/ProtectedRoute';
 
 
 
 // URL 파라미터를 읽어 HomeBodyPage에 league prop을 전달하는 래퍼 컴포넌트
-const HomePageWrapper = ({ posts, likedMatches, onLikeMatch, onOpenChat, handleLeagueChange, selectedLeague }) => {
+const HomePageWrapper = ({ posts, likedMatches, onLikeMatch, onOpenChat, handleLeagueChange, selectedLeague, isLoggedIn }) => {
     const { sport, league } = useParams();
     const location = useLocation();
 
@@ -76,10 +78,10 @@ const HomePageWrapper = ({ posts, likedMatches, onLikeMatch, onOpenChat, handleL
     console.log('🏠 HomePageWrapper - URL 파라미터:', { sport, league });
     console.log('🏠 HomePageWrapper - Final props:', { finalSport, finalLeague, selectedLeague });
 
-    return <HomeBodyPage posts={posts} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} league={finalLeague} sport={finalSport} />;
+    return <HomeBodyPage posts={posts} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} league={finalLeague} sport={finalSport} isLoggedIn={isLoggedIn} />;
 };
 
-export default function BodyPage({ posts, matches, userScores, capturedImage, setCapturedImage, userInfo, onProfileUpdate, likedMatches, onLikeMatch, onOpenChat, onCloseChat, chatState, onMinimizeChat, onSetActiveChat, onAddComment, onLikeComment, onAddReply, currentUser, onLikePost, onReport, handleLeagueChange, selectedLeague, isLoggedIn, onLogin, onLogout, onDateChange }) {
+export default function BodyPage({ posts, matches, userScores, capturedImage, setCapturedImage, userInfo, onProfileUpdate, likedMatches, onLikeMatch, onOpenChat, onCloseChat, chatState, onMinimizeChat, onSetActiveChat, onAddComment, onLikeComment, onAddReply, currentUser, onLikePost, onReport, handleLeagueChange, selectedLeague, isLoggedIn, onLogin, onLogout, onDateChange, sport,league }) {
 
 
     
@@ -90,18 +92,36 @@ export default function BodyPage({ posts, matches, userScores, capturedImage, se
 
                 <div style={{ flex: 1 }}>
                     <Routes>
-                        <Route path="/" element={<HomePageWrapper handleLeagueChange={handleLeagueChange} posts={posts} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} selectedLeague={selectedLeague} />} />
+                        {/* ✅ 로그인 필요 */}
+                        <Route
+                            path="/add"
+                            element={
+                            <ProtectedRoute>
+                                <AddBody setCapturedImage={setCapturedImage} />
+                            </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/myProfile"
+                            element={
+                            <ProtectedRoute>
+                                <MyProfile userScores={userScores} userInfo={userInfo} />
+                            </ProtectedRoute>
+                            }
+                        />
+                        <Route path="/" element={<HomePageWrapper handleLeagueChange={handleLeagueChange} posts={posts} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} selectedLeague={selectedLeague} isLoggedIn={isLoggedIn} />} />
                         
                         {/* 구체적인 라우트들을 먼저 정의 */}
                         <Route path="/match/:sport/:league/:matchId" element={<MatchDetailPage likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} />} />
-                        <Route path="/myProfile" element={<MyProfile userScores={userScores} userInfo={userInfo} />} />
+                        {/* <Route path="/myProfile" element={<MyProfile userScores={userScores} userInfo={userInfo} />} /> */}
                         <Route path="/edit-profile" element={<EditProfilePage currentUser={userInfo} onSave={onProfileUpdate} />} />
                         <Route path="/tier/:category" element={<TierDetailPage userScores={userScores} />} />
                         <Route path="/heart" element={<HeartPage likedMatches={likedMatches} onLikeMatch={onLikeMatch} />} />
                         <Route path="/ranking" element={<RankingPage />} />
                         <Route path="/ranking/:league" element={<TeamRankingPage />} />
                         <Route path="/team-rankings/:sport" element={<TeamRankingsPage />} />
-                        <Route path="/post/:postId" element={<PostDetailPage posts={posts} onAddComment={onAddComment} onLikeComment={onLikeComment} onAddReply={onAddReply} currentUser={currentUser} onLikePost={onLikePost} onReport={onReport} />} />
+                        <Route path="/boards/:sport/:league" element={<AllBoardsPage posts={posts} isLoggedIn={isLoggedIn} />} />
+                        <Route path="/boards/:boardId" element={<PostDetailPage posts={posts} onAddComment={onAddComment} onLikeComment={onLikeComment} onAddReply={onAddReply} currentUser={currentUser} onLikePost={onLikePost} onReport={onReport} />} />
                         
                         <Route path='/add' element={<AddBody setCapturedImage={setCapturedImage} />} />
                         <Route path='/editImage' element={<AddBody setCapturedImage={setCapturedImage} />} />
@@ -116,8 +136,8 @@ export default function BodyPage({ posts, matches, userScores, capturedImage, se
                         <Route path="/kakao/result" element={<KakaoResult/>} />
                     
                         {/* 일반적인 라우트들을 나중에 정의 */}
-                        <Route path="/:sport" element={<HomePageWrapper handleLeagueChange={handleLeagueChange} posts={posts} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} selectedLeague={selectedLeague} />} />
-                        <Route path="/:sport/:league" element={<HomePageWrapper handleLeagueChange={handleLeagueChange} posts={posts} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} selectedLeague={selectedLeague} />} />
+                        <Route path="/:sport" element={<HomePageWrapper handleLeagueChange={handleLeagueChange} posts={posts} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} selectedLeague={selectedLeague} isLoggedIn={isLoggedIn} />} />
+                        <Route path="/:sport/:league" element={<HomePageWrapper handleLeagueChange={handleLeagueChange} posts={posts} likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} selectedLeague={selectedLeague} isLoggedIn={isLoggedIn} />} />
                     </Routes>
                 </div>
             </div>

@@ -1,4 +1,4 @@
-import { apiJson } from "../apiClient";
+import { apiJson } from "./apiClient";
 
 // 공용 안전 추출기
 const extractData = (res, fallback = []) =>
