@@ -13,7 +13,7 @@ const toAbs = (u) => {
 };
 let refreshPromise = null;
 
-async function refreshAccessToken() {
+export async function refreshAccessToken() {
   if (!refreshPromise) {
     refreshPromise = (async () => {
       const res = await fetch(toAbs("/api/auth/refresh"), {
