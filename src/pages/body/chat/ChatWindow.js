@@ -13,10 +13,11 @@ export default function ChatWindow({ match, onMinimize, onClose }) {
   const messagesEndRef = useRef(null);
   const wsRef = useRef(null);
 
-  // --- 초기 채팅 불러오기 (REST) ---
+  // --- 초기 채팅 불러오기 (REST + WebSocket 연결) ---
   useEffect(() => {
     if (!match?.id) return;
     let alive = true;
+    let ws = null;
 
     (async () => {
       try {
@@ -32,6 +33,20 @@ export default function ChatWindow({ match, onMinimize, onClose }) {
 
         setMe(user);
         setMessages(chatMessages);
+
+        // ✅ view API 성공 → 토큰이 최신 → 이제 소켓 연결
+        ws = connectSocket(match.id, (msg) => {
+          if (msg.matchId === match.id) {
+            setMessages((prev) => {
+              if (prev.some(m => m.messageId && m.messageId === msg.messageId)) {
+                return prev;
+              }
+              return [...prev, msg];
+            });
+          }
+        });
+        wsRef.current = ws;
+
       } catch (err) {
         console.error('채팅 불러오기 실패:', err);
       }
@@ -39,31 +54,10 @@ export default function ChatWindow({ match, onMinimize, onClose }) {
 
     return () => {
       alive = false;
+      ws?.close(); // ✅ 반드시 닫기
     };
   }, [match?.id]);
 
-  // --- WebSocket 연결 ---
-  useEffect(() => {
-    if (!match?.id) return;
-
-    const ws = connectSocket(match.id, (msg) => {
-      if (msg.matchId === match.id) {
-        setMessages((prev) => {
-          // ✅ 중복 방지
-          if (prev.some(m => m.messageId && m.messageId === msg.messageId)) {
-            return prev;
-          }
-          return [...prev, msg];
-        });
-      }
-    });
-
-    wsRef.current = ws;
-
-    return () => {
-      ws.close(); // ✅ 반드시 닫기
-    };
-  }, [match?.id]);
 
 
   // --- 스크롤 맨 아래로 ---

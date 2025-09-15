@@ -1,24 +1,10 @@
-import { getCookie, deleteCookie } from "../utils/Cookie";
-import { refreshAccessToken } from "./apiClient";
+import { getCookie } from "../utils/Cookie";
 
 let ws = null;
-let shouldReconnect = false;
-let lastMatchId = null;
-let lastOnMessage = null;
 let messageQueue = [];
 
-setInterval(() => {
-  if (shouldReconnect && (!ws || ws.readyState === WebSocket.CLOSED)) {
-    console.log("♻️ 재연결 시도:", getCookie("jwt"));
-    connectSocket(lastMatchId, lastOnMessage);
-    shouldReconnect = false;
-  }
-}, 1000);
-
 export function connectSocket(matchId, onMessage) {
-  lastMatchId = matchId;
-  lastOnMessage = onMessage;
-
+  // 기존 소켓 정리
   if (ws) {
     ws.onopen = null;
     ws.onmessage = null;
@@ -40,6 +26,7 @@ export function connectSocket(matchId, onMessage) {
 
   ws.onopen = () => {
     console.log("✅ WebSocket 연결됨");
+    // 큐 flush
     while (messageQueue.length > 0) {
       const msg = messageQueue.shift();
       ws.send(JSON.stringify(msg));
@@ -55,21 +42,8 @@ export function connectSocket(matchId, onMessage) {
     }
   };
 
-  ws.onclose = async (event) => {
+  ws.onclose = (event) => {
     console.log("🔒 onclose → code:", event.code, "reason:", event.reason);
-    if (event.reason === "ACCESS_TOKEN_EXPIRED") {
-      try {
-        await refreshAccessToken();
-        console.log("🔄 토큰 재발급 성공 → 재연결 예정");
-        console.log("🔑 새 토큰 확인:", getCookie("jwt"));
-        shouldReconnect = true;
-      } catch (err) {
-        alert("세션 만료. 다시 로그인해주세요.");
-        deleteCookie("jwt");
-        window.location.href = "/login";
-      }
-      return;
-    }
   };
 
   ws.onerror = (err) => console.error("❌ WebSocket 에러:", err);
