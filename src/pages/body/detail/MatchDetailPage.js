@@ -5,7 +5,7 @@ import MatchCard from "../home/match/MatchCard";
 import { getCookie } from "../../../utils/Cookie";
 import "../../../styles/detail.css";
 import ChatWindow from "../chat/ChatWindow";
-import { getHomeAndAwayMatches ,getRecentMatchesByHome,getRecentMatchesByAway} from "../../../api/Detail";
+import { getHomeAndAwayMatches, getRecentMatchesByHome, getRecentMatchesByAway } from "../../../api/Detail";
 // 팀 로고 컴포넌트
 const TeamLogo = ({ teamName, logoUrl }) => {
   if (logoUrl) {
@@ -57,9 +57,8 @@ const RecentMatch = ({ match }) => {
         </div>
         <div className="score">
           {shouldShowScore(match.status || match.matchStatus)
-            ? `${match.homeScore || match.home_score || 0} : ${
-                match.awayScore || match.away_score || 0
-              }`
+            ? `${match.homeScore || match.home_score || 0} : ${match.awayScore || match.away_score || 0
+            }`
             : "VS"}
         </div>
         <div className="team">
@@ -142,8 +141,8 @@ const H2HMatch = ({ match }) => {
 
 export default function MatchDetailPage({
   likedMatches = [],
-  onLikeMatch = () => {},
-  onOpenChat = () => {},
+  onLikeMatch = () => { },
+  onOpenChat = () => { },
   recentMatchData = {},
   h2hHistory = [],
 }) {
@@ -160,6 +159,13 @@ export default function MatchDetailPage({
   const [homeRecent, setHomeRecent] = useState([]);
   const [awayRecent, setAwayRecent] = useState([]);
   const [recentLoading, setRecentLoading] = useState(false);
+
+  useEffect(() => {
+    if (detail) {
+      console.log("✅ homeTeamLogo:", detail.homeTeamLogo);
+      console.log("✅ home_team_logo:", detail.home_team_logo);
+    }
+  }, [detail]);
 
   // 최근 접속한 경기 저장
   useEffect(() => {
@@ -396,9 +402,8 @@ export default function MatchDetailPage({
 
   return (
     <div
-      className={`match-detail-layout ${
-        activeTab === "opentalk" && isLoggedIn ? "with-chat" : ""
-      }`}
+      className={`match-detail-layout ${activeTab === "opentalk" && isLoggedIn ? "with-chat" : ""
+        }`}
     >
       {/* 왼쪽 사이드바 */}
       <div className="left-sidebar">
@@ -414,9 +419,8 @@ export default function MatchDetailPage({
                 <div className="match-info">
                   <span>{match.leagueNickname}</span>
                   <div
-                    className={`match-league ${
-                      !match.matchStatus || match.matchStatus === "" ? "no-border" : ""
-                    }`}
+                    className={`match-league ${!match.matchStatus || match.matchStatus === "" ? "no-border" : ""
+                      }`}
                   >
                     {getStatusText(match.matchStatus)}
                   </div>
