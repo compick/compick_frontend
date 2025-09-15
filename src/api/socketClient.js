@@ -64,7 +64,7 @@ export function connectSocket(matchId, onMessage) {
             try {
                 await refreshAccessToken();
                 console.log("🔄 토큰 재발급 성공, 소켓 재연결");
-                connectSocket(matchId, onMessage);
+                setTimeout(() => connectSocket(matchId, onMessage), 500);
             } catch (err) {
                 alert("세션이 만료되었습니다. 다시 로그인해주세요.");
                 deleteCookie("jwt");
