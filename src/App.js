@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { BrowserRouter } from "react-router-dom"
+import { BrowserRouter } from "react-router-dom";
+import {getCookie} from "./utils/Cookie";
 
 
 import BodyPage from "./pages/BodyPage";
@@ -17,13 +18,24 @@ function App() {
   const currentUser = { name: '나' }; // 현재 사용자 정보 (임시)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  useEffect(() => {
+    const token = getCookie("jwt"); // JWT 쿠키 가져오기
+    setIsLoggedIn(!!token); // 있으면 true, 없으면 false
+  }, []);
+
   const handleLogin = () => {
-    setIsLoggedIn(true);
+    // 로그인 성공 시 백엔드에서 JWT 쿠키를 내려주고,
+    // 프론트에서는 다시 확인해서 상태 갱신
+    const token = getCookie("jwt");
+    if (token) {
+      setIsLoggedIn(true);
+    }
   };
 
   const handleLogout = () => {
+    // 쿠키 삭제 (예: util 함수로 clearCookie 호출)
+    document.cookie = "jwt=; Max-Age=0; path=/;"; 
     setIsLoggedIn(false);
-    // 필요하다면 여기에 로그아웃 후 리디렉션 로직 추가
   };
 
   const [userScores, setUserScores] = useState({

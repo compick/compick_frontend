@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getMatchDetail } from "../../../api/match/Matches";
 import MatchCard from "../home/match/MatchCard";
 import { getCookie } from "../../../utils/Cookie";
+import ChatWindow from "../chat/ChatWindow";
 import "../../../styles/detail.css";
 import { getHomeAndAwayMatches ,getRecentMatchesByHome,getRecentMatchesByAway} from "../../../api/Detail";
 // 팀 로고 컴포넌트

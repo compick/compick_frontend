@@ -6,6 +6,7 @@ import MatchSearch from "./MatchSearch";
 
 
 export default function WritePost({ capturedImage }) {
+  const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loading, setLoading] = useState(false);
   const [selectedMatches, setSelectedMatches] = useState([]);
@@ -32,14 +33,42 @@ export default function WritePost({ capturedImage }) {
         { name: '모든리그', value: 'all' },
         { name: 'KBO', value: 'kbo' }
       ]
-    },
-    'MMA': {
-      leagues: [
-        { name: '모든리그', value: 'all' },
-        { name: 'UFC', value: 'ufc' }
-      ]
     }
+    // 'MMA': {
+    //   leagues: [
+    //     { name: '모든리그', value: 'all' },
+    //     { name: 'UFC', value: 'ufc' }
+    //   ]
+    // }
   };
+
+  const newHandleShare = async (e) => {
+    e?.preventDefault();
+    if(loading) return;
+    setLoading(true);
+
+    try {
+      const formData = new FormData();
+
+      const imageUrl = capturedImage ? await uploadCapturedImage(capturedImage) : null;
+
+      formData.append("title", title);
+      formData.append("content", content);
+      //formData.append("image", capturedImage);
+      formData.append("sport", selectedSport);
+      formData.append("league", selectedLeague);
+    }
+    catch(err) {
+      console.error("게시글 등록 중 오류");
+      alert(`게시글 등록 실패: ${err?.message || "Unknown error"}`);
+
+    }
+    finally {
+      setLoading(false);
+    }
+  }
+
+
 
   const handleShare = async (e) => {
     e?.preventDefault();
@@ -61,6 +90,7 @@ export default function WritePost({ capturedImage }) {
      
       // 4) 업로드
       const result = await addBoard({
+        title,
         matchtagList,
         content,
         image: imageUrl,
@@ -73,6 +103,7 @@ export default function WritePost({ capturedImage }) {
   
       if (result.code === 200) {
         alert("게시글이 성공적으로 등록되었습니다!");
+        setTitle("");
         setContent("");
         setSelectedMatches([]);
         setSelectedSport("all");
@@ -98,6 +129,7 @@ export default function WritePost({ capturedImage }) {
       setLoading(false);
     }
   };
+  
 
   const handleMatchSelect = (match, isRemove = false) => {
     if (isRemove) {
@@ -175,6 +207,14 @@ export default function WritePost({ capturedImage }) {
             </select>
           </div>
         </div>
+        <h3>게시글 제목</h3>
+        <input
+          type="text"
+          placeholder="게시글 제목을 입력하세요"
+          className="postTitle"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
         <h3>매치 언급</h3>
         <MatchSearch 
           onSelectMatch={handleMatchSelect}

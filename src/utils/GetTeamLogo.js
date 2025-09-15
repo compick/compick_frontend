@@ -12,7 +12,6 @@ import KiwoomHeroes from '../img/baseballTeam/kbo/키움 히어로즈 로고.svg
 // ⚽ EPL 팀 로고
 import Norwich from '../img/soccerTeam/epl/노리치 시티 FC 로고.svg';
 import NottinghamForest from '../img/soccerTeam/epl/노팅엄 포레스트 FC 로고.svg';
-import NottinghamForest2 from '../img/soccerTeam/epl/노팅엄 포레스트 FC 로고 화....svg';
 import Newcastle from '../img/soccerTeam/epl/뉴캐슬 유나이티드 FC 로고.svg';
 import Leicester from '../img/soccerTeam/epl/레스터 시티 FC 로고.svg';
 import Luton from '../img/soccerTeam/epl/루턴 타운 FC 로고.svg';

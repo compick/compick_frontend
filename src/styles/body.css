@@ -2017,20 +2017,59 @@
     max-width: none !important;
 }
 
-/* All Posts Page Styles */
+/* All Posts Page Styles - 반응형 레이아웃 */
 .allPostsPage {
     padding: 20px;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* 데스크톱 레이아웃 - 분할 화면 */
+.allPostsPage.desktop-layout {
+    width: 90%;
+    display: flex;
+    gap: 20px;
+    max-width: none;
+    margin: 0 auto;
+}
+
+/* 모바일 레이아웃 - 전체 화면 */
+.allPostsPage.mobile-layout {
+    display: block;
     max-width: 1200px;
     margin: 0 auto;
+    height: auto;
+    overflow: visible;
+}
+
+/* 게시글 목록 섹션 */
+.postsListSection {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.desktop-layout .postsListSection {
+    max-width: 50%;
+    border-right: 1px solid #e9ecef;
+    padding-right: 20px;
+}
+
+.mobile-layout .postsListSection {
+    max-width: none;
 }
 
 .allPostsHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 30px;
-    padding-bottom: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
     border-bottom: 2px solid #e0e0e0;
+    flex-shrink: 0;
 }
 
 .allPostsHeader h1 {
@@ -2076,11 +2115,18 @@
 .postsControls {
     display: flex;
     gap: 20px;
-    margin-bottom: 20px;
-    padding: 15px;
+    margin-bottom: 15px;
+    padding: 12px;
     background: var(--card-bg);
     border-radius: 8px;
     border: 1px solid #e9ecef;
+    flex-shrink: 0;
+}
+
+.controlGroup {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .filterControls, .sortControls {
@@ -2112,16 +2158,29 @@
 }
 
 .postsStats {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     color: #6c757d;
     font-size: 14px;
     font-weight: 500;
+    flex-shrink: 0;
 }
 
 .postsList {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 12px;
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+.desktop-layout .postsList {
+    max-height: calc(100vh - 300px);
+}
+
+.mobile-layout .postsList {
+    max-height: none;
+    overflow-y: visible;
 }
 
 .postItemLink {
@@ -2132,7 +2191,7 @@
 
 .postItem {
     display: flex;
-    gap: 15px;
+    gap: 16px;
     padding: 20px;
     background: var(--card-bg);
     border-radius: 12px;
@@ -2140,12 +2199,453 @@
     border: 1px solid #e9ecef;
     transition: all 0.3s ease;
     cursor: pointer;
+    min-height: 120px;
+}
+
+/* 게시글 이미지 컨테이너 */
+.postImageContainer {
+    flex-shrink: 0;
+    width: 100px;
+    height: 100px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.postImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.postImagePlaceholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f3f4;
+    color: #9aa0a6;
+    font-size: 24px;
+    border-radius: 8px;
+}
+
+/* 메인 콘텐츠 영역 */
+.postMainContent {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100px;
+}
+
+/* 텍스트 콘텐츠 */
+.postTextContent {
+    flex: 1;
+    margin-bottom: 12px;
+}
+
+.postTitle {
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.postContentText {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* 푸터 영역 */
+.postFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-top: auto;
+}
+
+.postMeta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+/* 작성자 섹션 */
+.authorSection {
+    display: flex;
+    align-items: center;
+}
+
+.authorInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.authorProfile {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--card-border);
+}
+
+.authorProfilePlaceholder {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #f1f3f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #9aa0a6;
+    font-size: 16px;
+    border: 2px solid var(--card-border);
+}
+
+.authorDetails {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.authorName {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.2;
+}
+
+.postDate {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.2;
+}
+
+/* 통계 정보 */
+.postStats {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.statItem {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
+.statIcon {
+    font-size: 14px;
+}
+
+.statCount {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.likedByMe {
+    color: #38c0e9;
+    font-weight: 600;
+}
+
+.sportTag,
+.leagueTag,
+.matchTag {
+    background: var(--button-secondary);
+    color: var(--text-primary);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+
+
+.matchTag {
+    background: #e8f5e8;
+    color: #388e3c;
+}
+
+/* Category Navigation Styles */
+.categoryNavigation {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: var(--card-bg);
+    border-radius: 12px;
+    border: 1px solid var(--card-border);
+    position: relative;
+}
+
+.categoryGroup {
+    position: relative;
+}
+
+.categoryButton {
+    padding: 10px 20px;
+    background: var(--button-secondary);
+    color: var(--text-primary);
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.categoryButton:hover {
+    background: var(--button-primary);
+    color: white;
+    border-color: var(--button-primary);
+}
+
+.leagueDropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 100;
+    background: white;
+    border: 1px solid var(--card-border);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 150px;
+    margin-top: 5px;
+}
+
+.leagueLink {
+    display: block;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: var(--text-primary);
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.leagueLink:last-child {
+    border-bottom: none;
+}
+
+.leagueLink:hover {
+    background: var(--button-secondary);
 }
 
 .postItem:hover {
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
     border-color: #38c0e9;
+}
+
+.postItem.selected {
+    border-color: #38c0e9;
+    background: var(--card-bg);
+    box-shadow: 0 2px 12px rgba(56, 192, 233, 0.2);
+}
+
+/* 게시글 상세 섹션 */
+.postDetailSection {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    overflow: hidden;
+    background: var(--card-bg);
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+
+.postDetailContainer {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.postDetailPlaceholder {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8f9fa;
+    border-radius: 12px;
+}
+
+.placeholderContent {
+    text-align: center;
+    color: #6c757d;
+}
+
+.placeholderContent h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.placeholderContent p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* PostDetailPage 사이드바 모드 스타일 */
+.post-detail-container.sidebar-mode {
+    padding: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.post-detail-container.sidebar-mode .post-title {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    line-height: 1.4;
+}
+
+.post-detail-container.sidebar-mode .post-meta {
+    font-size: 13px;
+    margin-bottom: 15px;
+    gap: 12px;
+}
+
+.post-detail-container.sidebar-mode .post-image {
+    max-width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.post-detail-container.sidebar-mode .post-content {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.post-detail-container.sidebar-mode .post-actions {
+    margin-bottom: 20px;
+    gap: 8px;
+}
+
+.post-detail-container.sidebar-mode .post-actions button {
+    padding: 6px 12px;
+    font-size: 13px;
+}
+
+.post-detail-container.sidebar-mode .comment-section {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.post-detail-container.sidebar-mode .comment-section h3 {
+    font-size: 1.1rem;
+    margin-bottom: 12px;
+}
+
+.post-detail-container.sidebar-mode .comment-input-area {
+    margin-bottom: 15px;
+}
+
+.post-detail-container.sidebar-mode .comment-input-area input {
+    padding: 8px;
+    font-size: 13px;
+}
+
+.post-detail-container.sidebar-mode .comment-input-area button {
+    padding: 8px 12px;
+    font-size: 13px;
+}
+
+/* 반응형 디자인 - 모바일 */
+@media (max-width: 768px) {
+    .postItem {
+        flex-direction: column;
+        gap: 12px;
+        padding: 16px;
+        min-height: auto;
+    }
+    
+    .postImageContainer {
+        width: 100%;
+        height: 200px;
+        align-self: stretch;
+    }
+    
+    .postMainContent {
+        min-height: auto;
+    }
+    
+    .postFooter {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .authorInfo {
+        gap: 8px;
+    }
+    
+    .authorProfile,
+    .authorProfilePlaceholder {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .postStats {
+        gap: 12px;
+        align-self: flex-end;
+    }
+}
+
+@media (max-width: 480px) {
+    .postItem {
+        padding: 12px;
+        gap: 10px;
+    }
+    
+    .postImageContainer {
+        height: 150px;
+    }
+    
+    .postTitle {
+        font-size: 1rem;
+    }
+    
+    .postContentText {
+        font-size: 0.85rem;
+    }
+    
+    .authorName {
+        font-size: 13px;
+    }
+    
+    .postDate {
+        font-size: 11px;
+    }
+    
+    .statItem {
+        font-size: 12px;
+    }
 }
 
 .postImage {

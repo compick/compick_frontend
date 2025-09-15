@@ -75,9 +75,7 @@ export default function SidebarPage({ onLogout }) {
             <div className="popupContent">
               {loggedIn ? (
                 <>
-                  <div className="popupIcon" onClick={() => navigate('/myProfile')}>
-                    <span>내 프로필</span>
-                  </div>
+                  
                   <div className="popupIcon" onClick={handleLogout}>
                     <span>로그아웃</span>
                   </div>

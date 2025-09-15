@@ -236,13 +236,43 @@ color: #fff;
 padding: 7px;
 margin: 0 7px ;
 }
+.postTitle{
+width: 96%;
+padding: 12px;
+margin: 1%;
+border-radius: 8px;
+border: 1px solid #ddd;
+font-size: 16px;
+font-weight: 500;
+background: var(--card-bg);
+color: var(--text-primary);
+transition: border-color 0.3s ease;
+}
+
+.postTitle:focus {
+outline: none;
+border-color: #38c0e9;
+box-shadow: 0 0 0 3px rgba(56, 192, 233, 0.1);
+}
+
 .postText{
 width: 96%;
-padding: 1%;
+padding: 12px;
 margin: 1%;
 border-radius: 8px;
 height: 80px;
 resize: none;
+border: 1px solid #ddd;
+font-size: 14px;
+background: var(--card-bg);
+color: var(--text-primary);
+transition: border-color 0.3s ease;
+}
+
+.postText:focus {
+outline: none;
+border-color: #38c0e9;
+box-shadow: 0 0 0 3px rgba(56, 192, 233, 0.1);
 }
 .postImg{
 width: 100%;
