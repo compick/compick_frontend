@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { apiJson } from '../../../api/apiClient';
-import { getCookie } from '../../../utils/Cookie';
+import { apiJson, refreshAccessToken } from '../../../api/apiClient'; // 🔑 refresh 추가
 import './ChatWindow.css';
 import { connectSocket, sendMessage } from '../../../api/socketClient';
-import { v4 as uuidv4 } from 'uuid'; // 상단에 추가
-
+import { v4 as uuidv4 } from 'uuid';
 
 export default function ChatWindow({ match, onMinimize, onClose }) {
   const [me, setMe] = useState(null);
@@ -21,11 +19,18 @@ export default function ChatWindow({ match, onMinimize, onClose }) {
 
     (async () => {
       try {
+        // 0️⃣ 토큰 최신화 먼저 보장
+        try {
+          await refreshAccessToken();
+        } catch (err) {
+          console.warn("refreshAccessToken 실패(무시 가능):", err);
+        }
+
+        // 1️⃣ view API 호출
         const data = await apiJson(
           `/api/chat/view?matchId=${encodeURIComponent(match.id)}`,
           { method: 'GET' }
         );
-
         if (!alive) return;
 
         const user = data?.data?.user ?? data?.user;
@@ -34,7 +39,7 @@ export default function ChatWindow({ match, onMinimize, onClose }) {
         setMe(user);
         setMessages(chatMessages);
 
-        // ✅ view API 성공 → 토큰이 최신 → 이제 소켓 연결
+        // 2️⃣ 최신 토큰으로 WebSocket 연결
         ws = connectSocket(match.id, (msg) => {
           if (msg.matchId === match.id) {
             setMessages((prev) => {
@@ -58,8 +63,6 @@ export default function ChatWindow({ match, onMinimize, onClose }) {
     };
   }, [match?.id]);
 
-
-
   // --- 스크롤 맨 아래로 ---
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -82,7 +85,7 @@ export default function ChatWindow({ match, onMinimize, onClose }) {
     // 1️⃣ DB 저장 (REST API)
     try {
       await apiJson(`/api/chat/regist?matchId=${match.id}&content=${encodeURIComponent(newMessage)}`, {
-        method: "POST" // POST여도 body는 필요 없음
+        method: "POST"
       });
     } catch (err) {
       console.error("DB 저장 실패:", err);
@@ -90,7 +93,7 @@ export default function ChatWindow({ match, onMinimize, onClose }) {
 
     // 2️⃣ WebSocket 브로드캐스트
     const msgObj = {
-      tempId: uuidv4(),    // ✅ 임시 ID 추가
+      tempId: uuidv4(),
       matchId: match.id,
       content: newMessage,
       userIdx: me?.userIdx,
@@ -101,8 +104,6 @@ export default function ChatWindow({ match, onMinimize, onClose }) {
     sendMessage(msgObj);
     setNewMessage('');
   };
-
-
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') handleSendMessage();
