@@ -4,6 +4,7 @@ import { getMatchDetail } from "../../../api/match/Matches";
 import MatchCard from "../home/match/MatchCard";
 import { getCookie } from "../../../utils/Cookie";
 import "../../../styles/detail.css";
+import ChatWindow from "../chat/ChatWindow";
 import { getHomeAndAwayMatches ,getRecentMatchesByHome,getRecentMatchesByAway} from "../../../api/Detail";
 // 팀 로고 컴포넌트
 const TeamLogo = ({ teamName, logoUrl }) => {
