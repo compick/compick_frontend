@@ -104,7 +104,7 @@ export default function ChatWindow({ match, onMinimize, onClose }) {
       createdAt: new Date().toISOString(),
     };
 
-    wsRef.current.send(JSON.stringify(msgObj));
+    sendMessage(msgObj);
     setNewMessage('');
   };
 
