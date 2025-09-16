@@ -30,5 +30,15 @@ export async function updateUser(payload) {
       throw err;
     }
   }
-  
+  export async function deleteUser() {
+    try {
+      const res = await apiJson("/api/user/delete", {
+        method: "DELETE",
+      });
+      return res;
+    } catch (err) {
+      console.error("[deleteUser] error:", err);
+      throw err;
+    }
+  }
 

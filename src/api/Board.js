@@ -1,22 +1,24 @@
 // apiJson 말고 apiFetch 사용!
-import { apiJson } from "./apiClient";
+import { apiJson,apiForm } from "./apiClient";
 
-export async function addBoard({ title,content, matchtagList, image,sport,league}) {
-  const payload = {
-    title,
-    content,
-    matchtagName: matchtagList,
-    sport,
-    league,
-    image
-  };
-  console.log("[addBoard payload]", payload);
-  // ✅ apiJson 사용 → 자동으로 Content-Type: application/json 붙고 JSON.stringify 해줌
-  return await apiJson("/api/board/regist", {
-    method: "POST",
-    body: JSON.stringify(payload)
-  });
-  
+export async function addBoard({ title,content, matchtagList, capturedImage ,sport,league}) {
+  const formData = new FormData();
+  formData.append("title", title);
+  formData.append("content", content);
+  formData.append("sport", sport);
+  formData.append("league", league);
+
+  // matchtagList 배열 JSON으로 넣음
+  if (matchtagList && matchtagList.length > 0) {
+    formData.append("matchtagList", JSON.stringify(matchtagList));
+  }
+  if (capturedImage) {
+    const blob = await (await fetch(capturedImage)).blob();
+    const file = new File([blob], `boardUpload_${Date.now()}.png`, { type: "image/png" });
+    formData.append("file", file);
+  }
+
+  return await apiForm("/api/board/regist", formData);
 }
 
 export async function uploadCapturedImage(capturedImage) {
@@ -26,15 +28,9 @@ export async function uploadCapturedImage(capturedImage) {
   const formData = new FormData();
   formData.append("file", file);
 
-  const res = await apiJson("/api/upload/image", {
-    method: "POST",
-    body: formData,
-  });
+  const res = await apiForm("/api/upload/image", formData);
 
-  if (!res.ok) throw new Error("업로드 실패");
-  const data = await res.json();
-
-  return data.fileUrl; // "/images/board/boardUpload_....png"
+  return res.fileUrl; 
 }
 
 export async function getBoardList(sport, league) {

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { checkPassword, updateUser } from "../../api/User";
+import { checkPassword, updateUser ,deleteUser} from "../../api/User";
+import { deleteCookie } from "../../utils/Cookie";
 
 export default function EditProfilePage({ currentUser, onSave }) {
   const [nickname, setNickname] = useState("");
@@ -117,8 +118,18 @@ export default function EditProfilePage({ currentUser, onSave }) {
     setShowWithdrawalConfirmation(true);
   };
 
-  const handleWithdrawal = () => {
-    alert("회원탈퇴가 처리되었습니다.");
+  const handleWithdrawal = async() => {
+    if(window.confirm("정말로 회원탈퇴하시겠습니까?")) {
+      try {
+      const result = await deleteUser();
+      alert("회원탈퇴가 처리되었습니다.");
+      deleteCookie("jwt");
+      window.location.href = "/";
+      }
+     catch(err) {
+      alert("회원탈퇴 처리 중 오류가 발생했습니다."+err.message);
+    }
+  };
     navigate("/");
   };
 

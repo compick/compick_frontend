@@ -93,7 +93,7 @@ export default function BodyPage({ posts, matches, userScores, capturedImage, se
             <SportHeader selectedLeague={selectedLeague} isLoggedIn={isLoggedIn} onLogout={onLogout} />
             <div className="bodyContainer">
 
-                <div style={{ flex: 1 }}>\
+                <div style={{ flex: 1 }}>
                 <Routes>
                         {/* ✅ 로그인 필요 */}
                         <Route
