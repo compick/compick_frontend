@@ -23,7 +23,7 @@ export default function TopBoard({ posts = [] }) {
         .slice(0, 5);
 
     const handleViewAllPosts = () => {
-        navigate('/boards/all/all');
+        navigate('/board/all/all');
     };
 
     return (

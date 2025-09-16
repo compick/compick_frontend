@@ -65,4 +65,14 @@ export async function apiJson(input, init = {}) {
   if (!res.ok) throw new Error(data?.msg || `HTTP_${res.status}`);
   return data;
 }
+export async function apiForm(input, formData, init = {}) {
+  // Content-Type을 붙이지 않아야 boundary가 자동 생성됨
+  const headers = new Headers(init.headers || {});
+
+  const res = await apiFetch(input, { ...init, method: "POST", body: formData, headers });
+
+  const data = await res.json().catch(() => null);
+  if (!res.ok) throw new Error(data?.msg || `HTTP_${res.status}`);
+  return data;
+}
 

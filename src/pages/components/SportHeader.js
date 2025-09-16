@@ -25,14 +25,14 @@ export default function SportHeader({ selectedLeague, isLoggedIn, onLogout }){
                 { name: '전체보기', path: '/baseball/all' },
                 { name: 'KBO', path: '/baseball/kbo' }
             ]
-        },
-        'MMA': {
-            basePath: '/mma',
-            leagues: [
-                { name: '전체보기', path: '/mma/all' },
-                { name: 'UFC', path: '/mma/ufc' }
-            ]
         }
+        // 'MMA': {
+        //     basePath: '/mma',
+        //     leagues: [
+        //         { name: '전체보기', path: '/mma/all' },
+        //         { name: 'UFC', path: '/mma/ufc' }
+        //     ]
+        // }
     };
 
     // 현재 선택된 리그에 따라 어떤 스포츠 메뉴가 활성화되어야 하는지 결정
