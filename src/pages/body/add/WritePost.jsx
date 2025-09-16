@@ -91,6 +91,8 @@ export default function WritePost({ capturedImage }) {
     }
   };
 
+  
+
   return (
     <div className="uploadContainer">
       <h2>새 게시물</h2>
