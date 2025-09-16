@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { apiJson } from '../../../api/apiClient';
-import { getCookie } from '../../../utils/Cookie';
+import { apiJson, refreshAccessToken } from '../../../api/apiClient'; // 🔑 refresh 추가
 import './ChatWindow.css';
 import { connectSocket, sendMessage } from '../../../api/socketClient';
-import { v4 as uuidv4 } from 'uuid'; // 상단에 추가
-
+import { v4 as uuidv4 } from 'uuid';
 
 export default function ChatWindow({ match, onMinimize, onClose }) {
   const [me, setMe] = useState(null);
@@ -13,18 +11,26 @@ export default function ChatWindow({ match, onMinimize, onClose }) {
   const messagesEndRef = useRef(null);
   const wsRef = useRef(null);
 
-  // --- 초기 채팅 불러오기 (REST) ---
+  // --- 초기 채팅 불러오기 (REST + WebSocket 연결) ---
   useEffect(() => {
     if (!match?.id) return;
     let alive = true;
+    let ws = null;
 
     (async () => {
       try {
+        // 0️⃣ 토큰 최신화 먼저 보장
+        try {
+          await refreshAccessToken();
+        } catch (err) {
+          console.warn("refreshAccessToken 실패(무시 가능):", err);
+        }
+
+        // 1️⃣ view API 호출
         const data = await apiJson(
           `/api/chat/view?matchId=${encodeURIComponent(match.id)}`,
           { method: 'GET' }
         );
-
         if (!alive) return;
 
         const user = data?.data?.user ?? data?.user;
@@ -32,6 +38,20 @@ export default function ChatWindow({ match, onMinimize, onClose }) {
 
         setMe(user);
         setMessages(chatMessages);
+
+        // 2️⃣ 최신 토큰으로 WebSocket 연결
+        ws = connectSocket(match.id, (msg) => {
+          if (msg.matchId === match.id) {
+            setMessages((prev) => {
+              if (prev.some(m => m.messageId && m.messageId === msg.messageId)) {
+                return prev;
+              }
+              return [...prev, msg];
+            });
+          }
+        });
+        wsRef.current = ws;
+
       } catch (err) {
         console.error('채팅 불러오기 실패:', err);
       }
@@ -39,32 +59,9 @@ export default function ChatWindow({ match, onMinimize, onClose }) {
 
     return () => {
       alive = false;
+      ws?.close(); // ✅ 반드시 닫기
     };
   }, [match?.id]);
-
-  // --- WebSocket 연결 ---
-  useEffect(() => {
-    if (!match?.id) return;
-
-    const ws = connectSocket(match.id, (msg) => {
-      if (msg.matchId === match.id) {
-        setMessages((prev) => {
-          // ✅ 중복 방지
-          if (prev.some(m => m.messageId && m.messageId === msg.messageId)) {
-            return prev;
-          }
-          return [...prev, msg];
-        });
-      }
-    });
-
-    wsRef.current = ws;
-
-    return () => {
-      ws.close(); // ✅ 반드시 닫기
-    };
-  }, [match?.id]);
-
 
   // --- 스크롤 맨 아래로 ---
   const scrollToBottom = () => {
@@ -88,7 +85,7 @@ export default function ChatWindow({ match, onMinimize, onClose }) {
     // 1️⃣ DB 저장 (REST API)
     try {
       await apiJson(`/api/chat/regist?matchId=${match.id}&content=${encodeURIComponent(newMessage)}`, {
-        method: "POST" // POST여도 body는 필요 없음
+        method: "POST"
       });
     } catch (err) {
       console.error("DB 저장 실패:", err);
@@ -96,7 +93,7 @@ export default function ChatWindow({ match, onMinimize, onClose }) {
 
     // 2️⃣ WebSocket 브로드캐스트
     const msgObj = {
-      tempId: uuidv4(),    // ✅ 임시 ID 추가
+      tempId: uuidv4(),
       matchId: match.id,
       content: newMessage,
       userIdx: me?.userIdx,
@@ -104,11 +101,9 @@ export default function ChatWindow({ match, onMinimize, onClose }) {
       createdAt: new Date().toISOString(),
     };
 
-    wsRef.current.send(JSON.stringify(msgObj));
+    sendMessage(msgObj);
     setNewMessage('');
   };
-
-
 
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') handleSendMessage();
