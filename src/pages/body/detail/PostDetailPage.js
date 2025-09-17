@@ -2,6 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
 import Comment from "./Comment"; // 댓글 컴포넌트
 import { apiJson } from "../../../api/apiClient"; // 상세 데이터 요청용
+import { toggleLike,getPostDetail } from "../../../api/Board";
+import { toast } from "react-toastify";
+import { addComment } from "../../../api/Comment";
 
 
 export default function PostDetailPage({ 
@@ -22,7 +25,7 @@ export default function PostDetailPage({
   // props로 받은 값이 있으면 우선 사용, 없으면 URL/location에서 가져오기
   const boardId = propBoardId || urlBoardId;
   const initialPost = propInitialPost || location.state?.post || null;
-  const [post, setPost] = useState(initialPost);
+  const [post, setPost] = useState(initialPost || null);
   const [newComment, setNewComment] = useState("");
   const commentInputRef = useRef(null);
 
@@ -37,9 +40,9 @@ export default function PostDetailPage({
       }
     };
 
-    if (!initialPost) {
+  
       fetchDetail();
-    }
+   
   }, [boardId, initialPost]);
 
   if (!post) {
@@ -49,11 +52,52 @@ export default function PostDetailPage({
   // ✅ 좋아요 여부 판별
   const isPostLiked = post.likedBy?.includes(currentUser?.name);
 
+    //좋아요 기능
+  const handleLikePost = async (boardId) => {
+    try {
+      const res = await toggleLike(boardId);
+      console.log("[handleLikePost] res =", res);
+
+      const payload = res?.data ?? res;
+      const liked = payload?.liked;
+      const likeCount = payload?.likeCount;
+
+      // ✅ 즉시 UI 반영
+      setPost((prev) => {
+        if (!prev) return prev;
+        return {
+          ...prev,
+          likedByMe: liked ?? prev.likedByMe,
+          likeCount: typeof likeCount === "number" ? likeCount : prev.likeCount,
+        };
+      });
+
+      // ✅ 서버 최신 데이터 재조회 (동기화 보장)
+      const fresh = await getPostDetail(boardId);  // 단일 게시글 조회 API
+      setPost(fresh?.data ?? fresh);
+
+    } catch (error) {
+      console.error("[handleLikePost] 좋아요 실패:", error);
+    }
+};
+
   // ✅ 댓글 등록
-  const handleCommentSubmit = () => {
+  const handleCommentSubmit = async () => {
     if (newComment.trim() === "") return;
-    onAddComment(post.boardId, newComment);
-    setNewComment("");
+  
+    try {
+      const savedComment = await addComment({
+        boardId: post.boardId,
+        content: newComment,
+      });
+  
+      // 성공 시 부모 컴포넌트에 전달 (예: 목록 갱신)
+      onAddComment(savedComment);
+  
+      setNewComment(""); // 입력창 초기화
+    } catch (err) {
+      console.error("댓글 작성 실패:", err);
+    }
   };
 
   // ✅ 댓글 멘션 기능
@@ -62,13 +106,18 @@ export default function PostDetailPage({
     commentInputRef.current?.focus();
   };
 
-  // ✅ 신고하기
-  const handleReportPost = () => {
-    const reason = prompt("신고 사유를 입력해주세요:");
-    if (reason) {
-      onReport("post", post.boardId, reason);
+  // ✅ 공유 버튼 핸들러
+  const handleSharePost = async () => {
+    try {
+      const shareUrl = window.location.href;
+      await navigator.clipboard.writeText(shareUrl);
+      toast.success("📋 게시글 링크가 복사되었습니다!");
+    } catch (err) {
+      console.error("링크 복사 실패:", err);
+      toast.error("❌ 링크 복사에 실패했습니다.");
     }
   };
+
 
   return (
     <div className={`post-detail-container ${isInSidebar ? 'sidebar-mode' : 'fullpage-mode'}`}>
@@ -82,22 +131,22 @@ export default function PostDetailPage({
         <span>작성일: {new Date(post.createdAt).toLocaleDateString("ko-KR")}</span>
       </div>
 
-      {post.fileUrl && (
-        <img src={post.fileUrl} alt={post.title} className="post-image" />
+      {post.fileData && (
+        <img src={post.fileData} alt={post.title} className="post-image" />
       )}
 
       <p className="post-content">{post.content}</p>
 
       <div className="post-actions">
-        <button
-          onClick={() => onLikePost(post.boardId)}
-          className={isPostLiked ? "liked" : ""}
-        >
-          ❤️ {post.likeCount || 0} 좋아요
-        </button>
-        <button>💬 댓글</button>
-        <button>🔗 공유</button>
-      </div>
+      <button
+        onClick={()=>handleLikePost(post.boardId)}
+        className={post.likedByMe ? "liked" : ""}
+      >
+        ❤️ {post.likeCount??  0} 좋아요
+      </button>
+      <button>💬 댓글</button>
+      <button onClick={handleSharePost}>🔗 공유</button>
+    </div>
 
       {/* ✅ 댓글 영역 */}
       <div className="comment-section">

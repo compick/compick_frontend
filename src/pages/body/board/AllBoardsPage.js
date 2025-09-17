@@ -35,7 +35,7 @@ export default function AllBoardsPage({ isLoggedIn, currentUser, onAddComment, o
     const fetchPosts = async () => {
       try {
         const res = await getBoardList(sport, league);
-        console.log("[AllBoardPage] boardList res =", res);
+        console.log("[AllBoardPage] boardList res =", res.data);
         setPosts(Array.isArray(res) ? res : res.data || []);
       } catch (error) {
         console.error("[AllBoardPage] 게시글 불러오기 실패:", error);
@@ -146,14 +146,14 @@ export default function AllBoardsPage({ isLoggedIn, currentUser, onAddComment, o
                 onClick={() => handlePostClick(post)}
               >
                 <div className="postImageContainer">
-                  {post.fileUrl ? (
-                    <img src={post.fileUrl} alt="게시글 이미지" className="postImage" />
+                  {post.fileData ? (
+                    <img src={post.fileData} alt="게시글 이미지" className="postImage" />
                   ) : (
                     <div className="postImagePlaceholder">📷</div>
                   )}
                 </div>
                 <div className="postMainContent">
-                  {post.title && <h3 className="postTitle">{post.title}</h3>}
+                  {post.title && <h3 className="postTitle">제목 : {post.title}</h3>}
                   <p className="postContentText">{post.content}</p>
                   <div className="postFooter">
                     <div className="authorInfo">
@@ -162,10 +162,10 @@ export default function AllBoardsPage({ isLoggedIn, currentUser, onAddComment, o
                       ) : <div className="authorProfilePlaceholder">👤</div>}
                       <div className="authorDetails">
                         <span className="authorName">{post.userNickname}</span>
-                        <span className="postDate">{new Date(post.createdAt).toLocaleDateString("ko-KR")}</span>
                       </div>
                     </div>
                     <div className="postStats">
+                        <span className="postDate">{new Date(post.createdAt).toLocaleDateString("ko-KR")}</span>
                       <span className="statItem">👁 {post.views || 0}</span>
                       <span className="statItem">❤️ {post.likeCount || 0}</span>
                     </div>

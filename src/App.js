@@ -6,7 +6,9 @@ import {getCookie} from "./utils/Cookie";
 import BodyPage from "./pages/BodyPage";
 import ThemeToggle from "./components/ThemeToggle";
 import profileImg from "./img/icon/defaultProfile.jpeg"; // 이미지 경로 수정
+import { ToastContainer } from "react-toastify";
 
+import "react-toastify/dist/ReactToastify.css";
 import "./styles/login.css";
 import "./styles/component.css";
 import "./styles/body.css";
@@ -321,6 +323,7 @@ function App() {
          onLogin={handleLogin}
          onLogout={handleLogout}
       />
+      <ToastContainer position="top-center" autoClose={2000} />
     </BrowserRouter>
   );
 }
