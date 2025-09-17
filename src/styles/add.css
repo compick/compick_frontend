@@ -236,7 +236,7 @@ color: #fff;
 padding: 7px;
 margin: 0 7px ;
 }
-.postTitle{
+.postTitle_wirte{
 width: 96%;
 padding: 12px;
 margin: 1%;
@@ -249,7 +249,7 @@ color: var(--text-primary);
 transition: border-color 0.3s ease;
 }
 
-.postTitle:focus {
+.postTitle_wirte:focus {
 outline: none;
 border-color: #38c0e9;
 box-shadow: 0 0 0 3px rgba(56, 192, 233, 0.1);

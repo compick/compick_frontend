@@ -32,12 +32,19 @@ export async function uploadCapturedImage(capturedImage) {
 
   return res.fileUrl; 
 }
-
 export async function getBoardList(sport, league) {
   const params = new URLSearchParams();
   if (sport) params.append("sport", sport);
   if (league) params.append("league", league);
 
-  const url = `/api/board/list?sport=${sport ?? "all"}&league=${league ?? "all"}`; 
- return await apiJson(url, { method: "GET" });
+  const url = `/api/board/list${params.toString() ? "?" + params.toString() : ""}`;
+  return await apiJson(url, { method: "GET" });
+}
+export async function toggleLike(boardId) {
+  return await apiJson(`/api/board/like/${boardId}`, {
+    method: "POST"
+  });
+}
+export async function getPostDetail(boardId) {
+  return await apiJson(`/api/board/detail/${boardId}`, { method: "GET" });
 }

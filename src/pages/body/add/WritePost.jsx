@@ -152,7 +152,7 @@ export default function WritePost({ capturedImage }) {
           <input
             type="text"
             placeholder="게시글 제목을 입력하세요"
-            className="postTitle"
+            className="postTitle_wirte"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
           />
