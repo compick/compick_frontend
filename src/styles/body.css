@@ -114,11 +114,10 @@
     transform: translateY(-50%);
     width: 40px;
     height: 40px;
-    border-radius: 50%;
+    border-radius: 50% !important;
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
-    opacity: 0.15;
     z-index: 0;
     pointer-events: none;
     aspect-ratio: 1/1;
@@ -747,6 +746,20 @@
     
     .teamBg.right {
         right: 5px;
+    }
+    
+    /* teamSection과 teamName 600px 이하 스타일 */
+    .teamSection {
+        min-width: 75px;
+    }
+    
+    .teamName {
+        font-size: 0.8rem;
+        min-width: 45px;
+        max-width: 75px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
@@ -1885,7 +1898,7 @@
     flex-direction: column;
     align-items: center;
     gap: 6px;
-    min-width: 90px;
+    min-width: 100px;
     flex: 1;
 }
 
@@ -1904,9 +1917,12 @@
     font-weight: 700;
     font-size: 0.75rem;
     text-align: center;
-    word-break: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     line-height: 1.2;
-    max-width: 80px;
+    min-width: 60px;
+    max-width: 100px;
     color: var(--text-primary);
 }
 
@@ -2045,7 +2061,7 @@
     }
     
     .teamSection {
-        min-width: 70px;
+        min-width: 85px;
     }
     
     .teamLogo {
@@ -2057,7 +2073,11 @@
     
     .teamName {
         font-size: 0.9rem;
-        max-width: 70px;
+        min-width: 50px;
+        max-width: 80px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
     .scoreBox {
@@ -2131,7 +2151,7 @@
     }
     
     .teamSection {
-        min-width: 60px;
+        min-width: 70px;
     }
     
     .teamLogo {
@@ -2143,7 +2163,11 @@
     
     .teamName {
         font-size: 0.7rem;
-        max-width: 60px;
+        min-width: 40px;
+        max-width: 65px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
     .scoreBox {
@@ -3735,5 +3759,19 @@ html, body {
     
     .teamBg.right {
         right: 3px;
+    }
+    
+    /* teamSection과 teamName 320px 이하 스타일 */
+    .teamSection {
+        min-width: 65px;
+    }
+    
+    .teamName {
+        font-size: 0.65rem;
+        min-width: 35px;
+        max-width: 60px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
