@@ -164,9 +164,9 @@ export default function LocalSignup() {
         )}
         {emailState.msg && <div className={`status-message ${emailState.verified ? 'success' : emailState.sent ? 'info' : 'error'}`}>{emailState.msg}</div>}
 
-        <submit type="submit" disabled={busy.submit}>
+        <button type="submit" disabled={busy.submit}>
           {busy.submit ? "처리중..." : "회원가입"}
-        </submit>
+        </button>
       </form>
     </div>
   );
