@@ -97,15 +97,16 @@
   padding: 8px 12px;
   border-radius: 12px;
   word-break: break-word;
+  color:var(--text-primary)
 }
 
 .chat-message.mine .bubble {
-  background: #ffe066;
+  background: var(--header-bg);
   text-align: right;
 }
 
 .chat-message.other .bubble {
-  background: #ffffff;
+  background: var(--header-bg);
   border: 1px solid #ddd;
 }
 
