@@ -34,14 +34,14 @@ const RecentMatch = ({ match }) => {
         return "예정";
       case "live":
         return "진행중";
-      case "finished":
-        return "종료";
+      case "Ended":
+        return "경기종료";
       default:
         return status;
     }
   };
 
-  const shouldShowScore = (status) => status === "live" || status === "finished";
+  const shouldShowScore = (status) => status === "live" || status === "경기종료";
 
   return (
     <div className="recent-match">
@@ -470,21 +470,21 @@ export default function MatchDetailPage({
             <div className="match-status">
               {getStatusText(detail.matchStatus || detail.status || detail.state)}
             </div>
-            {shouldShowScore(detail.matchStatus || detail.status || detail.state) && (
+          
               <div className="match-score">
                 {detail.homeScore || detail.home_score || 0} : {detail.awayScore || detail.away_score || 0}
               </div>
-            )}
+         
           </div>
 
           <div className="team-info">
-            <div className="team-name">
-              {detail.awayTeam || detail.away_team || detail.awayTeamName || "원정팀"}
-            </div>
             <TeamLogo
               teamName={detail.awayTeam || detail.away_team || detail.awayTeamName}
               logoUrl={detail.awayTeamLogo || detail.away_team_logo}
             />
+            <div className="team-name">
+              {detail.awayTeam || detail.away_team || detail.awayTeamName || "원정팀"}
+            </div>
           </div>
         </div>
 

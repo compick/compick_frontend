@@ -49,6 +49,7 @@
     display: flex;
     align-items: center;
     gap: 15px;
+    flex-direction: column;
 }
 
 .match-header .team-logo {
@@ -85,7 +86,7 @@
 }
 
 .match-header .match-time {
-    font-size: 16px;
+    font-size: 10px;
     font-weight: bold;
     margin-bottom: 5px;
     color: var(--text-primary);
@@ -98,11 +99,24 @@
 }
 
 .match-header .match-score {
-    font-size: 24px;
-    font-weight: bold;
-    color: var(--text-primary);
-    margin: 10px 0;
+    border: none;
+    font-size: 32px;
+    font-weight: 900;
+    color: var(--link-color);
+    text-align: center;
+    background: var(--card-bg);
+    padding: 0px 16px;
+    display: inline-block;
+    min-width: 100px;
+    letter-spacing: 2px;
+    font-family: 'Arial Black', Arial, sans-serif;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
+
+
+
 
 /* 네비게이션 탭 */
 .match-nav-tabs {
@@ -293,6 +307,8 @@
     border-radius: 8px;
     border-left: 4px solid var(--link-color);
     transition: background-color 0.3s ease, border-color 0.3s ease;
+    min-height: 80px;
+    gap: 10px;
 }
 
 .h2h-match .match-date {
@@ -336,6 +352,11 @@
     font-size: 14px;
     font-weight: bold;
     color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 120px;
+    min-width: 60px;
 }
 
 .h2h-match .score {
@@ -620,16 +641,22 @@
 .match-score {
     font-size: 24px;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--link-color);
     margin-top: 10px;
     text-align: center;
+    background: var(--button-secondary);
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--link-color);
+    display: inline-block;
+    min-width: 60px;
 }
 
 /* 팀 전력 비교 섹션 */
 .team-power-comparison {
     background: var(--card-bg);
     border-radius: 12px;
-    padding: 25px;
+    padding: 15px;
     margin-bottom: 20px;
     box-shadow: var(--shadow-md);
     border: 1px solid var(--card-border);
@@ -659,14 +686,14 @@
 }
 
 .team-power .team-name {
-    font-size: 18px;
+    font-size: 15px;
     font-weight: bold;
     margin-bottom: 10px;
     color: var(--text-primary);
 }
 
 .team-power .win-rate {
-    font-size: 24px;
+    font-size: 15px;
     font-weight: bold;
     color: var(--link-color);
     margin-bottom: 5px;
@@ -804,8 +831,16 @@
     }
 
     .match-header {
-        flex-direction: column;
+        flex-direction: row;
         gap: 15px;
+    }
+    
+    .match-header .match-score {
+        font-size: 24px;
+        padding: 8px 16px;
+        min-width: 80px;
+        margin: 10px 0;
+        border-width: 2px;
     }
 
     .team-comparison {
@@ -817,9 +852,34 @@
         margin: 10px 0;
     }
 
-    .h2h-match .match-teams {
+    .h2h-match {
+        padding: 12px;
+        min-height: 70px;
         flex-direction: column;
-        gap: 10px;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .h2h-match .match-teams {
+        flex-direction: row;
+        gap: 8px;
+        width: 100%;
+        align-items: center;
+    }
+    
+    .h2h-match .team {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .h2h-match .team-name {
+        font-size: 13px;
+        max-width: 100px;
+    }
+    
+    .h2h-match .score {
+        font-size: 14px;
+        margin: 5px 0;
     }
 
     .recent-matches-grid {
@@ -827,8 +887,90 @@
     }
 
     .power-stats {
-        flex-direction: column;
+        flex-direction: row;
         gap: 15px;
+    }
+}
+
+/* 중간 크기 모바일 (600px 이하) */
+@media (max-width: 600px) {
+    .h2h-match {
+        padding: 12px;
+        min-height: 65px;
+        gap: 8px;
+    }
+    
+    .h2h-match .team-name {
+        font-size: 13px;
+        max-width: 90px;
+    }
+    
+    .h2h-match .team-logo {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .h2h-match .score {
+        font-size: 15px;
+    }
+    
+    .match-header .match-score {
+        font-size: 20px;
+        padding: 6px 12px;
+        min-width: 70px;
+        margin: 8px 0;
+        border-width: 2px;
+        letter-spacing: 1px;
+    }
+}
+
+/* 작은 모바일 화면 (480px 이하) */
+@media (max-width: 480px) {
+    .h2h-match {
+        padding: 10px;
+        min-height: 60px;
+        gap: 6px;
+    }
+    
+    .h2h-match .match-date {
+        font-size: 11px;
+    }
+    
+    .h2h-match .match-league {
+        font-size: 10px;
+    }
+    
+    .h2h-match .match-teams {
+        gap: 6px;
+    }
+    
+    .h2h-match .team {
+        gap: 6px;
+    }
+    
+    .h2h-match .team-name {
+        font-size: 12px;
+        max-width: 80px;
+    }
+    
+    .h2h-match .team-logo {
+        width: 25px;
+        height: 25px;
+    }
+    
+    .h2h-match .score {
+        font-size: 13px;
+        margin: 3px 0;
+    }
+    
+    .match-header .match-score {
+        font-size: 18px;
+        padding: 5px 10px;
+        min-width: 60px;
+        margin: 6px 0;
+        border-width: 2px;
+        letter-spacing: 1px;
+        border-radius: 8px;
     }
 
     .team-power {

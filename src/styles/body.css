@@ -2,13 +2,15 @@
     display: flex;
     flex-direction: column;
     margin: 0 auto;
-    padding-top: 40px; /* SportHeader의 높이(40px)만큼 여백 */
+    padding-top: 81px; /* SportHeader의 높이(40px) + border(1px) */
     background-color: var(--page-bg);
     transition: background-color 0.3s ease, margin-right 0.3s ease;
     width: 100%;
-    height: calc(100vh - 40px);
-    max-height: calc(100vh - 40px);
+    height: calc(100vh - 41px);
+    max-height: calc(100vh - 41px);
     overflow-y: auto;
+    position: relative;
+    z-index: 1;
     box-sizing: border-box;
     flex: 1;
 }
@@ -1338,9 +1340,11 @@
 /* Responsive Styles */
 @media (max-width: 768px) {
     .bodyContainer {
-        padding-bottom: 60px; /* 하단 탭 바 높이만큼 여백 추가 */
-        height: calc(100vh - 100px); /* SportHeader(40px) + 하단 탭바(60px) */
-        max-height: calc(100vh - 100px);
+        padding-top: 81px;
+        /* padding-bottom: 60px; */
+        height: calc(100vh - 101px);
+        max-height: calc(100vh);
+        overflow-x: hidden;
     }
     
     /* 홈 컨테이너 모바일 조정 */
