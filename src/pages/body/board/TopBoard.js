@@ -30,13 +30,7 @@ export default function TopBoard({ posts = [] }) {
         <div className="topPosts">
             <div className="topPostsHeader">
                 <h3>일주일간 인기 게시글</h3>
-                <button 
-                    className="viewAllButton"
-                    onClick={handleViewAllPosts}
-                    title="모든 게시글 보기"
-                >
-                    +
-                </button>
+               
             </div>
             <div className="topPostsList">
                 {topPosts.length > 0 ? (

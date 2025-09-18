@@ -1,25 +1,31 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import TierList from "./TierList";
-import MyVotesPage from "./MyVotesPage";
-import FavoritesPage from "./FavoritesPage";
 import MyCommentsPage from "./MyCommentsPage";
 import { deleteCookie } from '../../utils/Cookie';
 import { apiJson } from "../../api/apiClient";
+import {getMyComments} from "../../api/Comment";
 
 export default function MyProfile({ userScores, userInfo }) {
     const navigate = useNavigate();
-    const [activeView, setActiveView] = useState("tiers");
 
     // 닉네임 / 소개글 / 프로필 이미지 상태
     const [currentUser, setCurrentUser] = useState(null);
+    const [activeView, setActiveView] = useState("comments");
+    const [myComments, setMyComments] = useState([]);
     const [userData, setUserData] = useState({
         nickname: userInfo?.nickname || "",
         introduction: userInfo?.introduction || "",
         profileImg: userInfo?.profileImg || ""
     });
     console.log("[MyProfile] userData =", userInfo.profileImg);
-    
+    const renderContent = () => {
+        switch (activeView) {
+          case "comments":
+            return <MyCommentsPage comments={myComments} />;
+          default:
+            return <MyCommentsPage comments={myComments} />;
+        }
+      };
     useEffect(() => {
         apiJson("/api/user/info")
             .then((data) => {
@@ -62,24 +68,21 @@ export default function MyProfile({ userScores, userInfo }) {
         }
     };
 
-    const handleViewChange = (view) => {
+    const handleViewChange = async (view) => {
         setActiveView(view);
-    };
-
-    const renderContent = () => {
-        switch (activeView) {
-            case "tiers":
-                return <TierList userScores={userScores} />;
-            case "votes":
-                return <MyVotesPage />;
-            case "favorites":
-                return <FavoritesPage />;
-            case "comments":
-                return <MyCommentsPage />;
-            default:
-                return <TierList userScores={userScores} />;
+      
+        if (view === "comments") {
+          try {
+            const data = await getMyComments();
+            console.log("[MyProfile] 내 댓글 목록 =", data);
+            setMyComments(Array.isArray(data) ? data : data.data || []);
+          } catch (err) {
+            console.error("내 댓글 불러오기 실패:", err);
+          }
         }
-    };
+      };
+
+ 
 
     return (
         <div className="uploadContainer">

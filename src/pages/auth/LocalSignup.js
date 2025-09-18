@@ -120,7 +120,7 @@ export default function LocalSignup() {
     <div className="loginContainer">
       <form className="loginBox" onSubmit={handleSubmit}>
         <h2 className="signupTitle">회원가입</h2>
-        <div className="container" style={{ display:"flex", gap:8 }}>
+        <div className="container inputContainer" style={{ display:"flex", gap:8 }}>
           <input type="text" name="userId" placeholder="아이디"
                  value={form.userId} onChange={handleChange} required autoComplete="username" />
           <button type="button" className="authButton" onClick={checkUserId} disabled={busy.id}>
@@ -132,7 +132,7 @@ export default function LocalSignup() {
         <input type="password" name="password" placeholder="비밀번호"
                value={form.password} onChange={handleChange} required autoComplete="new-password" />
 
-        <div className="container" style={{ display:"flex", gap:8, marginTop:8 }}>
+        <div className="container inputContainer" style={{ display:"flex", gap:8, marginTop:8 }}>
           <input type="text" name="nickname" placeholder="닉네임"
                  value={form.nickname} onChange={handleChange} required />
           <button type="button" className="authButton" onClick={checkNickname} disabled={busy.nick}>
@@ -141,7 +141,7 @@ export default function LocalSignup() {
         </div>
         {nickCheck.msg && <div className={`status-message ${nickCheck.available ? 'success' : 'error'}`}>{nickCheck.msg}</div>}
 
-        <div className="container" style={{ display:"flex", gap:8, marginTop:8 }}>
+        <div className="container inputContainer" style={{ display:"flex", gap:8, marginTop:8 }}>
           <input type="email" name="email" placeholder="이메일"
                  value={form.email} onChange={handleChange} readOnly={emailState.verified} required />
           <button type="button" className="authButton"
@@ -164,9 +164,9 @@ export default function LocalSignup() {
         )}
         {emailState.msg && <div className={`status-message ${emailState.verified ? 'success' : emailState.sent ? 'info' : 'error'}`}>{emailState.msg}</div>}
 
-        <button type="submit" disabled={busy.submit}>
+        <submit type="submit" disabled={busy.submit}>
           {busy.submit ? "처리중..." : "회원가입"}
-        </button>
+        </submit>
       </form>
     </div>
   );

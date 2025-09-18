@@ -9,6 +9,81 @@ body {
   color: var(--text-primary);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
+/* 스포츠 플랫폼 회원가입 테마 */
+:root {
+  /* 라이트모드 변수 */
+  --bg-gradient-light: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+  --box-bg-light: rgba(255, 255, 255, 0.95);
+  --text-primary-light: #1e3c72;
+  --text-secondary-light: #4a5568;
+  --border-light: rgba(255, 255, 255, 0.3);
+  --input-bg-light: rgba(255, 255, 255, 0.9);
+  --input-border-light: #e1e8ed;
+  --shadow-light: rgba(0, 0, 0, 0.15);
+  
+  /* 전체 페이지 라이트모드 변수 */
+  --page-bg: #ffffff;
+  --header-bg: #ffffff;
+  --header-text: #1e3c72;
+  --header-border: #e2e8f0;
+  --sidebar-bg: #f8fafc;
+  --sidebar-text: #4a5568;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --text-primary: #1e3c72;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+  --link-color: #667eea;
+  --link-hover: #5a67d8;
+  --button-primary: #afd4f4;
+  --button-primary-hover: #5a67d8;
+  --button-secondary: #e2e8f0;
+  --button-secondary-hover: #cbd5e0;
+  --input-bg: #ffffff;
+  --input-border: #e2e8f0;
+  --input-focus: #667eea;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="dark"] {
+  /* 다크모드 변수 */
+  --bg-gradient-light: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  --box-bg-light: rgba(30, 41, 59, 0.95);
+  --text-primary-light: #f1f5f9;
+  --text-secondary-light: #cbd5e1;
+  --border-light: rgba(51, 65, 85, 0.3);
+  --input-bg-light: rgba(51, 65, 85, 0.9);
+  --input-border-light: #475569;
+  --shadow-light: rgba(0, 0, 0, 0.3);
+  
+  /* 전체 페이지 다크모드 변수 */
+  --page-bg: #0f172a;
+  --header-bg: #1e293b;
+  --header-text: #f1f5f9;
+  --header-border: #334155;
+  --sidebar-bg: #1e293b;
+  --sidebar-text: #cbd5e1;
+  --card-bg: #1e293b;
+  --card-border: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #cbd5e1;
+  --text-muted: #94a3b8;
+  --link-color: #60a5fa;
+  --link-hover: #3b82f6;
+  --button-primary: #3b82f6;
+  --button-primary-hover: #2563eb;
+  --button-secondary: #334155;
+  --button-secondary-hover: #475569;
+  --input-bg: #1e293b;
+  --input-border: #475569;
+  --input-focus: #60a5fa;
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
+}
+
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
@@ -35,16 +110,11 @@ header, .header, [class*="header"] {
 }
 
 /* 사이드바 스타일 */
-aside, .sidebar, [class*="sidebar"] {
+
+/* .sportHeader, [class*="sportHeader"] {
   background-color: var(--secondary-bg) !important;
-  color: var(--sidebar-text) !important;
-  
-}
-.sportHeader, [class*="sportHeader"] {
-  background-color: var(--secondary-bg) !important;
-  color: var(--sidebar-text) !important;
-  
-}
+  color: var(--sidebar-text) !important;  
+} */
 .sport-heder-item, [class*="sport-heder-item"] {
   background-color: var(--secondary-bg) !important;
   color: var(--sidebar-text) !important;
@@ -62,7 +132,7 @@ aside, .sidebar, [class*="sidebar"] {
 /* 버튼 스타일 */
 button:not(.theme-toggle):not(.kakaoButton):not(.authButton) {
   background-color: var(--button-primary);
-  color: white !important;
+  color: var(--text-primary);
   transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 

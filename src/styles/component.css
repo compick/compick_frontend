@@ -1,5 +1,4 @@
 .sidebarContainer {
-    
     z-index: 999;
     display: flex;
     justify-content: center;
@@ -109,8 +108,8 @@
   }
 }
 .popupBox {
-    background: white;
-    padding: 12px;
+    background: var(--card-bg);
+    padding: 3px;
     border-radius: 16px;
     min-width: 140px;
     border: 1px solid #ddd;
@@ -177,12 +176,15 @@
     width: 100vw;
     display: flex;
     position: fixed;
+    top: 0;
+    left: 0;
     justify-content: space-between;
     align-items: center;
     background-color: var(--header-bg);
-    z-index: 1000;
-    height: 40px; /* 고정 높이 추가 */
+    z-index: 100;
+    height: 40px; /* 고정 높이 명시 */
     transition: background-color 0.3s ease;
+    box-sizing: border-box;
 }
 
 .sportHeaderLeft img {
@@ -511,5 +513,40 @@
     
     .selectorGroup {
         min-width: auto;
+    }
+}
+
+/* App 컨테이너 스타일 */
+.app-container {
+    position: relative;
+    height: 100vh;
+    max-height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 채팅 사이드바가 열렸을 때 메인 콘텐츠 여백 조정 */
+.app-container .bodyContainer {
+    transition: margin-right 0.3s ease;
+}
+
+/* 모바일에서 app-container 높이 조정 */
+@media (max-width: 768px) {
+    .app-container {
+        height: 100vh;
+        max-height: 100vh;
+    }
+}
+
+/* 사이드바가 보일 때 여백 조정 */
+.app-container.sidebar-visible .bodyContainer {
+    margin-right: 400px;
+    transition: margin-right 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .app-container.sidebar-visible .bodyContainer {
+        margin-right: 0;
     }
 }

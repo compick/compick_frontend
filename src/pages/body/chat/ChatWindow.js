@@ -116,8 +116,20 @@ export default function ChatWindow({ match, onMinimize, onClose }) {
           {match.home} vs {match.away}
         </h2>
         <div className="chat-controls">
-          <button onClick={() => onMinimize(match)} className="minimize-chat-btn">-</button>
-          <button onClick={() => onClose(match.id)} className="close-chat-btn">X</button>
+          <button 
+            onClick={() => onMinimize(match)} 
+            className="minimize-chat-btn"
+            title="최소화"
+          >
+            −
+          </button>
+          <button 
+            onClick={() => onClose(match.id)} 
+            className="close-chat-btn"
+            title="닫기"
+          >
+            ✕
+          </button>
         </div>
       </header>
 

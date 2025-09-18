@@ -17,7 +17,6 @@ import AddBody from './body/add/AddBody';
 import EditImage from './body/add/EditImage';
 import WritePost from './body/add/WritePost';
 import MyProfile from './user/MyProfile';
-import TierDetailPage from './user/TierDetailPage';
 import EditProfilePage from './user/EditProfilePage';
 import HeartPage from './body/home/match/HeartPage';
 import MatchDetailPage from './body/detail/MatchDetailPage';
@@ -125,7 +124,6 @@ export default function BodyPage({ posts, matches, userScores, capturedImage, se
                         <Route path="/match/:sport/:league/:matchId" element={<MatchDetailPage likedMatches={likedMatches} onLikeMatch={onLikeMatch} onOpenChat={onOpenChat} />} />
                         <Route path="/myProfile" element={<MyProfile userScores={userScores} userInfo={userInfo} />} /> 
                         <Route path="/edit-profile" element={<EditProfilePage currentUser={userInfo} onSave={onProfileUpdate} />} />
-                        <Route path="/tier/:category" element={<TierDetailPage userScores={userScores} />} />
                         <Route path="/heart" element={<HeartPage likedMatches={likedMatches} onLikeMatch={onLikeMatch} />} />
                         <Route path="/ranking" element={<RankingPage />} />
                         <Route path="/ranking/:league" element={<TeamRankingPage />} />
@@ -160,13 +158,6 @@ export default function BodyPage({ posts, matches, userScores, capturedImage, se
                     </Routes>
                 </div>
             </div>
-            <ChatManager
-                chatState={chatState}
-                onOpenChat={onOpenChat}
-                onCloseChat={onCloseChat}
-                onMinimizeChat={onMinimizeChat}
-                onSetActiveChat={onSetActiveChat}
-            />
         </>
     )
 }

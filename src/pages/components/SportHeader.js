@@ -105,7 +105,7 @@ export default function SportHeader({ selectedLeague, isLoggedIn, onLogout }){
                         ))}
                     </div>
                 </div>
-            <SidebarPage isLoggedIn={isLoggedIn} onLogout={onLogout} />
+            {!isScrolled && <SidebarPage isLoggedIn={isLoggedIn} onLogout={onLogout} />}
             </div>
         </>
     )

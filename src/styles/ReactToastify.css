@@ -1,0 +1,156 @@
+/* Toast Container */
+.Toastify__toast-container {
+    z-index: 9999;
+    position: fixed;
+    padding: 8px;
+    width: 320px;
+    box-sizing: border-box;
+    background-color: var(--card-bg) !important;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  .Toastify__toast-container--top-left    { top: 1rem; left: 1rem; background-color: var(--card-bg) !important; }
+  .Toastify__toast-container--top-center  { top: 1rem; left: 50%; transform: translateX(-50%); background-color: var(--card-bg) !important; }
+  .Toastify__toast-container--top-right   { top: 1rem; right: 1rem; background-color: var(--card-bg) !important; }
+  .Toastify__toast-container--bottom-left { bottom: 1rem; left: 1rem; background-color: var(--card-bg) !important; }
+  .Toastify__toast-container--bottom-center{ bottom: 1rem; left: 50%; transform: translateX(-50%); background-color: var(--card-bg) !important; }
+  .Toastify__toast-container--bottom-right{ bottom: 1rem; right: 1rem; background-color: var(--card-bg) !important; }
+
+  /* 모든 토스트 컨테이너 클래스에 대해 강제 적용 */
+  [class*="Toastify__toast-container"] {
+    background-color: var(--card-bg) !important;
+    border-radius: 8px !important;
+    padding: 8px !important;
+  }
+  
+  /* Base Toast Style */
+  .Toastify__toast {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    margin: 0 0 8px 0;
+    padding: 10px 12px;
+    border-radius: 12px;
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+    font-size: 14px;
+    line-height: 1.35;
+    cursor: default;
+    animation: toast-slide-in 200ms ease-out;
+    border: 1px solid var(--card-border);
+    background: var(--card-bg);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-md);
+  }
+  
+  /* Toast body & icon */
+  .Toastify__toast-body {
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+  }
+  .Toastify__toast-icon {
+    display: inline-flex;
+    margin-right: 10px;
+    font-size: 18px;
+  }
+  
+  /* Close button */
+  .Toastify__close-button {
+    margin-left: 12px;
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    opacity: 0.7;
+    font-size: 16px;
+    line-height: 1;
+    cursor: pointer;
+    transition: opacity .15s ease;
+  }
+  .Toastify__close-button:hover { opacity: 1; }
+  
+  /* Type Variants */
+  .Toastify__toast--success { border-left: 5px solid var(--button-primary); }
+  .Toastify__toast--info    { border-left: 5px solid var(--link-color); }
+  .Toastify__toast--warning { border-left: 5px solid #facc15; } /* 노란색 */
+  .Toastify__toast--error   { border-left: 5px solid #ef4444; } /* 빨간색 */
+  
+  /* Progress Bar */
+  .Toastify__progress-bar {
+    position: absolute;
+    left: 0; bottom: 0;
+    height: 3px;
+    width: 100%;
+    transform-origin: left;
+    animation: toast-progress linear forwards;
+    background: var(--link-color);
+    opacity: 0.8;
+  }
+  .Toastify__progress-bar--rtl {
+    right: 0; left: auto;
+    transform-origin: right;
+  }
+  .Toastify__toast-theme--light {
+    background: var(--card-bg) !important;
+  }
+  
+  .Toastify__toast-theme--dark {
+    background: var(--card-bg) !important;
+  }
+  
+  /* 모든 토스트 타입에 배경 적용 */
+  .Toastify__toast {
+    background: var(--card-bg) !important;
+  }
+  
+  .Toastify__toast--success {
+    background: var(--card-bg) !important;
+  }
+  
+  .Toastify__toast--error {
+    background: var(--card-bg) !important;
+  }
+  
+  .Toastify__toast--warning {
+    background: var(--card-bg) !important;
+  }
+  
+  .Toastify__toast--info {
+    background: var(--card-bg) !important;
+  }
+  /* Animations */
+  @keyframes toast-slide-in {
+    from { transform: translateY(-6px); opacity: 0; }
+    to   { transform: translateY(0);    opacity: 1; }
+  }
+  @keyframes toast-progress {
+    from { transform: scaleX(1); }
+    to   { transform: scaleX(0); }
+  }
+  
+  /* RTL */
+  .Toastify__toast--rtl { direction: rtl; }
+  
+  /* Light theme (기본 브라우저 테마 or data-theme="light") */
+  :root,
+  [data-theme="light"] {
+    --card-bg: #fff;
+    --card-border: #e5e7eb;
+    --text-primary: #111827;
+    --text-secondary: #6b7280;
+    --link-color: #3b82f6;
+    --button-primary: #10b981;
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Dark theme */
+  [data-theme="dark"] {
+    --card-bg: var(--sidebar-bg);
+    --card-border: var(--card-border);
+    --text-primary: var(--text-primary);
+    --text-secondary: var(--text-secondary);
+    --link-color: var(--link-color);
+    --button-primary: var(--button-primary);
+    --shadow-md: var(--shadow-md);
+  }
+  

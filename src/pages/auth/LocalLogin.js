@@ -44,7 +44,7 @@ export default function LocalLogin() {
       <div className="loginBox">
         <span>계정 로그인</span>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="loginForm">
           <input
             type="text"
             placeholder="아이디"
@@ -63,7 +63,7 @@ export default function LocalLogin() {
             autoComplete="current-password"
             required
           />
-          <button type="submit" disabled={busy}>
+          <button type="submit" className="full" disabled={busy}>
             {busy ? "로그인 중..." : "로그인"}
           </button>
         </form>

@@ -256,13 +256,13 @@ const EditImage = forwardRef(({ setCapturedImage, imageFromProps }, ref) => {
                     setToolPosition({ top: offsetY + rect.height + 5, left: offsetX });
                   }
                 }}
-                className="text-label"
+                className="text-label custom"
                 style={{
                   transform: `translate(${t.x}px, ${t.y}px)`,
                   fontSize: t.fontSize,
                   fontFamily: t.fontFamily,
                   backgroundColor: rgbaString(t.bgHex, t.bgOpacity),  
-                  color: t.color,
+                  "--text-color": t.color,
                   padding: "6px 8px",
                   borderRadius: 6,
                   cursor: "move",
@@ -289,8 +289,8 @@ const EditImage = forwardRef(({ setCapturedImage, imageFromProps }, ref) => {
             display: "flex",
             gap: 8,
             padding: 8,
-            background: "#fff",
-            border: "1px solid #ddd",
+            background: "var(--card-bg) !important",
+            border: "1px solid var(--card-border) !important",
             borderRadius: 8,
             boxShadow: "0 4px 12px rgba(0,0,0,.08)",
           }}
