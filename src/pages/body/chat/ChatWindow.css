@@ -4,7 +4,7 @@
   border: 1px solid #ddd;
   display: flex;
   flex-direction: column;
-  background: #f9f9f9;
+  background: #ffffff;
 }
 
 .chat-header {
@@ -14,6 +14,53 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.chat-controls {
+  display: flex;
+  gap: 8px;
+  z-index: 1002;
+  position: relative;
+}
+
+.minimize-chat-btn,
+.close-chat-btn {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  pointer-events: auto;
+  z-index: 1003;
+  position: relative;
+}
+
+.minimize-chat-btn:hover {
+  background: #ffc107;
+  border-color: #ffc107;
+  color: #000;
+  transform: scale(1.05);
+}
+
+.close-chat-btn:hover {
+  background: #dc3545;
+  border-color: #dc3545;
+  color: white;
+  transform: scale(1.05);
+}
+
+.minimize-chat-btn:active,
+.close-chat-btn:active {
+  transform: scale(0.95);
 }
 
 .chat-messages {

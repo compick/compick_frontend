@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import Comment from "./Comment"; // 댓글 컴포넌트
-import { apiJson } from "../../../api/apiClient"; // 상세 데이터 요청용
-import { toggleLike,getPostDetail } from "../../../api/Board";
+import { apiJson } from "../../../api/apiClient"; 
+import { toggleLike, getPostDetail } from "../../../api/Board";
 import { toast } from "react-toastify";
-import { addComment } from "../../../api/Comment";
-
+import { addComment, addReply, getComment, getReplies } from "../../../api/Comment";
+import CommentComponent from "./CommentComponent";  
 
 export default function PostDetailPage({ 
   boardId: propBoardId, 
@@ -18,51 +17,81 @@ export default function PostDetailPage({
   onReport, 
   isInSidebar = false 
 }) {
-  const { boardId: urlBoardId } = useParams(); // URL에서 게시글 id 가져오기
+  const { boardId: urlBoardId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
 
-  // props로 받은 값이 있으면 우선 사용, 없으면 URL/location에서 가져오기
   const boardId = propBoardId || urlBoardId;
-  const initialPost = propInitialPost || location.state?.post || null;
-  const [post, setPost] = useState(initialPost || null);
+  const initialPostData = propInitialPost || location.state?.post || null;
+
+  const [post, setPost] = useState(initialPostData || null);
   const [newComment, setNewComment] = useState("");
+  const [comments, setComments] = useState([]);
   const commentInputRef = useRef(null);
 
-  // ✅ 상세 API 호출 (state가 없을 경우 대비)
+  // ✅ 게시글 상세 불러오기
   useEffect(() => {
     const fetchDetail = async () => {
       try {
         const res = await apiJson(`/api/board/detail/${boardId}`, { method: "GET" });
-        setPost(res.data || res); // 서버 데이터로 갱신
+        setPost(res.data || res);
       } catch (err) {
         console.error("게시글 상세 불러오기 실패:", err);
       }
     };
+    if (boardId) fetchDetail();
+  }, [boardId]);
 
-  
-      fetchDetail();
-   
-  }, [boardId, initialPost]);
+  // ✅ 댓글과 대댓글 불러오기
+  const fetchCommentsWithReplies = async () => {
+    if (!boardId) return;
+    try {
+      const commentsData = await getComment(boardId);
+      console.log("댓글 목록:", commentsData);
+      
+      // 각 댓글에 대한 대댓글 불러오기
+      const commentsWithReplies = await Promise.all(
+        commentsData.map(async (comment) => {
+          try {
+            const repliesData = await getReplies(comment.commentId);
+            console.log(`댓글 ${comment.commentId}의 대댓글:`, repliesData);
+            return {
+              ...comment,
+              replies: repliesData || []
+            };
+          } catch (err) {
+            console.error(`댓글 ${comment.commentId}의 대댓글 불러오기 실패:`, err);
+            return {
+              ...comment,
+              replies: []
+            };
+          }
+        })
+      );
+      
+      setComments(commentsWithReplies);
+      console.log("댓글과 대댓글 연결 완료:", commentsWithReplies);
+    } catch (err) {
+      console.error("댓글 불러오기 실패:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCommentsWithReplies();
+  }, [boardId]);
 
   if (!post) {
     return <div>게시글을 찾을 수 없습니다.</div>;
   }
 
-  // ✅ 좋아요 여부 판별
-  const isPostLiked = post.likedBy?.includes(currentUser?.name);
-
-    //좋아요 기능
+  // ✅ 좋아요 기능
   const handleLikePost = async (boardId) => {
     try {
       const res = await toggleLike(boardId);
-      console.log("[handleLikePost] res =", res);
-
       const payload = res?.data ?? res;
       const liked = payload?.liked;
       const likeCount = payload?.likeCount;
 
-      // ✅ 즉시 UI 반영
       setPost((prev) => {
         if (!prev) return prev;
         return {
@@ -72,41 +101,60 @@ export default function PostDetailPage({
         };
       });
 
-      // ✅ 서버 최신 데이터 재조회 (동기화 보장)
-      const fresh = await getPostDetail(boardId);  // 단일 게시글 조회 API
+      const fresh = await getPostDetail(boardId);
       setPost(fresh?.data ?? fresh);
-
     } catch (error) {
       console.error("[handleLikePost] 좋아요 실패:", error);
     }
-};
+  };
 
-  // ✅ 댓글 등록
-  const handleCommentSubmit = async () => {
+  // ✅ 댓글 추가
+  const handleAddComment = async () => {
     if (newComment.trim() === "") return;
-  
     try {
-      const savedComment = await addComment({
-        boardId: post.boardId,
-        content: newComment,
-      });
-  
-      // 성공 시 부모 컴포넌트에 전달 (예: 목록 갱신)
-      onAddComment(savedComment);
-  
-      setNewComment(""); // 입력창 초기화
-    } catch (err) {
-      console.error("댓글 작성 실패:", err);
+      await addComment({ boardId: boardId, content: newComment });
+      toast.success("댓글이 등록되었습니다!");
+      setNewComment("");
+      await fetchCommentsWithReplies(); // 댓글과 대댓글 전체 다시 불러오기
+      onAddComment?.(boardId, newComment);
+    } catch (error) {
+      console.error("댓글 등록 실패:", error);
+      toast.error("댓글 등록에 실패했습니다.");
     }
   };
 
-  // ✅ 댓글 멘션 기능
+  // ✅ 대댓글 추가
+  const handleAddReply = async (postId, parentCommentId, replyText) => {
+    try {
+      await addReply({ boardId: postId, parentId: parentCommentId, content: replyText });
+      toast.success("답글이 등록되었습니다!");
+      await fetchCommentsWithReplies(); // 댓글과 대댓글 전체 다시 불러오기
+      onAddReply?.(postId, parentCommentId, replyText);
+    } catch (error) {
+      console.error("답글 등록 실패:", error);
+      toast.error("답글 등록에 실패했습니다.");
+    }
+  };
+
+  // ✅ 댓글 좋아요
+  const handleLikeComment = async (postId, commentId) => {
+    try {
+      console.log("댓글 좋아요:", postId, commentId);
+      await fetchCommentsWithReplies(); // 댓글과 대댓글 전체 다시 불러오기
+      onLikeComment?.(postId, commentId);
+    } catch (error) {
+      console.error("댓글 좋아요 실패:", error);
+      toast.error("댓글 좋아요에 실패했습니다.");
+    }
+  };
+
+  // ✅ 멘션
   const handleMention = (username) => {
-    setNewComment((prev) => `${prev}@${username} `.trimStart());
+    setNewComment((prev) => `${prev}@${username} `);
     commentInputRef.current?.focus();
   };
 
-  // ✅ 공유 버튼 핸들러
+  // ✅ 공유
   const handleSharePost = async () => {
     try {
       const shareUrl = window.location.href;
@@ -118,70 +166,55 @@ export default function PostDetailPage({
     }
   };
 
-
   return (
-    <div className={`post-detail-container ${isInSidebar ? 'sidebar-mode' : 'fullpage-mode'}`}>
-      {!isInSidebar && (
-        <button onClick={() => navigate(-1)}>← 뒤로가기</button>
-      )}
-
-      <h1 className="post-title">{post.title}</h1>
-      <div className="post-meta">
-        <span>작성자: {post.userNickname || post.author}</span>
-        <span>작성일: {new Date(post.createdAt).toLocaleDateString("ko-KR")}</span>
+    <div className={`post-detail-container ${isInSidebar ? "sidebar-mode" : "fullpage-mode"}`}>
+      {/* 게시글 */}
+      <div className="post-detail-header">
+        {!isInSidebar && <button onClick={() => navigate(-1)}>← 뒤로가기</button>}
+        <h1 className="post-title">{post.title}</h1>
+        <div className="post-meta">
+          <span>작성자: {post.userNickname || post.author}</span>
+          <span>작성일: {new Date(post.createdAt).toLocaleDateString("ko-KR")}</span>
+        </div>
+        {post.fileData && <img src={post.fileData} alt={post.title} className="post-image" />}
+        <p className="post-content">{post.content}</p>
+        <div className="post-actions">
+          <button onClick={() => handleLikePost(post.boardId)} className={post.likedByMe ? "liked" : ""}>
+            ❤️ {post.likeCount ?? 0} 좋아요
+          </button>
+          <button>💬 댓글</button>
+          <button onClick={handleSharePost}>🔗 공유</button>
+        </div>
       </div>
 
-      {post.fileData && (
-        <img src={post.fileData} alt={post.title} className="post-image" />
-      )}
+      {/* 댓글 입력 */}
+      <div className="comment-input-area">
+        <input
+          type="text"
+          placeholder="댓글을 입력하세요..."
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          onKeyPress={(e) => e.key === "Enter" && handleAddComment()}
+          ref={commentInputRef}
+        />
+        <button onClick={handleAddComment}>등록</button>
+      </div>
 
-      <p className="post-content">{post.content}</p>
-
-      <div className="post-actions">
-      <button
-        onClick={()=>handleLikePost(post.boardId)}
-        className={post.likedByMe ? "liked" : ""}
-      >
-        ❤️ {post.likeCount??  0} 좋아요
-      </button>
-      <button>💬 댓글</button>
-      <button onClick={handleSharePost}>🔗 공유</button>
-    </div>
-
-      {/* ✅ 댓글 영역 */}
-      <div className="comment-section">
-        <h3>댓글 ({post.comments?.length || 0})</h3>
-        <div className="comment-input-area">
-          <input
-            ref={commentInputRef}
-            type="text"
-            placeholder="댓글을 입력하세요..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
+      {/* 댓글 목록 */}
+      <div className="comment-list">
+        {comments.map((comment) => (
+          <CommentComponent
+            key={comment.commentId ?? comment.id}
+            comment={comment}
+            postId={post.boardId}
+            onLikeComment={handleLikeComment}
+            onAddReply={handleAddReply}
+            onMention={handleMention}
+            currentUser={currentUser}
+            level={0}
           />
-          <button onClick={handleCommentSubmit}>등록</button>
-        </div>
-        <div className="comment-list">
-          {post.comments?.map((comment) => (
-            <Comment
-              key={comment.id}
-              comment={comment}
-              postId={post.boardId}
-              onLikeComment={onLikeComment}
-              onAddReply={onAddReply}
-              onMention={handleMention}
-              currentUser={currentUser}
-              level={0}
-            />
-          ))}
-        </div>
+        ))}
       </div>
-
-      {/* <div className="post-footer">
-        <button onClick={handleReportPost} className="report-btn">
-          🚨 게시글 신고하기
-        </button>
-      </div> */}
     </div>
   );
 }

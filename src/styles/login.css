@@ -1,87 +1,13 @@
-/* 스포츠 플랫폼 회원가입 테마 */
-:root {
-  /* 라이트모드 변수 */
-  --bg-gradient-light: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
-  --box-bg-light: rgba(255, 255, 255, 0.95);
-  --text-primary-light: #1e3c72;
-  --text-secondary-light: #4a5568;
-  --border-light: rgba(255, 255, 255, 0.3);
-  --input-bg-light: rgba(255, 255, 255, 0.9);
-  --input-border-light: #e1e8ed;
-  --shadow-light: rgba(0, 0, 0, 0.15);
-  
-  /* 전체 페이지 라이트모드 변수 */
-  --page-bg: #ffffff;
-  --header-bg: #ffffff;
-  --header-text: #1e3c72;
-  --header-border: #e2e8f0;
-  --sidebar-bg: #f8fafc;
-  --sidebar-text: #4a5568;
-  --card-bg: #ffffff;
-  --card-border: #e2e8f0;
-  --text-primary: #1e3c72;
-  --text-secondary: #4a5568;
-  --text-muted: #718096;
-  --link-color: #667eea;
-  --link-hover: #5a67d8;
-  --button-primary: #667eea;
-  --button-primary-hover: #5a67d8;
-  --button-secondary: #e2e8f0;
-  --button-secondary-hover: #cbd5e0;
-  --input-bg: #ffffff;
-  --input-border: #e2e8f0;
-  --input-focus: #667eea;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
-}
-
-[data-theme="dark"] {
-  /* 다크모드 변수 */
-  --bg-gradient-light: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-  --box-bg-light: rgba(30, 41, 59, 0.95);
-  --text-primary-light: #f1f5f9;
-  --text-secondary-light: #cbd5e1;
-  --border-light: rgba(51, 65, 85, 0.3);
-  --input-bg-light: rgba(51, 65, 85, 0.9);
-  --input-border-light: #475569;
-  --shadow-light: rgba(0, 0, 0, 0.3);
-  
-  /* 전체 페이지 다크모드 변수 */
-  --page-bg: #0f172a;
-  --header-bg: #1e293b;
-  --header-text: #f1f5f9;
-  --header-border: #334155;
-  --sidebar-bg: #1e293b;
-  --sidebar-text: #cbd5e1;
-  --card-bg: #1e293b;
-  --card-border: #334155;
-  --text-primary: #f1f5f9;
-  --text-secondary: #cbd5e1;
-  --text-muted: #94a3b8;
-  --link-color: #60a5fa;
-  --link-hover: #3b82f6;
-  --button-primary: #3b82f6;
-  --button-primary-hover: #2563eb;
-  --button-secondary: #334155;
-  --button-secondary-hover: #475569;
-  --input-bg: #1e293b;
-  --input-border: #475569;
-  --input-focus: #60a5fa;
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
-}
 
 .loginContainer{
     display: flex;
     width: 100%;
 
-    height: 91.4vh;
+    height: 95.7vh;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+    background: var(--bg-gradient-light);
     position: relative;
     overflow: hidden;
     box-sizing: border-box;
@@ -95,52 +21,36 @@
     left: -50%;
     width: 200%;
     height: 200%;
-    background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-    animation: float 6s ease-in-out infinite;
+    background: var(--bg-gradient-light);
+
 }
 
-@keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(180deg); }
+.container.inputContainer{
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
 }
-
 .loginContainer .loginBox{
     display: flex;
     flex-direction: column;
     position: relative;
 
     width: 420px;
-    max-height: 90vh;
-    gap: 10px;    
-    background: rgba(255, 255, 255, 0.95);
+    height: auto;
+    min-height: 400px;
+    gap: 8px;    
+    background: var(--card-bg);
     backdrop-filter: blur(15px);
     border-radius: 24px;
-    padding: 35px;
+    padding: 30px;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
     border: 1px solid rgba(255, 255, 255, 0.3);
     z-index: 1;
-    overflow-y: auto;
+    overflow: visible;
     box-sizing: border-box;
 }
 
-/* 스크롤바 스타일링 */
-.loginContainer .loginBox::-webkit-scrollbar {
-    width: 6px;
-}
-
-.loginContainer .loginBox::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 3px;
-}
-
-.loginContainer .loginBox::-webkit-scrollbar-thumb {
-    background: rgba(102, 126, 234, 0.5);
-    border-radius: 3px;
-}
-
-.loginContainer .loginBox::-webkit-scrollbar-thumb:hover {
-    background: rgba(102, 126, 234, 0.7);
-}
+/* 스크롤바 스타일링 제거됨 - 더 이상 필요하지 않음 */
 
 /* 회원가입 제목 스타일 */
 .signupTitle {
@@ -157,11 +67,11 @@
 .loginContainer .loginBox input{
     box-sizing: border-box;
 
-    width: 100%;
+    width: 60%;
     font-size: 15px;    
 
     padding: 16px 20px;
-    background: rgba(255, 255, 255, 0.9);
+    background:var(--input-bg);
     border: 2px solid #e1e8ed;
     border-radius: 16px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -185,7 +95,7 @@
 }
 
 .loginContainer .loginBox input::placeholder{
-    color: #a0aec0;
+    color: var(--text-secondary);
     font-weight: 400;
     opacity: 0.8;
 }
@@ -194,15 +104,39 @@
 .loginContainer .loginBox button{
     box-sizing: border-box;
 
+    width: 30%;
+    font-size: 15px;    
+
+    padding: 16px 20px;
+    background: var(--button-primary);
+    border: none;    
+    border-radius: 16px;
+    color: var(--text-primary);
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    flex-shrink: 0;
+    margin-bottom: 10px;
+}
+.loginContainer .loginBox submit{
+    box-sizing: border-box;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     font-size: 15px;    
 
     padding: 16px 20px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--button-primary);
     border: none;    
 
     border-radius: 16px;
-    color: #ffffff;
+    color: var(--text-primary);
 
     font-weight: 700;
     cursor: pointer;
@@ -215,6 +149,13 @@
     flex-shrink: 0;
     margin-bottom: 10px;
 }
+
+.loginForm button,
+.loginForm submit,
+.loginForm input{
+    width: 100% !important;
+}
+
 
 .loginContainer .loginBox button:last-of-type {
     margin-bottom: 0;
@@ -231,15 +172,11 @@
     transition: left 0.6s;
 }
 
-.loginContainer .loginBox button:hover::before {
-    left: 100%;
-}
 
 .loginContainer .loginBox button:hover{   
 
     background: linear-gradient(135deg, #5a67d8 0%, #6b46c1 100%);
     transform: translateY(-3px);
-    box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
 }
 
 .loginContainer .loginBox button:active {
@@ -258,7 +195,7 @@
     text-align: center;
 
     margin-bottom: 10px;
-    color: #4a5568;
+    color: var(--text-secondary);
     font-weight: 500;
     flex-shrink: 0;
 }
@@ -327,7 +264,7 @@
 
 .loginContainer .loginBox .registerButton:hover {
 
-    background: #667eea;
+    background: var(--button-primary);
     color: white;
     transform: translateY(-3px);
     box-shadow: 0 15px 35px rgba(102, 126, 234, 0.3);
@@ -375,18 +312,16 @@
 }
 
 /* 인증 버튼 스타일 */
-.authButton {
-    background: linear-gradient(135deg, #48bb78 0%, #38a169 100%) !important;
-    color: white !important;
+.authButton {    
+    color: var(--text-primary) !important;
     font-weight: 700 !important;
-    padding: 12px 16px !important;
     border-radius: 12px !important;
+    padding: 0px !important ;
     border: none !important;
     cursor: pointer !important;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     white-space: nowrap !important;
     min-width: 120px !important;
-    box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3) !important;
     text-transform: uppercase !important;
     letter-spacing: 0.5px !important;
     font-size: 13px !important;
@@ -394,16 +329,14 @@
 }
 
 .authButton:hover {
-    background: linear-gradient(135deg, #38a169 0%, #2f855a 100%) !important;
+    background: var(--button-primary) !important;
     transform: translateY(-2px) !important;
-    box-shadow: 0 8px 20px rgba(72, 187, 120, 0.4) !important;
 }
 
 .authButton:disabled {
     background: #cbd5e0 !important;
     cursor: not-allowed !important;
     transform: none !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
 }
 
 /* 인증 코드 입력 필드 */
@@ -466,10 +399,11 @@
     .loginContainer .loginBox {
         width: 90%;
         max-width: 360px;
-        padding: 30px 20px;
+        padding: 25px 20px;
         margin: 15px;
-        gap: 14px;
-        max-height: 85vh;
+        gap: 10px;
+        height: auto;
+        min-height: 350px;
     }
     
     .signupTitle {
@@ -498,9 +432,10 @@
 @media (max-width: 480px) {
     .loginContainer .loginBox {
         width: 95%;
-        padding: 25px 15px;
-        gap: 12px;
-        max-height: 80vh;
+        padding: 20px 15px;
+        gap: 8px;
+        height: auto;
+        min-height: 320px;
     }
     
     .signupTitle {

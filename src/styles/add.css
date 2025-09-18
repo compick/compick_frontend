@@ -3,6 +3,8 @@
     max-width: 70vw; /* 최대 너비는 742px로 제한 */
     border-radius: 8px;
     margin: 0 auto;
+    position: relative; /* z-index가 적용되도록 position 설정 */
+    z-index: 101; /* SportHeader(100)보다 높게 설정 */
 }
 .uploadContainer h2{
     margin: 0 0 20px 0;
@@ -176,6 +178,9 @@ background-color: #111;
     user-select: none;
     transition: background 0.2s;
 }
+.text-label.custom {
+    color: var(--text-color) !important;
+}
 
 .text-input {
     border: none;
@@ -210,10 +215,9 @@ color: #111;
 gap: 4px;
 }
 .text-toolbar {
-background: rgba(20, 20, 20, 0.95);
 padding: 12px;
 border-radius: 10px;
-color: #111;
+color: var(--text-primary);
 font-size: 13px;
 display: flex;
 flex-direction: column;
@@ -231,7 +235,6 @@ gap: 4px;
 width: 100px;
 }
 .tagBtn{
-background: #333;
 color: #fff;
 padding: 7px;
 margin: 0 7px ;

@@ -15,7 +15,7 @@ export default function KakaoLogin() {
   }, [busy]);
 
   return (
-    <div className={page} style={{ background: "#f9fafb", fontFamily: "system-ui, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif" }}>
+    <div className={page} style={{ fontFamily: "system-ui, Segoe UI, Roboto, Apple SD Gothic Neo, Malgun Gothic, sans-serif" }}>
       <div style={card}>
         <h1 style={{ margin: "0 0 8px" }}>카카오 로그인</h1>
         <ul style={{ color: "#374151", margin: "0 0 16px 18px" }}>

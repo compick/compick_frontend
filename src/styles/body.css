@@ -2,17 +2,20 @@
     display: flex;
     flex-direction: column;
     margin: 0 auto;
-    padding-top: 80px; /* 고정된 SportHeader의 높이만큼 여백 */
+    padding-top: 40px; /* SportHeader의 높이(40px)만큼 여백 */
     background-color: var(--page-bg);
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, margin-right 0.3s ease;
     width: 100%;
-    min-height: 100vh;
+    height: calc(100vh - 40px);
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
     box-sizing: border-box;
+    flex: 1;
 }
 .HomeContainer{
   width: 100%;
   max-width: 630px;
-  min-height: 100vh;
+  height: 100%;
   display: flex;
   flex-direction: column;
   margin: 0 auto;
@@ -340,7 +343,7 @@
 
 /* New Home Page Styles */
 .homeContainer_new {
-    padding-top: 40px;
+    padding-top: 0px;
     padding-bottom: 20px;
 }
 
@@ -408,8 +411,10 @@
 }
 
 .listSection {
-    max-height: 600px; /* 리스트 영역의 최대 높이 지정 */
-    overflow-y: auto; /* 내용이 많아지면 스크롤 생성 */
+    height: 100%; /* 리스트 영역이 전체 높이 사용 */
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* 자식 요소에서 스크롤 처리 */
 }
 
 /* 날짜 헤더 */
@@ -460,6 +465,10 @@
     font-size: 11px;
     color: var(--link-color);
     font-weight: bold;
+}
+.comment-created-at{
+    color: var(--text-secondary) !important;
+    font-size: 12px;
 }
 
 .photo-icon {
@@ -1019,10 +1028,10 @@
 .comment-input-area input { flex-grow: 1; padding: 10px; border: 1px solid #ccc; border-radius: 6px 0 0 6px; }
 .comment-input-area button { padding: 0 15px; border: 1px solid #ccc; border-left: none; background: #f8f8f8; cursor: pointer; border-radius: 0 6px 6px 0; }
 .comment-container { margin-bottom: 15px; }
-.comment-main { background: #f9f9f9; padding: 12px; border-radius: 8px; }
+.comment-main { position: relative; padding: 12px; background: var(--card-bg); border-bottom: 1px solid var(--card-border); padding: 12px; border-radius: 8px; }
 .comment-author { font-weight: bold; }
 .comment-text { margin: 8px 0; }
-.comment-actions button { background: none; border: none; color: #555; cursor: pointer; padding: 4px; }
+.comment-actions button { position: absolute; right: 1.2rem; bottom:0.4rem; background: none; border: none; color: #555; cursor: pointer; padding: 4px; }
 .comment-actions button.liked {
     color: #007bff;
     font-weight: bold;
@@ -1062,6 +1071,8 @@
 @media (max-width: 768px) {
     .bodyContainer {
         padding-bottom: 60px; /* 하단 탭 바 높이만큼 여백 추가 */
+        height: calc(100vh - 100px); /* SportHeader(40px) + 하단 탭바(60px) */
+        max-height: calc(100vh - 100px);
     }
     
     /* 홈 컨테이너 모바일 조정 */
@@ -1451,10 +1462,10 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    padding: 20px;
+    padding: 20px 20px 20px 20px;
     width: 100%;
     max-width: 1200px;
-    min-height: 100vh;
+    height: 100%;
     margin: 0 auto;
     box-sizing: border-box;
 }
@@ -1485,7 +1496,7 @@
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-    height: calc(100vh - 200px); /* 헤더와 패딩을 고려한 높이 */
+    height: calc(100% - 200px); /* 헤더와 패딩을 고려한 높이 */
     min-height: 600px;
     width: 100%;
 }
@@ -1518,9 +1529,11 @@
     border-radius: 16px;
     box-shadow: var(--shadow-md);
     border: 1px solid var(--card-border);
-    overflow-y: auto;
+    overflow: hidden;
     height: 100%;
     padding: 20px;
+    display: flex;
+    flex-direction: column;
     transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -1529,6 +1542,16 @@
     font-size: 1.3rem;
     color: var(--text-primary);
     font-weight: 600;
+    flex-shrink: 0; /* 헤더가 줄어들지 않도록 */
+}
+
+/* postList가 listSection의 남은 공간을 모두 사용 */
+.listSection .postList {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
 }
 
 /* 리그 그룹 스타일 개선 */
@@ -2021,13 +2044,13 @@
 .allPostsPage {
     padding: 20px;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     overflow: hidden;
 }
 
 /* 데스크톱 레이아웃 - 분할 화면 */
 .allPostsPage.desktop-layout {
-    width: 90%;
+    width: auto;
     display: flex;
     gap: 20px;
     max-width: none;
@@ -2050,6 +2073,7 @@
     flex-direction: column;
     min-width: 0;
     overflow: hidden;
+    height: 100%;
 }
 
 .desktop-layout .postsListSection {
@@ -2069,7 +2093,7 @@
     margin-bottom: 20px;
     padding-bottom: 15px;
     border-bottom: 2px solid #e0e0e0;
-    flex-shrink: 0;
+    flex-shrink: 0; /* 헤더가 줄어들지 않도록 */
 }
 
 .allPostsHeader h1 {
@@ -2172,10 +2196,12 @@
     flex: 1;
     overflow-y: auto;
     padding-right: 5px;
+    height: 100%;
 }
 
 .desktop-layout .postsList {
-    max-height: calc(100vh - 300px);
+    flex: 1;
+    height: auto;
 }
 
 .mobile-layout .postsList {
@@ -2493,7 +2519,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f8f9fa;
+    background: var(--card-bg);
     border-radius: 12px;
 }
 
@@ -2536,7 +2562,7 @@
 
 .post-detail-container.sidebar-mode .post-image {
     max-width: 100%;
-    max-height: 300px;
+    max-height: 230px;
     object-fit: cover;
     border-radius: 8px;
     margin-bottom: 15px;
@@ -2551,6 +2577,7 @@
 .post-detail-container.sidebar-mode .post-actions {
     margin-bottom: 20px;
     gap: 8px;
+    padding: 0; 
 }
 
 .post-detail-container.sidebar-mode .post-actions button {

@@ -3,8 +3,9 @@ import React, { useState, useMemo, useEffect, useRef } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getBoardList } from '../../../api/Board';
 import PostDetailPage from '../detail/PostDetailPage';
+import {getCookie} from '../../../utils/Cookie';
 
-export default function AllBoardsPage({ isLoggedIn, currentUser, onAddComment, onLikeComment, onAddReply, onLikePost, onReport }) {
+export default function AllBoardsPage({ currentUser, onAddComment, onLikeComment, onAddReply, onLikePost, onReport }) {
   const navigate = useNavigate();
   const { sport, league } = useParams(); // ✅ URL에서 sport/league 받음
   const [posts, setPosts] = useState([]);
@@ -17,7 +18,12 @@ export default function AllBoardsPage({ isLoggedIn, currentUser, onAddComment, o
   const [isMobile, setIsMobile] = useState(false); // 모바일 여부 체크
   const postsPerPage = 10;
   const menuRef = useRef(null);
-  
+  // ✅ 로그인 여부 쿠키 기반으로 체크
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+    useEffect(() => {
+      const token = getCookie("jwt");
+      setIsLoggedIn(!!token);
+    }, []);
   // 화면 크기 체크
   useEffect(() => {
     const checkMobile = () => {
@@ -44,6 +50,7 @@ export default function AllBoardsPage({ isLoggedIn, currentUser, onAddComment, o
       }
     };
     fetchPosts();
+    
   }, [sport, league]);
 
   // 정렬 및 필터링
@@ -83,8 +90,10 @@ export default function AllBoardsPage({ isLoggedIn, currentUser, onAddComment, o
 
   const handleCreatePost = () => {
     if (isLoggedIn) {
+      console.log("[로그인 되어있음]",isLoggedIn);
       navigate("/add");
     } else {
+      console.log("[로그인 안되어있음]",isLoggedIn);
       alert("로그인이 필요합니다.");
       navigate("/login");
     }
@@ -97,8 +106,13 @@ export default function AllBoardsPage({ isLoggedIn, currentUser, onAddComment, o
   // ✅ 게시글 클릭 처리 (반응형)
   const handlePostClick = (post) => {
     if (isMobile) {
-      // 모바일: 페이지 이동
-      navigate(`/board/detail/${post.boardId}`, { state: { post } });
+      // 모바일: 페이지 이동 (게시글과 boardId 함께 전달)
+      navigate(`/board/detail/${post.boardId}`, { 
+        state: { 
+          post, 
+          boardId: post.boardId 
+        } 
+      });
     } else {
       // 웹: 사이드바에 표시
       setSelectedPost(post);

@@ -450,7 +450,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    height: 100%;
     padding: 20px;
 }
 
@@ -887,4 +887,192 @@
     /* action-button 클래스의 스타일을 기본으로 사용 */
     padding: 8px 16px; /* 버튼 크기 조정 */
     font-size: 14px;
+}
+
+/* MyCommentsPage 스타일 */
+.my-comments-page {
+    padding: 16px;
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--page-bg);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.my-comments-page h2 {
+    color: var(--text-primary);
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0; /* 헤더가 줄어들지 않도록 */
+}
+
+.my-comments-page h2::before {
+    content: "💬";
+    font-size: 16px;
+}
+
+.my-comments-page p {
+    text-align: center;
+    color: var(--text-secondary);
+    font-size: 14px;
+    padding: 24px 16px;
+    background: var(--card-bg);
+    border-radius: 6px;
+    border: 1px solid var(--card-border);
+    margin: 16px 0;
+}
+
+.comment-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1; /* 남은 공간 모두 사용 */
+    overflow-y: auto; /* 세로 스크롤 활성화 */
+    padding-right: 8px; /* 스크롤바 여백 */
+}
+
+/* comment-list 스크롤바 스타일링 */
+.comment-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.comment-list::-webkit-scrollbar-track {
+    background: var(--card-bg);
+    border-radius: 3px;
+}
+
+.comment-list::-webkit-scrollbar-thumb {
+    background: var(--button-primary);
+    border-radius: 3px;
+    opacity: 0.7;
+}
+
+.comment-list::-webkit-scrollbar-thumb:hover {
+    background: #0056b3;
+    opacity: 1;
+}
+
+.comment-item {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 6px;
+    padding: 8px 12px;
+    transition: all 0.2s ease;
+}
+
+.comment-item:hover {
+    border-color: var(--button-primary);
+    background: rgba(56, 192, 233, 0.02);
+}
+
+.comment-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+    font-size: 13px;
+}
+
+.comment-meta strong {
+    color: var(--button-primary);
+    font-weight: 500;
+}
+
+.comment-date {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.comment-content {
+    color: var(--text-primary);
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 4px 0;
+    padding: 0;
+    background: none;
+}
+
+.comment-board {
+    margin-top: 4px;
+    padding-top: 4px;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    font-size: 12px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.comment-board::before {
+    content: "📝";
+    font-size: 12px;
+}
+
+.comment-board-link {
+    color: var(--button-primary);
+    text-decoration: none;
+    font-weight: 400;
+    transition: all 0.2s ease;
+}
+
+.comment-board-link:hover {
+    text-decoration: underline;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .my-comments-page {
+        padding: 12px;
+    }
+    
+    .my-comments-page h2 {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+    
+    .comment-item {
+        padding: 6px 10px;
+    }
+    
+    .comment-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+    }
+    
+    .comment-content {
+        font-size: 13px;
+    }
+    
+    .comment-board {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+    }
+}
+
+@media (max-width: 480px) {
+    .my-comments-page {
+        padding: 8px;
+    }
+    
+    .comment-item {
+        padding: 6px 8px;
+        border-radius: 4px;
+    }
+    
+    .comment-content {
+        font-size: 12px;
+    }
 }
