@@ -16,6 +16,7 @@
   justify-content: space-between;
 }
 
+
 .sidebar .homeLogo{
     width: 50px;
     height: 50px;
@@ -103,9 +104,53 @@
   .popupOverlay {
     right: 8px;
   }
-    .popupBox {
+  .popupBox {
     min-width: 100px;
   }
+}
+.allPostsTitle{
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* 작은 모바일 화면에서 사이드바 최적화 */
+@media (max-width: 480px) {
+    .sidebarContainer {
+        padding: 0 15px; /* 더 작은 여백 */
+        height: 55px; /* 약간 더 작은 높이 */
+    }
+    
+    .tabIcon {
+        min-width: 40px; /* 더 작은 최소 크기 */
+        min-height: 40px;
+        width: 40px;
+        height: 40px;
+    }
+    
+    .tabIcon svg {
+        width: 20px; /* 아이콘 크기 조정 */
+        height: 20px;
+    }
+}
+
+/* 매우 작은 화면에서 사이드바 최적화 */
+@media (max-width: 360px) {
+    .sidebarContainer {
+        padding: 0 10px; /* 최소 여백 */
+        height: 50px;
+    }
+    
+    .tabIcon {
+        min-width: 36px;
+        min-height: 36px;
+        width: 36px;
+        height: 36px;
+    }
+    
+    .tabIcon svg {
+        width: 18px;
+        height: 18px;
+    }
 }
 .popupBox {
     background: var(--card-bg);
@@ -152,22 +197,24 @@
         left: 0;
         width: 100vw;
         height: 60px; /* 탭 바 높이 */
-        background-color: #ffffff;
+        background-color: var(--card-bg) !important;
         border-top: 1px solid #e0e0e0;
         z-index: 1000;
-        height: auto; /* vh 높이 초기화 */
+        padding: 0 20px; /* 좌우 여백 추가 */
     }
     .sidebar {
         flex-direction: row; /* 가로로 배치 */
-        justify-content: space-around; /* 아이콘들을 균등하게 배치 */
+        justify-content: space-between; /* 아이콘들을 양끝과 균등하게 배치 */
         height: 100%;
+        width: 80%;
     }
     .tabIcon {
         padding: 0; /* 기존 패딩 제거 */
-        flex-grow: 1; /* 공간을 균등하게 차지 */
         display: flex;
         align-items: center;
         justify-content: center;
+        min-width: 44px; /* 터치하기 쉬운 최소 크기 */
+        min-height: 44px;
     }
 }
 

@@ -123,9 +123,14 @@ export default function AllBoardsPage({ currentUser, onAddComment, onLikeComment
     <div className={`allPostsPage ${!isMobile ? 'desktop-layout' : 'mobile-layout'}`}>
       <div className="postsListSection">
         <div className="allPostsHeader">
+          <div>
+
           <button className="backButton" onClick={handleBackToHome}>← 홈으로</button>
-          <h1>모든 게시글</h1>
+          </div>
+          <span className="allPostsTitle">모든 게시글</span>
+          <div>
           <button className="createPostButton" onClick={handleCreatePost}>+ 게시글 작성</button>
+          </div>
         </div>
 
         <div className="postsControls">

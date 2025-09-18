@@ -18,13 +18,13 @@ export default function GlobalChatSidebar({
     if (!isVisible) {
         return (
             <div className="chat-sidebar-toggle">
-                <button 
+                {/* <button 
                     className="toggle-chat-btn"
                     onClick={onToggleVisibility}
                     title="채팅 열기"
                 >
                     💬
-                </button>
+                </button> */}
                 {/* 최소화된 채팅 개수 표시 */}
                 {(openChats.length > 0 || minimizedChats.length > 0) && (
                     <span className="chat-count-badge">
