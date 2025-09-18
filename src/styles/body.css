@@ -107,29 +107,31 @@
   box-shadow: var(--shadow-md);
 }
 
-/* 배경 이미지 */
+/* 배경 이미지 - 1:1 비율 유지 */
 .teamBg {
     position: absolute;
-    top: 13%;
-    width: 3vw;
-    height: 5vh;
-    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
+    border-radius: 50% !important;
     background-repeat: no-repeat;
     background-position: center;
-    opacity: 0.88;
+    background-size: cover;
     z-index: 0;
     pointer-events: none;
+    aspect-ratio: 1/1;
 
   /* ✅ 이벤트 통과시키기 */
   pointer-events: none;
 }
 
 .teamBg.left {
-  left: 4%;
+  left: 8px;
 }
 
 .teamBg.right {
-  right: 4%
+  right: 8px;
 }
 
 
@@ -730,6 +732,34 @@
     
     .fc .fc-toolbar-title {
         font-size: 1.1rem;
+    }
+    
+    /* teamBg 600px 이하 스타일 */
+    .teamBg {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .teamBg.left {
+        left: 5px;
+    }
+    
+    .teamBg.right {
+        right: 5px;
+    }
+    
+    /* teamSection과 teamName 600px 이하 스타일 */
+    .teamSection {
+        min-width: 75px;
+    }
+    
+    .teamName {
+        font-size: 0.8rem;
+        min-width: 45px;
+        max-width: 75px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
@@ -1868,7 +1898,7 @@
     flex-direction: column;
     align-items: center;
     gap: 6px;
-    min-width: 90px;
+    min-width: 100px;
     flex: 1;
 }
 
@@ -1887,9 +1917,12 @@
     font-weight: 700;
     font-size: 0.75rem;
     text-align: center;
-    word-break: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     line-height: 1.2;
-    max-width: 80px;
+    min-width: 60px;
+    max-width: 100px;
     color: var(--text-primary);
 }
 
@@ -2014,8 +2047,21 @@
         padding: 8px 10px;
     }
     
+    .teamBg {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .teamBg.left {
+        left: 6px;
+    }
+    
+    .teamBg.right {
+        right: 6px;
+    }
+    
     .teamSection {
-        min-width: 70px;
+        min-width: 85px;
     }
     
     .teamLogo {
@@ -2027,7 +2073,11 @@
     
     .teamName {
         font-size: 0.9rem;
-        max-width: 70px;
+        min-width: 50px;
+        max-width: 80px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
     .scoreBox {
@@ -2087,8 +2137,21 @@
         margin: 4px auto;
     }
     
+    .teamBg {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .teamBg.left {
+        left: 4px;
+    }
+    
+    .teamBg.right {
+        right: 4px;
+    }
+    
     .teamSection {
-        min-width: 60px;
+        min-width: 70px;
     }
     
     .teamLogo {
@@ -2100,7 +2163,11 @@
     
     .teamName {
         font-size: 0.7rem;
-        max-width: 60px;
+        min-width: 40px;
+        max-width: 65px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
     
     .scoreBox {
@@ -2611,9 +2678,9 @@
 .postFooter {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
-    gap: 10px;
-    margin-top: auto;
+        align-items: flex-end;
+        gap: 10px;
+        margin-top: auto;
     flex-wrap: wrap;
 }
 
@@ -3678,5 +3745,33 @@ html, body {
     
     .postTitle {
         font-size: 1rem;
+    }
+    
+    /* teamBg 320px 이하 스타일 */
+    .teamBg {
+        width: 25px;
+        height: 25px;
+    }
+    
+    .teamBg.left {
+        left: 3px;
+    }
+    
+    .teamBg.right {
+        right: 3px;
+    }
+    
+    /* teamSection과 teamName 320px 이하 스타일 */
+    .teamSection {
+        min-width: 65px;
+    }
+    
+    .teamName {
+        font-size: 0.65rem;
+        min-width: 35px;
+        max-width: 60px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }

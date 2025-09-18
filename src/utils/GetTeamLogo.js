@@ -33,7 +33,7 @@ import AstonVilla from '../img/soccerTeam/epl/아스톤 빌라 FC 로고.svg';
 import Everton from '../img/soccerTeam/epl/에버튼 FC 로고.svg';
 import Watford from '../img/soccerTeam/epl/왓포드 FC 로고.svg';
 import Urawa from '../img/soccerTeam/epl/우라와 레드 다이아몬즈 로고.svg';
-import Wolves from '../img/soccerTeam/epl/울버햄튼 원더러스 FC 로고.svg';
+import Wolverhampton from '../img/soccerTeam/epl/울버햄튼 원더러스 FC 로고.svg';
 import WestBrom from '../img/soccerTeam/epl/웨스트 브롬위치 알비온 FC ....svg';
 import WestHam from '../img/soccerTeam/epl/웨스트햄 유나이티드 FC 로고.svg';
 import Ipswich from '../img/soccerTeam/epl/입스위치 타운 FC 로고.svg';
@@ -99,7 +99,7 @@ const GetTeamLogo = (league, teamName) => {
         case "에버튼": return Everton;
         case "왓포드": return Watford;
         case "우라와": return Urawa;
-        case "울버햄튼": return Wolves;
+        case "울버햄튼": return Wolverhampton;
         case "웨스트 브롬": return WestBrom;
         case "웨스트햄": return WestHam;
         case "입스위치": return Ipswich;
