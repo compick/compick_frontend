@@ -107,29 +107,32 @@
   box-shadow: var(--shadow-md);
 }
 
-/* 배경 이미지 */
+/* 배경 이미지 - 1:1 비율 유지 */
 .teamBg {
     position: absolute;
-    top: 13%;
-    width: 3vw;
-    height: 5vh;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background-repeat: no-repeat;
     background-position: center;
-    opacity: 0.88;
+    background-size: cover;
+    opacity: 0.15;
     z-index: 0;
     pointer-events: none;
+    aspect-ratio: 1/1;
 
   /* ✅ 이벤트 통과시키기 */
   pointer-events: none;
 }
 
 .teamBg.left {
-  left: 4%;
+  left: 8px;
 }
 
 .teamBg.right {
-  right: 4%
+  right: 8px;
 }
 
 
@@ -730,6 +733,20 @@
     
     .fc .fc-toolbar-title {
         font-size: 1.1rem;
+    }
+    
+    /* teamBg 600px 이하 스타일 */
+    .teamBg {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .teamBg.left {
+        left: 5px;
+    }
+    
+    .teamBg.right {
+        right: 5px;
     }
 }
 
@@ -2014,6 +2031,19 @@
         padding: 8px 10px;
     }
     
+    .teamBg {
+        width: 35px;
+        height: 35px;
+    }
+    
+    .teamBg.left {
+        left: 6px;
+    }
+    
+    .teamBg.right {
+        right: 6px;
+    }
+    
     .teamSection {
         min-width: 70px;
     }
@@ -2085,6 +2115,19 @@
         width: 100%;
         padding: 6px 8px;
         margin: 4px auto;
+    }
+    
+    .teamBg {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .teamBg.left {
+        left: 4px;
+    }
+    
+    .teamBg.right {
+        right: 4px;
     }
     
     .teamSection {
@@ -2611,9 +2654,9 @@
 .postFooter {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
-    gap: 10px;
-    margin-top: auto;
+        align-items: flex-end;
+        gap: 10px;
+        margin-top: auto;
     flex-wrap: wrap;
 }
 
@@ -3678,5 +3721,19 @@ html, body {
     
     .postTitle {
         font-size: 1rem;
+    }
+    
+    /* teamBg 320px 이하 스타일 */
+    .teamBg {
+        width: 25px;
+        height: 25px;
+    }
+    
+    .teamBg.left {
+        left: 3px;
+    }
+    
+    .teamBg.right {
+        right: 3px;
     }
 }
